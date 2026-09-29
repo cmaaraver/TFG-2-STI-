@@ -1,0 +1,8 @@
+# Secretos (CLAUDE.md, regla 3): nunca subir claves ni contraseñas
+.env
+**/include/secrets.h
+
+# Compilación y copias
+.pio/
+raspberry/backups/
+__pycache__/
