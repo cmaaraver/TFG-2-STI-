@@ -1,0 +1,3 @@
+# Copiar a "acl". El ingestor solo puede leer eventos de aplicación.
+user ingestor
+topic read application/+/device/+/event/#
