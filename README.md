@@ -53,9 +53,18 @@ que están en `.gitignore` (se suben solo sus plantillas `*.example`).
 
 ## Imágenes
 
-| | |
-|---|---|
-| Conexionado del nodo | ![](docs/img/conexionado-nodo.png) |
-| Sondas en el depósito | ![](docs/img/instalacion-sensores.png) |
-| Pantalla OLED del nodo | ![](docs/img/pantalla-oled.png) |
-| Web (datos simulados) | ![](docs/img/web-datos-simulados.png) |
+### Conexionado del nodo
+![Conexionado del nodo](docs/img/conexionado-nodo.png)
+
+### Sondas dentro del depósito
+![Instalación de las sondas en el depósito](docs/img/instalacion-sensores.png)
+
+### Pantalla OLED del nodo
+Logo de Los Viveros, fase del ciclo y temporizador del envío por LoRa.
+
+![Pantalla OLED](docs/img/pantalla-oled.png)
+
+### Web en tiempo real (captura con datos simulados)
+![Web en el ordenador](docs/img/web-datos-simulados.png)
+
+<img src="docs/img/web-movil-datos-simulados.png" alt="Web en el móvil" width="300">
