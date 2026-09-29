@@ -8,9 +8,9 @@ Está fuera del edificio; la telemetría entra al centro por LoRaWAN hasta el ga
 ```
         panel solar (orientado al sur, ~50°)
              │
-  ┌──────────┴──────────┐      caja estanca: LILYGO, placa base, MPPT, batería (o caja aparte)
+  ┌──────────┴──────────┐      caja estanca: LILYGO y placa base; otra caja: MPPT y batería
   │                     │
-  │   DEPÓSITO opaco    │──► bomba 12 V ──► caudalímetro ──► cámara de sondas (pH, EC, O2) ──┐
+  │   DEPÓSITO opaco    │──► bomba 12 V ──► caudalímetro ──► antirretorno ──► cámara (pH, O2) ─┐
   │   (KIT0139 al fondo,│                                     SEN0509 en la tubería           │
   │    SEN0204 en pared)│◄─────────────────────────── retorno ────────────────────────────────┘
   └─────────────────────┘
@@ -20,7 +20,8 @@ Está fuera del edificio; la telemetría entra al centro por LoRaWAN hasta el ga
 1. Se despierta la LILYGO, enciende sensores y bomba.
 2. La bomba recircula 45 s para que las sondas vean agua "nueva" (no agua estancada).
 3. En los últimos 10 s se mide el caudal. Si es menor de 0,3 L/min → aviso "bomba sin caudal".
-4. Se para la bomba y se esperan 5 s con el agua quieta (el motor mete ruido en pH y EC).
+4. Se para la bomba y se esperan 5 s con el agua quieta (el motor mete ruido en el pH).
+   La válvula antirretorno mantiene la cámara llena para que la sonda de pH no se seque.
 5. Se leen todos los sensores, se apaga todo, se envía el mensaje y se duerme.
 
 ## 3. Balance de energía (estimación, se confirma midiendo en la fase 6)
