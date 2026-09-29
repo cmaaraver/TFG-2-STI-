@@ -78,6 +78,8 @@ docs/
   04-formato-payload.md       ← formato binario del mensaje LoRaWAN (v2, con caudal)
   05-indice-memoria.md        ← índice provisional de la memoria
   06-maqueta.md               ← maqueta exterior, ciclo de bombeo y balance de energía
+  07-lista-compra.md          ← lo que hay que comprar, con enlaces y precios
+  img/esquema-sistema.png     ← dibujo del sistema completo
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)

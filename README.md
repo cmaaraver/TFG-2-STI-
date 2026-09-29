@@ -11,7 +11,7 @@ accesible desde Internet con DuckDNS.
 ![Esquema del sistema](docs/img/esquema-sistema.png)
 
 - Plan completo y tareas: [`CLAUDE.md`](CLAUDE.md)
-- Material: [`docs/01-lista-material.md`](docs/01-lista-material.md)
+- Material: [`docs/01-lista-material.md`](docs/01-lista-material.md) · compra con enlaces: [`docs/07-lista-compra.md`](docs/07-lista-compra.md)
 - Red: [`docs/02-arquitectura-red.md`](docs/02-arquitectura-red.md)
 - Conexionado del nodo: [`docs/03-conexionado-nodo.md`](docs/03-conexionado-nodo.md)
 - Maqueta y energía: [`docs/06-maqueta.md`](docs/06-maqueta.md)
