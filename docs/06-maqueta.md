@@ -1,27 +1,32 @@
 # Maqueta exterior
 
 ## 1. Qué es
-Depósito con agua de red, una bomba que recircula el agua por un circuito de tubería donde van
-las sondas, y el nodo LILYGO en una caja estanca. Todo alimentado con un panel solar y una batería.
+Depósito con agua de red con **todas las sondas colgadas dentro**, una bomba sumergida que mueve el agua
+en circuito cerrado (sale por la tubería, pasa por el caudalímetro y vuelve al mismo depósito), y el
+nodo LILYGO en una caja estanca. No hay cámara de medida aparte. Todo alimentado con un panel solar y una batería.
 Está fuera del edificio; la telemetría entra al centro por LoRaWAN hasta el gateway.
 
 ```
         panel solar (orientado al sur, ~50°)
              │
-  ┌──────────┴──────────┐      caja estanca: LILYGO y placa base; otra caja: MPPT y batería
-  │                     │
-  │   DEPÓSITO opaco    │──► bomba 12 V ──► caudalímetro ──► antirretorno ──► cámara (pH, O2) ─┐
-  │   (KIT0139 al fondo,│                                     SEN0509 en la tubería           │
-  │    SEN0204 en pared)│◄─────────────────────────── retorno ────────────────────────────────┘
-  └─────────────────────┘
+   caja 1: LILYGO y placa base        caja 2: MPPT, batería y fusibles
+             │ cables por la tapa (prensaestopas)
+  ┌──────────┴──────────────────────┐
+  │  soporte en la boca del depósito│◄── retorno ◄── válvula de bola ◄── caudalímetro ◄─┐
+  │   ├─ sonda pH      (colgada)    │                                                    │
+  │   └─ SEN0681 O2+T  (colgada)    │                                                    │
+  │  DEPÓSITO opaco                 │                                                    │
+  │   KIT0139 nivel (en el fondo)   │                                                    │
+  │   bomba 12 V sumergida ─────────┼──► manguera ───────────────────────────────────────┘
+  │   SEN0204 en la pared exterior  │
+  └─────────────────────────────────┘
 ```
 
 ## 2. Funcionamiento en cada ciclo (cada 15 min)
 1. Se despierta la LILYGO, enciende sensores y bomba.
-2. La bomba recircula 45 s para que las sondas vean agua "nueva" (no agua estancada).
+2. La bomba mueve el agua 45 s para mezclarla y que las sondas no vean agua estancada.
 3. En los últimos 10 s se mide el caudal. Si es menor de 0,3 L/min → aviso "bomba sin caudal".
 4. Se para la bomba y se esperan 5 s con el agua quieta (el motor mete ruido en el pH).
-   La válvula antirretorno mantiene la cámara llena para que la sonda de pH no se seque.
 5. Se leen todos los sensores, se apaga todo, se envía el mensaje y se duerme.
 
 ## 3. Balance de energía (estimación, se confirma midiendo en la fase 6)
@@ -44,6 +49,9 @@ Está fuera del edificio; la telemetría entra al centro por LoRaWAN hasta el ga
 - **Temperatura**: el SEN0681 trabaja de 0 a 40 °C. En verano en Sevilla un depósito al sol pasa de eso:
   depósito blanco u opaco, a la sombra o con toldo, y la batería LiFePO4 también a la sombra.
 - **Algas**: depósito opaco y tapado; limpiar sondas cada 2-4 semanas.
+- **Sondas dentro del depósito**: colgadas del soporte a media altura, lejos de la salida de la bomba
+  (el chorro y las burbujas falsean el oxígeno) y por encima del fondo (lodos). El nivel mínimo del
+  depósito tiene que cubrir siempre la punta de la sonda de pH: si baja de ahí, alarma de rellenar.
 - **Evaporación**: el nivel bajará solo; es un buen dato para el panel (y para la alarma de rellenar).
 - **Vandalismo y robo**: caja con candado o tornillos de seguridad, dentro de una zona vallada del centro.
 - **Lluvia y rayos**: prensaestopas hacia abajo (goteo), caja con membrana de ventilación, estructura y panel a tierra si es posible.

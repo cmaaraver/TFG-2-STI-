@@ -3,7 +3,8 @@
 Versión 2 (2026-09-29). Cambios respecto a la versión anterior:
 - **Se quita la medida de conductividad (sensor de sales)**: fuera la sonda K=1, su placa, un aislador,
   un pasamuros BNC y la solución de 1413 µS/cm. La DFR0300-H (K=10) tampoco se usa.
-- **Circuito de agua completo**: bomba, tubos, racores, válvulas, filtro y cámara de medida con cantidades.
+- **Circuito de agua completo**: bomba, tubos, racores, válvula, filtro y soporte con cantidades.
+- **Sin cámara de medida**: las sondas van colgadas dentro del depósito.
 - **Todo lo de la maqueta es autónomo**: bomba, LILYGO y sensores funcionan solo con el panel solar y la
   batería. No hay ningún cable de 230 V ni de red hasta la maqueta; los datos salen por LoRaWAN.
 
@@ -17,9 +18,9 @@ Lo que lleva `TODO VERIFICAR` se comprueba con la ficha del modelo que se compre
 | Gateway | MikroTik wAP LR8 kit (con fuente 24 V e inyector PoE) | Recibe LoRaWAN y reenvía a la Raspberry |
 | Servidor LoRaWAN / router | Raspberry Pi 5 4 GB | ChirpStack, MQTT, NAT, NTP, Tailscale |
 | Oxígeno disuelto + temperatura | DFRobot SEN0681 (RS485, 10-30 V, 0,2 W) | Sensor principal; su temperatura compensa el pH |
-| pH | DFRobot SEN0169-V2 (sonda industrial) | Inmersión continua en la cámara de medida |
+| pH | DFRobot SEN0169-V2 (sonda industrial) | Inmersión continua dentro del depósito |
 | Nivel de agua | DFRobot KIT0139 (4-20 mA) | Nivel del depósito (evaporación, alarma de rellenar) |
-| Presencia de agua | DFRobot SEN0204 o SEN0509 (se usa uno) | Alarma "cámara de medida seca" |
+| Presencia de agua | DFRobot SEN0204 o SEN0509 (se usa uno) | Alarma de nivel mínimo (sonda de pH a punto de quedar al aire) |
 | Actuador (fase 7) | DFRobot DFR1120-868 | Relé controlado por downlink (baliza/alarma) |
 
 ## B. Material en reserva (no se usa)
@@ -41,7 +42,6 @@ Lo que lleva `TODO VERIFICAR` se comprueba con la ficha del modelo que se compre
 | 1 | ADC ADS1115 16 bits I2C (p. ej. Gravity DFR0553) | Lecturas analógicas estables (pH, nivel, batería) |
 | 1 | Aislador de señal analógica Gravity (DFR0504) | Aísla el pH de la masa de la bomba, que está en la misma agua |
 | 1 | Adaptador RS485↔UART aislado (3,3 V, dirección automática) | Leer el SEN0681 |
-| 1 | Convertidor 4-20 mA a tensión (si no viene en el KIT0139) | Leer el sensor de nivel |
 | 1 | Convertidor DC-DC 12 V → 5 V, 1-2 A, bajo consumo en reposo (< 1 mA) | Alimentar la LILYGO y los módulos de 5 V |
 | 1 | P-MOSFET IRF9540N o AOD417 + NPN BC547 + resistencias 10k, 1k, 100k | Conmutador 12 V de sensores (`docs/03`, apartado 4) |
 | 1 | P-MOSFET AO3401 + NPN BC547 + resistencias 10k, 1k, 100k | Conmutador 5 V de sensores |
@@ -68,32 +68,28 @@ Lo que lleva `TODO VERIFICAR` se comprueba con la ficha del modelo que se compre
 | 1 | Bolsitas de gel de sílice + barniz protector (conformal coating) | Humedad en la placa |
 | 1 | Candado o tornillos de seguridad para las cajas | Vandalismo |
 
-### C3. Circuito de agua (maqueta)
+### C3. Circuito de agua y soporte de sondas (maqueta)
 
-Recorrido: bomba sumergida en el depósito → tubo → caudalímetro → válvula antirretorno →
-entrada por abajo de la cámara de medida → salida por arriba → retorno por la tapa al depósito.
-La **válvula antirretorno** es obligatoria: al parar la bomba la cámara se queda llena y la sonda de pH
-nunca se seca.
+Las sondas van **colgadas directamente dentro del depósito**; no hay cámara de medida.
+Recorrido del agua: bomba sumergida en el depósito → manguera → caudalímetro → válvula de bola →
+retorno por la tapa al mismo depósito. Como no hay cámara que vaciar, **no hace falta válvula antirretorno**.
 
 | Cant. | Material | Motivo |
 |---|---|---|
-| 1 | Depósito opaco o blanco 50-100 L con tapa | Evitar algas y calentamiento |
-| 1 | Bomba sumergible 12 V DC sin escobillas, ≤ 1 A, 3-8 L/min, altura ≥ 2 m, salida para tubo 1/2" (TODO VERIFICAR modelo; tipo DC40) | Recircular el agua por las sondas. Sin escobillas: dura años y apenas mete ruido eléctrico |
+| 1 | Depósito opaco o blanco 50-100 L con tapa | Evitar algas y calentamiento; dentro van todas las sondas |
+| 1 | Bomba sumergible 12 V DC sin escobillas, ≤ 1 A, 3-8 L/min, altura ≥ 2 m, salida para tubo 1/2" (TODO VERIFICAR modelo; tipo DC40) | Mover el agua del depósito. Sin escobillas: dura años y apenas mete ruido eléctrico |
 | 1 | Rejilla/filtro de aspiración para la bomba (o malla inox atada) | Que no entren algas ni suciedad al caudalímetro |
-| 1 | Caudalímetro de efecto Hall YF-S201 (rosca macho G1/2", 1-30 L/min) | Medir L/min |
-| 1 | Válvula antirretorno 1/2" (latón o PVC) | Mantener la cámara llena con la bomba parada |
-| 2 | Válvula de bola PVC 1/2" | Una para regular caudal, otra de vaciado de la cámara |
-| 3 m | Tubo flexible PVC transparente reforzado (manguera cristal) Ø interior 13 mm | Tramos bomba-caudalímetro-cámara-retorno. Opaco o pintado si hay algas |
-| 6 | Racor de espiga 1/2" para manguera 13 mm con rosca G1/2" (macho o hembra según pieza) | Unir la manguera al caudalímetro, válvulas y cámara |
-| 10 | Abrazaderas inox para manguera 12-20 mm | Sujetar las espigas |
-| 1 | Tubo PVC evacuación Ø90 mm, 40 cm + 2 tapones Ø90 | Cámara de medida vertical (sondas sumergidas y protegidas de la luz) |
-| 2 | Pasamuros/racor de depósito rosca 1/2" con junta | Entrada (abajo) y salida (arriba) de la cámara |
-| 1 | Pasamuros de depósito 1/2" + tapón (o T 1/2") | Vaciado de la cámara para limpiarla |
-| 2 | Prensaestopas del diámetro de cada sonda (pH y SEN0681), en la tapa superior de la cámara (TODO VERIFICAR medir las sondas) | Sujetar las sondas a la altura correcta y estanco |
-| 1 | Codo 1/2" + tubo rígido corto para el retorno por la tapa del depósito | Que el retorno caiga dentro sin salpicar |
-| 1 | Cinta de teflón + cola de PVC | Roscas y uniones |
-| 1 | Base de madera tratada o perfil de aluminio + tornillería inox + abrazaderas de tubo Ø90 | Estructura y sujeción de la cámara |
-| 1 | Toldo o sombra para depósito, cámara y caja de batería | El SEN0681 trabaja hasta 40 °C y la LiFePO4 no debe calentarse |
+| 1 | Caudalímetro de efecto Hall YF-S201 (rosca macho G1/2", 1-30 L/min) | Medir L/min (comprueba que la bomba funciona) |
+| 1 | Válvula de bola PVC 1/2" | Regular el caudal |
+| 3 m | Tubo flexible PVC transparente reforzado (manguera cristal) Ø interior 13 mm | Bomba → caudalímetro → válvula → retorno. Opaco o pintado si hay algas |
+| 4 | Racor de espiga 1/2" para manguera 13 mm con rosca G1/2" | Unir la manguera al caudalímetro y a la válvula |
+| 8 | Abrazaderas inox para manguera 12-20 mm | Sujetar las espigas |
+| 1 | Perfil de aluminio en U o pletina de ~60 cm (más largo que la boca del depósito) | Soporte que cruza la boca del depósito y del que cuelgan las sondas |
+| 3 | Prensaestopas del diámetro de cada sonda o clips/abrazaderas de cable (pH, SEN0681, cable del KIT0139) (TODO VERIFICAR medir las sondas) | Fijar cada sonda a su profundidad en el soporte |
+| 2 | Prensaestopas PG16 para la tapa del depósito | Paso de cables y del tubo de retorno |
+| 1 | Cinta de teflón | Roscas |
+| 1 | Base de madera tratada o perfil de aluminio + tornillería inox | Estructura |
+| 1 | Toldo o sombra para depósito y caja de batería | El SEN0681 trabaja hasta 40 °C y la LiFePO4 no debe calentarse |
 
 ### C4. Energía autónoma (dimensionado en `docs/06-maqueta.md`, ≈ 35 Wh/día con la bomba)
 | Cant. | Material | Motivo |

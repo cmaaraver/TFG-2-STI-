@@ -7,11 +7,11 @@
 
 Todo va sobre una **placa base de topos** dentro de la caja estanca:
 - La LILYGO va **pinchada en tiras de pines hembra**, no soldada. Si se rompe, se cambia en 1 minuto.
-- Los módulos Gravity (placa del pH, placa del EC, aisladores, ADS1115) se conectan con sus
+- Los módulos Gravity (placa del pH, aislador, ADS1115) se conectan con sus
   **cables PH2.0 de 3 pines** a tiras de pines macho soldadas en la placa base.
 - Alimentación, RS485 y cables largos entran por **bornas de tornillo**.
 - Los sensores exteriores entran por **conectores de aviación GX12/GX16** en la pared de la caja
-  y las sondas de pH/EC por **pasamuros BNC**. Así se desmonta un sensor sin abrir la caja.
+  y la sonda de pH por **pasamuros BNC**. Así se desmonta un sensor sin abrir la caja.
 - Lo único que se suelda es la placa base (pines, bornas, MOSFET, resistencias, puentes).
 
 ## 2. Esquema de bloques
@@ -28,7 +28,6 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
                     └──[divisor 100k/22k]──────────────► ADS1115 A3 (batería)
 
   DC-DC 5 V ──[conmutador 5V, GPIO EN_5V]──► placa pH ──► aislador ──► ADS1115 A0
-                                          ├► placa EC ──► aislador ──► ADS1115 A1
                                           ├► convertidor 4-20 mA ────► ADS1115 A2
                                           ├► adaptador RS485 (lado aislado lo alimenta él)
                                           ├► SEN0204 (presencia de agua) ──► GPIO AGUA
@@ -58,7 +57,7 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
 | Canal | Señal | Rango esperado |
 |---|---|---|
 | A0 | pH (tras aislador) | 0-3 V |
-| A1 | EC (tras aislador) | 0-3,2 V |
+| A1 | Libre (antes conductividad) | — |
 | A2 | Nivel (convertidor 4-20 mA) | ~0,48-2,4 V (4-20 mA en 120 Ω, verificar) |
 | A3 | Batería (divisor 100k/22k) | 12,8 V → ~2,3 V |
 
@@ -105,4 +104,4 @@ El diodo protege el MOSFET del pico que da el motor al apagarse.
 - Membrana de ventilación en la caja (evita condensación) y bolsitas de gel de sílice.
 - Barniz protector (conformal coating) sobre la placa base una vez probada.
 - Etiquetar cada cable en los dos extremos.
-- Tubo de PVC perforado alrededor de las sondas: las protege de golpes y de la luz.
+- Sondas colgadas del soporte dentro del depósito, con el cable sujeto para que no tire del conector.
