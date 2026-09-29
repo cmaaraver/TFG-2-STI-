@@ -91,6 +91,11 @@ docker compose exec -T mosquitto mosquitto_pub -q 1 -t application/1/device/0000
 Borrar después los datos de prueba: `DELETE FROM medidas WHERE dev_eui='0000000000000001';` (y en `nodos` y `uplinks_raw`).
 
 ## La web
+
+![Web con datos simulados](../docs/img/web-datos-simulados.png)
+
+(Captura con **datos simulados** de 7 días, no son medidas reales. En el móvil: `docs/img/web-movil-datos-simulados.png`.)
+
 - `web/app.py`: API (FastAPI). `/api/historico` agrupa en medias automáticamente si hay más de 1500 puntos.
 - `web/static/`: la página (HTML + CSS + JavaScript con ECharts, sin depender de Internet).
 - Tiempo real: el ingestor inserta → un trigger de la base de datos hace `NOTIFY` → la web lo manda al

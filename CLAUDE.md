@@ -70,6 +70,7 @@ Detalle completo en `docs/02-arquitectura-red.md`.
 ## 4. Estructura del repositorio
 
 ```
+README.md                     ← portada del repositorio con el índice de todo
 CLAUDE.md                     ← este plan
 docs/
   01-lista-material.md        ← material disponible y lista de compra
@@ -79,12 +80,13 @@ docs/
   05-indice-memoria.md        ← índice provisional de la memoria
   06-maqueta.md               ← maqueta exterior, ciclo de bombeo y balance de energía
   07-lista-compra.md          ← lo que hay que comprar, con enlaces y precios
+  07-lista-compra.xlsx        ← la misma lista en hoja de cálculo, para el centro
   08-guia-instalacion.md      ← guía de instalación completa, de la caja de material a la web funcionando
-  img/                        ← esquema del sistema, conexionado del nodo, sondas en el depósito, pantalla OLED
+  img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
   herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
-pruebas/payload/              ← prueba sin hardware: payload.h (C++) → decoder.js → campos del ingestor
+pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
   docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy, DuckDNS
   .env.example                ← plantilla de contraseñas y token de DuckDNS (.env no se sube)

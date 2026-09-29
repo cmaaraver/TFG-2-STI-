@@ -2,6 +2,7 @@
 
 Solo lo que hay que comprar (el material que ya tenemos está en `01-lista-material.md`, apartado A).
 Enlaces comprobados el 29/09/2026: todos abrían la ficha del producto con stock, salvo los marcados **SIN VERIFICAR**.
+La misma lista en hoja de cálculo, para pasarla al centro: [`07-lista-compra.xlsx`](07-lista-compra.xlsx).
 Precios unitarios con IVA salvo DFRobot (en dólares, sin IVA ni envío). Pueden cambiar.
 
 No hace falta comprar: el convertidor 4-20 mA (viene con el KIT0139), el switch (con solo el wAP no hace falta),
