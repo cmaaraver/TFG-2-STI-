@@ -14,7 +14,7 @@
    3.2 Nodo de medida (hardware, conexionado, alimentación solar)
    3.3 Red LoRaWAN privada (gateway y ChirpStack)
    3.4 Red de datos: router/NAT, NTP, firewall y acceso remoto
-   3.5 Base de datos y panel de control
+   3.5 Base de datos, web en tiempo real y acceso por DuckDNS
 4. Implementación
    4.1 Montaje del nodo
    4.2 Firmware
@@ -24,7 +24,7 @@
    5.1 Calibración de sondas
    5.2 Cobertura del enlace (RSSI/SNR)
    5.3 Consumo y autonomía
-   5.4 Robustez (cortes de red, PC apagado)
+   5.4 Robustez (cortes de red, ingestor parado, Raspberry reiniciada)
 6. Presupuesto
 7. Conclusiones y mejoras futuras
 8. Bibliografía

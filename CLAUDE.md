@@ -23,16 +23,14 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
 
 ```
  [Sondas] → [LILYGO ESP32 LoRa] ~~~ LoRaWAN EU868 ~~~ [MikroTik wAP LR8]
-                 (nodo solar)                               │ PoE + Ethernet
+                 (nodo solar)                               │ PoE, 192.168.50.2
                                                             ▼
-                                  ┌──────── RED PRIVADA 192.168.50.0/24 ────────┐
-                                  │  switch                                     │
-                                  │   ├─ wAP LR8 ........ 192.168.50.2          │
-                                  │   ├─ Raspberry Pi 5 . 192.168.50.1 (eth0)   │
-                                  │   └─ PC de datos .... 192.168.50.5          │
-                                  └─────────────────────────────────────────────┘
-                                                            │
-                          Raspberry Pi 5 eth1 (adaptador USB-Ethernet) → red del instituto → Internet
+                                  eth0 192.168.50.1 ┌─────────────────┐
+                                                    │ Raspberry Pi 5  │ todo el servidor en Docker
+                                  eth1 (USB, DHCP)  └────────┬────────┘
+                                                             ▼
+                                   red del instituto 192.168.155.x → Internet
+                                   https://<nombre>.duckdns.org (web pública)
 ```
 
 | Equipo | Función | Software |
@@ -40,11 +38,14 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
 | LILYGO (nodo, maqueta exterior) | Remueve el agua del depósito con la bomba, mide caudal y sensores, envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
 | DFR1120-868 (maqueta, fase 7) | Relé controlado por downlink (llenado, alarma o anulación de la bomba) | Configuración propia de DFRobot |
 | wAP LR8 | Gateway LoRaWAN, reenvía por UDP 1700 | RouterOS (packet forwarder nativo) |
-| Raspberry Pi 5 | Router/NAT/firewall de la red privada, servidor NTP, servidor LoRaWAN, broker MQTT, alarmas | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Docker: ChirpStack v4 + Gateway Bridge + PostgreSQL + Redis + Mosquitto, Node-RED, Tailscale |
-| PC de datos | Base de datos histórica y panel | Ubuntu Server 24.04 LTS, Docker: TimescaleDB, ingestor Python, Grafana, copias de seguridad, Tailscale |
+| Raspberry Pi 5 | **Todo el servidor**: router/NAT/firewall, NTP, servidor LoRaWAN, MQTT, base de datos, web con HTTPS y DuckDNS | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy + DuckDNS |
+
+Ya **no hay PC de datos ni Grafana** (decisión de 2026-09-29): la base de datos y una web propia
+van en la Raspberry.
 
 Flujo de datos: nodo → wAP → ChirpStack (decodifica con `raspberry/codec/decoder.js`) → MQTT (QoS 1)
-→ ingestor en el PC → TimescaleDB → Grafana.
+→ ingestor → TimescaleDB → web (tiempo real por NOTIFY + SSE, gráficas del histórico con ECharts)
+→ Caddy (HTTPS) → `https://<nombre>.duckdns.org`.
 
 Detalle completo en `docs/02-arquitectura-red.md`.
 
@@ -55,10 +56,10 @@ Detalle completo en `docs/02-arquitectura-red.md`.
    parámetros de ChirpStack o RouterOS: si no están confirmados en este repo, se consultan en la
    documentación oficial (wiki DFRobot, pinout LILYGO, docs ChirpStack/MikroTik) y se cita la fuente
    en un comentario. Si no se puede confirmar, se deja un `TODO VERIFICAR` y se avisa.
-3. **Secretos fuera de git**: claves LoRaWAN, contraseñas de MQTT, BD y Grafana en `secrets.h` / `.env`
+3. **Secretos fuera de git**: claves LoRaWAN, contraseñas de la BD y de ChirpStack y el token de DuckDNS en `secrets.h` / `raspberry/.env`
    (existen plantillas `*.example`). Añadir al `.gitignore`.
-4. **Hora siempre en UTC** en la base de datos (`timestamptz`). Grafana muestra Europe/Madrid.
-5. **Todo en Docker Compose** con `restart: unless-stopped`, volúmenes con nombre y healthchecks.
+4. **Hora siempre en UTC** en la base de datos (`timestamptz`). La web muestra Europe/Madrid.
+5. **Todo en Docker Compose** (`raspberry/docker-compose.yml`) con `restart: unless-stopped`, volúmenes con nombre y healthchecks.
 6. **Cambios pequeños y probados**: después de cada tarea, explicar cómo probarla y qué salida se espera.
 7. **Documentación**: cada fase deja escrito en `docs/` qué se hizo, comandos usados, capturas pendientes
    y problemas encontrados, en tono natural de alumno de grado superior (claro, sin florituras).
@@ -79,11 +80,18 @@ docs/
   06-maqueta.md               ← maqueta exterior, ciclo de bombeo y balance de energía
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO
-raspberry/
+raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
+  docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy, DuckDNS
+  .env.example                ← plantilla de contraseñas y token de DuckDNS (.env no se sube)
+  configuracion/              ← ChirpStack (eu868, MQTT QoS 1) y Gateway Bridge
   codec/decoder.js            ← decodificador del payload para ChirpStack v4
-  mosquitto/mosquitto.conf    ← broker con cola persistente
-  red/                        ← configuración de red, chrony y firewall
-servidor-datos/               ← Docker Compose del PC: TimescaleDB + ingestor + Grafana
+  mosquitto/mosquitto.conf    ← broker interno con cola persistente
+  db/                         ← creación de las bases de datos, tablas y usuarios
+  ingestor/                   ← MQTT → TimescaleDB
+  web/                        ← API (FastAPI) + página en tiempo real con gráficas (ECharts)
+  caddy/                      ← HTTPS con certificado de Let's Encrypt por DNS de DuckDNS
+  red/                        ← NetworkManager, chrony y firewall
+  backup.sh                   ← copia diaria de las dos bases de datos
 ```
 
 ## 5. Datos pendientes (preguntar antes de cerrar la tarea afectada)
@@ -93,13 +101,14 @@ servidor-datos/               ← Docker Compose del PC: TimescaleDB + ingestor 
 - [x] Agua de red (dulce): salinidad del SEN0681 a 0 ‰ (es un ajuste del sensor de oxígeno, no un sensor).
 - [x] Sin sonda de conductividad; sondas dentro del depósito, sin cámara de medida.
 - [ ] Quitar la conductividad del firmware (`config.h`, `sensores.cpp`), del payload (`docs/04`),
-      de `decoder.js`, de `init.sql`/ingestor y del panel. Decidir si el payload pasa a v3 o se
+      de `decoder.js` y de `10-init.sql`/ingestor (la web ya no la enseña). Decidir si el payload pasa a v3 o se
       manda 0xFFFF ("sin dato") en esos bytes. **Preguntar antes de cambiar el formato.**
 - [ ] Modelo concreto de bomba (12 V, ≤ 1 A) y de caudalímetro (factor de pulsos por L/min).
 - [ ] Consumo real del DFR1120 en reposo (si es clase C escucha siempre y gasta más).
 - [ ] Registros Modbus del SEN0681 (copiar de la wiki oficial de DFRobot).
 - [ ] Permiso del coordinador TIC del centro para conectar la Raspberry a la red del instituto y usar Tailscale.
-- [ ] PC que se usará como servidor de datos (características).
+- [ ] Subred real del instituto (en principio 192.168.155.x) y si el centro tiene IP pública propia.
+- [ ] Permiso del coordinador TIC para reservar la IP de la Raspberry y reenviar el puerto 443 (DuckDNS). Si no, plan B con Tailscale Funnel.
 
 ## 6. Fases, tareas y criterios de aceptación
 
@@ -116,32 +125,31 @@ servidor-datos/               ← Docker Compose del PC: TimescaleDB + ingestor 
 - [ ] Calibrar pH (tampones 7 y 4) y guardar en NVS.
 - **Hecho cuando**: el monitor serie muestra valores coherentes con las soluciones patrón (±0,1 pH).
 
-### Fase 3 — Red y servidor LoRaWAN (Raspberry Pi 5)
+### Fase 3 — Red y servidor en la Raspberry Pi 5 (`raspberry/README.md`)
 - [ ] Raspberry Pi OS Lite 64 bits sobre NVMe, SSH con clave, usuario propio, actualizaciones.
-- [ ] Red: eth0 = 192.168.50.1/24 en modo compartido (DHCP + NAT), eth1 = red del instituto por DHCP (`docs/02`).
-- [ ] Firewall ufw: denegar entrada por eth1; permitir LAN privada y `tailscale0`.
-- [ ] chrony como servidor NTP de la LAN; batería RTC colocada; comprobar `timedatectl`.
-- [ ] ChirpStack v4 con Docker basado en el repositorio oficial `chirpstack/chirpstack-docker`,
-      región `eu868`, Gateway Bridge por UDP 1700, integración MQTT con **QoS 1**.
-- [ ] Mosquitto con listener interno (red Docker) y listener LAN autenticado (`raspberry/mosquitto/mosquitto.conf`).
+- [ ] Red con `raspberry/red/configurar-red.sh`: eth0 = 192.168.50.1/24 en modo compartido (DHCP + NAT)
+      hacia el wAP, eth1 (USB) = red del instituto por DHCP (`docs/02`).
+- [ ] chrony como servidor NTP de la red privada; batería RTC colocada; comprobar `timedatectl`.
+- [ ] `.env` rellenado y `docker compose up -d --build`: ChirpStack v4 (eu868, MQTT **QoS 1**),
+      Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web, Caddy y DuckDNS.
 - [ ] wAP LR8: IP estática 192.168.50.2, NTP → 192.168.50.1, servidor LoRa → 192.168.50.1:1700.
 - [ ] Alta en ChirpStack: gateway (EUI del wAP), perfil de dispositivo EU868 / LoRaWAN 1.1 / OTAA / clase A,
       codec `decoder.js`, dispositivo con DevEUI y claves.
-- **Hecho cuando**: el nodo hace join y los uplinks aparecen decodificados en ChirpStack y en `mosquitto_sub`.
+- [ ] Firewall con `raspberry/red/firewall.sh`.
+- **Hecho cuando**: el nodo hace join, los uplinks salen decodificados en ChirpStack y aparecen en la web al momento.
 
-### Fase 4 — Servidor de datos (PC)
-- [ ] Ubuntu Server 24.04 LTS, IP 192.168.50.5, NTP → 192.168.50.1.
-- [ ] `servidor-datos/docker-compose.yml` levantado (TimescaleDB + ingestor + Grafana).
-- [ ] Comprobar cola persistente: apagar el ingestor, enviar 2 uplinks, encenderlo → deben entrar en la BD.
-- [ ] Panel Grafana: series de cada parámetro, estado de batería, RSSI/SNR, última recepción.
-- [ ] Copia de seguridad diaria con `pg_dump` (cron en el host) y prueba de restauración.
-- **Hecho cuando**: los datos de 24 h están en la BD con hora correcta y se ven en Grafana.
+### Fase 4 — Base de datos y web
+- [ ] Comprobar cola persistente: parar el ingestor, enviar 2 uplinks, arrancarlo → deben entrar en la BD.
+- [ ] Web: tarjetas en tiempo real, gráficas del histórico (6 h, 24 h, 7 días, 30 días, personalizado), descarga CSV.
+- [ ] Ajustar los rangos de color de las tarjetas (`raspberry/web/static/app.js`) con datos reales.
+- [ ] Copia de seguridad diaria (`raspberry/backup.sh` en cron) y prueba de restauración.
+- **Hecho cuando**: hay 24 h de datos en la BD con hora correcta y se ven en la web.
 
 ### Fase 5 — Acceso remoto
-- [ ] Tailscale en Raspberry (subnet router de 192.168.50.0/24) y en el PC.
-- [ ] Acceso privado del equipo a Grafana y ChirpStack por Tailscale.
-- [ ] (Opcional) Enlace público de solo lectura a Grafana con Tailscale Funnel desde el PC.
-- **Hecho cuando**: se ve el panel desde un móvil con datos móviles, fuera del instituto.
+- [ ] DuckDNS: cuenta, subdominio y token en `.env`; Caddy obtiene el certificado HTTPS.
+- [ ] Coordinador TIC: reserva de IP de la Raspberry y reenvío del TCP 443. Si no es posible, `tailscale funnel`.
+- [ ] Tailscale en la Raspberry y en los equipos del grupo; ChirpStack solo por `tailscale serve`.
+- **Hecho cuando**: se ve la web desde un móvil con datos móviles, fuera del instituto.
 
 ### Fase 6 — Maqueta, energía e instalación exterior
 - [ ] Montar la maqueta: base, depósito opaco, bomba, tubería, caudalímetro y soporte de sondas dentro del depósito (`docs/06-maqueta.md`).
@@ -152,7 +160,7 @@ servidor-datos/               ← Docker Compose del PC: TimescaleDB + ingestor 
 - **Hecho cuando**: una semana sin pérdidas significativas de paquetes y batería estable.
 
 ### Fase 7 — Alarmas y actuador (ampliación)
-- [ ] Node-RED: alarmas por umbral (pH, O2, nivel, batería, nodo sin transmitir > 1 h).
+- [ ] Node-RED (contenedor en el mismo compose): alarmas por umbral (pH, O2, nivel, batería, nodo sin transmitir > 1 h).
 - [ ] DFR1120-868 dado de alta como segundo nodo; downlink para activar su relé (baliza) ante alarma.
 - [ ] Downlink de configuración al nodo principal: cambiar intervalo de envío (fPort 10).
 
