@@ -1,7 +1,7 @@
 """
 Ingestor: se suscribe a los uplinks de ChirpStack (MQTT, QoS 1, sesión persistente)
-y los guarda en TimescaleDB. Si este PC se apaga, el broker de la Raspberry guarda
-los mensajes y se insertan al volver. Los duplicados se descartan por dedup_id.
+y los guarda en TimescaleDB. Si el ingestor se para, Mosquitto guarda los mensajes
+y se insertan al volver. Los duplicados se descartan por dedup_id.
 """
 import json
 import logging
@@ -14,10 +14,10 @@ import psycopg
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("ingestor")
 
-MQTT_HOST = os.environ["MQTT_HOST"]
-MQTT_PORT = int(os.environ.get("MQTT_PORT", "1884"))
-MQTT_USER = os.environ["MQTT_USER"]
-MQTT_PASSWORD = os.environ["MQTT_PASSWORD"]
+MQTT_HOST = os.environ.get("MQTT_HOST", "mosquitto")
+MQTT_PORT = int(os.environ.get("MQTT_PORT", "1883"))
+MQTT_USER = os.environ.get("MQTT_USER")          # vacío: broker interno sin usuario
+MQTT_PASSWORD = os.environ.get("MQTT_PASSWORD")
 MQTT_TOPIC = os.environ.get("MQTT_TOPIC", "application/+/device/+/event/up")
 PG_DSN = os.environ["PG_DSN"]
 
@@ -114,10 +114,11 @@ def al_mensaje(cliente, userdata, msg):
 
 cliente = mqtt.Client(
     mqtt.CallbackAPIVersion.VERSION2,
-    client_id="ingestor-pc-datos",   # id fijo + clean_session False = cola persistente en el broker
+    client_id="ingestor-agua",   # id fijo + clean_session False = cola persistente en el broker
     clean_session=False,
 )
-cliente.username_pw_set(MQTT_USER, MQTT_PASSWORD)
+if MQTT_USER:
+    cliente.username_pw_set(MQTT_USER, MQTT_PASSWORD)
 cliente.on_connect = al_conectar
 cliente.on_message = al_mensaje
 cliente.reconnect_delay_set(min_delay=1, max_delay=60)

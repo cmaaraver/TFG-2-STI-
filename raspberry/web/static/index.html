@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calidad del agua · Maqueta LoRaWAN</title>
+  <meta name="description" content="Monitorización en tiempo real de la calidad del agua con LoRaWAN. TFG STI, CPIFP Los Viveros.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3C16 3 6 14.5 6 20a10 10 0 0 0 20 0C26 14.5 16 3 16 3z' fill='%230ea5c6'/></svg>">
+  <link rel="stylesheet" href="/static/estilo.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C16 3 6 14.5 6 20a10 10 0 0 0 20 0C26 14.5 16 3 16 3z"/></svg>
+      <div>
+        <h1>Calidad del agua</h1>
+        <p>Maqueta solar · LoRaWAN EU868 · CPIFP Los Viveros</p>
+      </div>
+    </div>
+    <div class="estado-nodo">
+      <select id="nodo" aria-label="Nodo"></select>
+      <span id="estado" class="pastilla">Conectando…</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="bloque">
+      <div class="titulo-bloque">
+        <h2>Ahora mismo</h2>
+        <span id="ultima-recepcion" class="tenue">—</span>
+      </div>
+      <div id="tarjetas" class="tarjetas"></div>
+      <div id="avisos" class="avisos"></div>
+    </section>
+
+    <section class="bloque">
+      <div class="titulo-bloque">
+        <h2>Histórico</h2>
+        <div class="controles">
+          <div class="rangos" role="group" aria-label="Rango de tiempo">
+            <button data-horas="6">6 h</button>
+            <button data-horas="24" class="activo">24 h</button>
+            <button data-horas="168">7 días</button>
+            <button data-horas="720">30 días</button>
+            <button data-horas="0">Personalizado</button>
+          </div>
+          <div id="personalizado" class="personalizado" hidden>
+            <label>Desde <input type="datetime-local" id="desde"></label>
+            <label>Hasta <input type="datetime-local" id="hasta"></label>
+            <button id="aplicar">Ver</button>
+          </div>
+          <a id="csv" class="boton-sec" href="#" download>Descargar CSV</a>
+        </div>
+      </div>
+      <p id="info-historico" class="tenue"></p>
+      <div id="graficas" class="graficas"></div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    TFG 2º STI · Carlos Maraver Román y Rubén Trillo García · Horas en hora de Madrid
+  </footer>
+
+  <script src="/static/echarts.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

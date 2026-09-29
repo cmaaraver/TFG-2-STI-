@@ -63,3 +63,15 @@ SELECT add_continuous_aggregate_policy('medidas_hora',
   start_offset => INTERVAL '3 days',
   end_offset   => INTERVAL '1 hour',
   schedule_interval => INTERVAL '30 minutes');
+
+-- Aviso en tiempo real: cada medida nueva se publica en el canal "nueva_medida".
+-- La web lo escucha (LISTEN) y la envía al navegador al instante, sin esperar a recargar.
+CREATE FUNCTION avisar_medida() RETURNS trigger AS $$
+BEGIN
+  PERFORM pg_notify('nueva_medida', NEW.dev_eui);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER medida_insertada AFTER INSERT ON medidas
+  FOR EACH ROW EXECUTE FUNCTION avisar_medida();

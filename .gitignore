@@ -1,10 +1,8 @@
 # Secretos (CLAUDE.md, regla 3): nunca subir claves ni contraseñas
 .env
 **/include/secrets.h
-raspberry/mosquitto/passwd
-raspberry/mosquitto/acl
 
 # Compilación y copias
 .pio/
-servidor-datos/backups/
+raspberry/backups/
 __pycache__/

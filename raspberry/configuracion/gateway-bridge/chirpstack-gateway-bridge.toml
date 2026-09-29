@@ -1,0 +1,9 @@
+# Copiado sin cambios de chirpstack/chirpstack-docker (configuration/chirpstack-gateway-bridge/).
+# Los topics eu868/... se fijan con variables de entorno en docker-compose.yml.
+# See https://www.chirpstack.io/gateway-bridge/install/config/ for a full
+# configuration example and documentation.
+
+[integration.mqtt.auth.generic]
+servers=["tcp://mosquitto:1883"]
+username=""
+password=""

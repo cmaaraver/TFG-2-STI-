@@ -1,0 +1,20 @@
+# Proxy HTTPS delante de la web.
+# DUCKDNS_DOMINIO y DUCKDNS_TOKEN vienen del .env (ver docker-compose.yml)
+
+{$DUCKDNS_DOMINIO}.duckdns.org {
+	tls {
+		dns duckdns {$DUCKDNS_TOKEN}
+	}
+	encode gzip
+	reverse_proxy web:8000 {
+		flush_interval -1   # tiempo real: no retener los eventos SSE
+	}
+}
+
+# Acceso por IP dentro de la red del instituto o por Tailscale, sin certificado: http://<ip-raspberry>
+:80 {
+	encode gzip
+	reverse_proxy web:8000 {
+		flush_interval -1
+	}
+}

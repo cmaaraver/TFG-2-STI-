@@ -1,0 +1,36 @@
+# ChirpStack v4 — basado en chirpstack/chirpstack-docker (configuration/chirpstack/chirpstack.toml)
+# Referencia de todas las opciones: https://www.chirpstack.io/docs/chirpstack/configuration.html
+# Las variables $ALGO se sustituyen con las del entorno (vienen del .env a través del docker-compose).
+
+[logging]
+  level="info"
+
+[postgresql]
+  # Misma instancia de PostgreSQL (TimescaleDB) que los datos, pero base de datos y usuario propios
+  dsn="postgres://chirpstack:$CHIRPSTACK_DB_PASSWORD@db/chirpstack?sslmode=disable"
+  max_open_connections=10
+  min_idle_connections=0
+
+[redis]
+  servers=["redis://redis/"]
+  tls_enabled=false
+  cluster=false
+
+[network]
+  net_id="000000"
+  # Solo Europa 868 MHz
+  enabled_regions=["eu868"]
+
+[api]
+  bind="0.0.0.0:8080"
+  # Generar con: openssl rand -base64 32   (va en el .env, nunca en git)
+  secret="$CHIRPSTACK_API_SECRET"
+
+[integration]
+  enabled=["mqtt"]
+
+  [integration.mqtt]
+    server="tcp://mosquitto:1883/"
+    json=true
+    # QoS 1: el broker guarda los uplinks en cola si el ingestor está parado
+    qos=1

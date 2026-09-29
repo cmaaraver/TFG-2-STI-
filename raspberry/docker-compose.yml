@@ -1,0 +1,143 @@
+# Raspberry Pi 5: todo el sistema en un solo Docker Compose
+#   gateway-bridge ← UDP 1700 ← wAP LR8
+#   chirpstack (servidor LoRaWAN) → mosquitto (MQTT) → ingestor → db (TimescaleDB)
+#   web (API + página) ← caddy (HTTPS con DuckDNS) ← navegador
+#
+# Arrancar:  cp .env.example .env  (y cambiar todas las contraseñas)
+#            docker compose up -d --build
+name: calidad-agua
+
+services:
+  db:
+    # PostgreSQL 16 + TimescaleDB. Una sola instancia con dos bases de datos:
+    # "calidad_agua" (medidas) y "chirpstack" (servidor LoRaWAN)
+    image: timescale/timescaledb:latest-pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      CHIRPSTACK_DB_PASSWORD: ${CHIRPSTACK_DB_PASSWORD}
+      WEB_DB_PASSWORD: ${WEB_DB_PASSWORD}
+      TS_TUNE_MEMORY: 1GB          # la Raspberry tiene 4 GB: se deja memoria para lo demás
+      TZ: UTC
+    volumes:
+      - datos_bd:/var/lib/postgresql/data
+      - ./db/00-chirpstack.sh:/docker-entrypoint-initdb.d/00-chirpstack.sh:ro
+      - ./db/10-init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+      - ./db/20-usuarios.sh:/docker-entrypoint-initdb.d/20-usuarios.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save 300 1 --save 60 100 --appendonly no
+    volumes:
+      - datos_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - datos_mosquitto:/mosquitto/data
+    # Sin "ports": el broker solo se usa dentro de la red Docker
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/broker/uptime", "-C", "1", "-W", "5"]
+      interval: 30s
+      retries: 3
+
+  chirpstack:
+    image: chirpstack/chirpstack:4
+    command: -c /etc/chirpstack
+    restart: unless-stopped
+    environment:
+      CHIRPSTACK_DB_PASSWORD: ${CHIRPSTACK_DB_PASSWORD}
+      CHIRPSTACK_API_SECRET: ${CHIRPSTACK_API_SECRET}
+    volumes:
+      - ./configuracion/chirpstack:/etc/chirpstack:ro
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      mosquitto: { condition: service_healthy }
+    ports:
+      # Solo local. El equipo entra por Tailscale ("tailscale serve", ver README)
+      - "127.0.0.1:8080:8080"
+
+  gateway-bridge:
+    image: chirpstack/chirpstack-gateway-bridge:4
+    restart: unless-stopped
+    environment:
+      - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}
+      - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}
+      - INTEGRATION__MQTT__COMMAND_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/command/#
+    volumes:
+      - ./configuracion/gateway-bridge:/etc/chirpstack-gateway-bridge:ro
+    depends_on:
+      mosquitto: { condition: service_healthy }
+    ports:
+      # Paquetes del wAP LR8. Desde la red del instituto se bloquea con red/firewall.sh
+      - "1700:1700/udp"
+
+  ingestor:
+    build: ./ingestor
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_TOPIC: application/+/device/+/event/up
+      PG_DSN: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db: { condition: service_healthy }
+      mosquitto: { condition: service_healthy }
+
+  web:
+    build: ./web
+    restart: unless-stopped
+    environment:
+      PG_DSN: postgresql://web_lector:${WEB_DB_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db: { condition: service_healthy }
+
+  caddy:
+    build: ./caddy
+    restart: unless-stopped
+    environment:
+      DUCKDNS_DOMINIO: ${DUCKDNS_DOMINIO}
+      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - datos_caddy:/data        # certificados HTTPS
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      web: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/api/salud"]
+      interval: 30s
+      retries: 3
+
+  duckdns:
+    # Actualiza cada 5 min la IP pública del instituto en <dominio>.duckdns.org
+    image: lscr.io/linuxserver/duckdns:latest
+    restart: unless-stopped
+    environment:
+      SUBDOMAINS: ${DUCKDNS_DOMINIO}
+      TOKEN: ${DUCKDNS_TOKEN}
+      TZ: Europe/Madrid
+      UPDATE_IP: ipv4
+      LOG_FILE: "false"
+
+volumes:
+  datos_bd:
+  datos_redis:
+  datos_mosquitto:
+  datos_caddy:
