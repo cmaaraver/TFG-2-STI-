@@ -82,12 +82,14 @@ docs/
   07-lista-compra.md          ← lo que hay que comprar, con enlaces y precios
   07-lista-compra.xlsx        ← la misma lista en hoja de cálculo, para el centro
   08-guia-instalacion.md      ← guía de instalación completa, de la caja de material a la web funcionando
+  09-guia-duckdns.md          ← DuckDNS paso a paso, qué pedir al coordinador TIC y plan B
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
   herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
 pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
+  instalar.sh                 ← instalación completa de la Raspberry con un solo script
   docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy, DuckDNS
   .env.example                ← plantilla de contraseñas y token de DuckDNS (.env no se sube)
   configuracion/              ← ChirpStack (eu868, MQTT QoS 1) y Gateway Bridge

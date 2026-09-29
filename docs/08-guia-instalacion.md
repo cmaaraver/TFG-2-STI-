@@ -133,17 +133,17 @@ da 4,00 ± 0,1; `rs485_err=0`; la temperatura cuadra con un termómetro; `bat` c
 
 ## 4. Servidor en la Raspberry Pi 5
 
-Pasos detallados en `raspberry/README.md` (apartados 1 a 3). Resumen:
+Se hace con un solo script. Detalle en `raspberry/README.md` ("Instalación automática"):
 
-1. Raspberry Pi OS Lite 64 bits en la microSD de 64 GB, SSH con clave, `apt full-upgrade`, Docker y límite del diario
-   del sistema para no desgastar la tarjeta.
-2. Red **con teclado y monitor conectados** (para no quedarse fuera):
-   `IF_LORA=eth0 IF_INSTITUTO=eth1 ./red/configurar-red.sh` y copiar `red/chrony.conf`.
-3. `cp .env.example .env`, cambiar **todas** las contraseñas y poner el subdominio y el token de DuckDNS.
-4. `docker compose up -d --build`
+1. Crear el subdominio y el token de DuckDNS: [`09-guia-duckdns.md`](09-guia-duckdns.md), apartado 1.
+2. Grabar Raspberry Pi OS Lite 64 bits en la microSD de 64 GB con Raspberry Pi Imager (SSH con clave).
+3. Cable del instituto en el adaptador USB, eth0 al inyector PoE del wAP, y entrar por SSH por el adaptador USB.
+4. `git clone` del repositorio y `./instalar.sh` dentro de `raspberry/`. Pide el subdominio y el token de DuckDNS
+   y deja todo instalado: red, NTP, Docker, contraseñas, contenedores, firewall y copia diaria.
+5. Pedir al coordinador TIC lo que dice el final del script (reserva de IP y puerto 443, `09-guia-duckdns.md`).
 
 **Comprobación**:
-- `docker compose ps` → todos los servicios `running` y los que tienen healthcheck `healthy`.
+- `sudo docker compose ps` → todos los servicios `running` y los que tienen healthcheck `healthy`.
 - `curl http://localhost/api/salud` → `{"estado":"ok"}`.
 - Desde un PC del aula, `http://<ip-de-la-raspberry>` → se abre la web (sin datos todavía).
 - Simular un uplink con el comando de `raspberry/README.md` ("Probar la web sin el nodo") → la tarjeta de la web

@@ -13,6 +13,7 @@ sudo ufw default allow routed                    # NAT de la red privada hacia I
 sudo ufw allow in on "$IF_LORA"                  # wAP y equipos de la red privada
 sudo ufw allow in on tailscale0                  # el equipo, por Tailscale (SSH, ChirpStack)
 sudo ufw allow in on "$IF_INSTITUTO" to any port 80,443 proto tcp   # la web
+sudo ufw allow in on "$IF_INSTITUTO" to any port 22 proto tcp      # SSH desde el aula (solo con clave)
 sudo ufw --force enable
 
 # Regla para los puertos de Docker (se vuelve a poner en cada arranque)

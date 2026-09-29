@@ -47,7 +47,7 @@ Ya no hay PC de datos.
 | ChirpStack (web de administración) | TCP 8080 | Solo `127.0.0.1`; el equipo entra con `tailscale serve` |
 | Mosquitto (MQTT) | 1883 | Solo dentro de Docker, no se publica |
 | TimescaleDB | 5432 | Solo dentro de Docker, no se publica |
-| SSH | TCP 22 | Red privada y Tailscale |
+| SSH | TCP 22 | Red privada, red del instituto (solo con clave) y Tailscale. Nunca desde Internet |
 
 ## DuckDNS y acceso desde Internet
 

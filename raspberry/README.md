@@ -3,7 +3,34 @@
 La Raspberry lo hace todo: router de la red del gateway, servidor LoRaWAN (ChirpStack), MQTT,
 base de datos (TimescaleDB), la web y el HTTPS con DuckDNS. Red explicada en `docs/02-arquitectura-red.md`.
 
-Orden recomendado. Cada paso tiene su comprobación; no pasar al siguiente sin que funcione.
+## Instalación automática (recomendada)
+
+`instalar.sh` hace los apartados 1, 2, 3, 6 y 8 de abajo (y Tailscale del 5) de una vez:
+
+1. **Antes**: crear el subdominio y el token de DuckDNS (`docs/09-guia-duckdns.md`, apartado 1).
+2. Grabar la microSD con **Raspberry Pi Imager** → Raspberry Pi OS Lite (64-bit). En la configuración:
+   hostname `rpi-lora`, usuario propio, **SSH con clave pública**, zona horaria Europe/Madrid.
+3. Conectar el **cable del instituto al adaptador USB-Ethernet** y el puerto integrado (eth0) al inyector
+   PoE del wAP. Encender y entrar por SSH a la IP que tenga el adaptador USB (o con teclado y monitor).
+   *No* entrar por eth0: el script la convierte en la red del wAP y cortaría la sesión (el script lo comprueba).
+4. Ejecutar:
+   ```bash
+   sudo apt update && sudo apt install -y git
+   git clone https://github.com/cmaaraver/TFG-2-STI-.git
+   cd TFG-2-STI-/raspberry
+   ./instalar.sh
+   ```
+   Pregunta el subdominio y el token de DuckDNS, si se instala Tailscale y si está la batería RTC oficial.
+   Todo lo demás lo hace solo: sistema, microSD, Docker, red, NTP, contraseñas aleatorias en `.env`,
+   todos los contenedores, firewall y copia diaria. Se puede repetir sin problema.
+5. Al terminar enseña la dirección de la web y lo que hay que pedir al coordinador TIC. Quedan a mano el
+   wAP (apartado 4) y el alta en ChirpStack (apartado 5), porque dependen del EUI del gateway y de las
+   claves del nodo.
+6. `sudo reboot` y comprobar que todo vuelve solo: `sudo docker compose ps`.
+
+## Instalación paso a paso (lo mismo que hace el script)
+
+Cada paso tiene su comprobación; no pasar al siguiente sin que funcione.
 
 ## 1. Sistema
 1. Raspberry Pi Imager → Raspberry Pi OS Lite (64-bit) → grabar en la **microSD de 64 GB** (mejor una de marca A1/A2
