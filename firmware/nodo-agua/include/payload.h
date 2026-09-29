@@ -35,7 +35,7 @@ static inline void construirPayload(const Medida& m, uint8_t* b) {
   ponerU16(b, 2,  aI16(m.temperatura_c, 100));
   ponerU16(b, 4,  aU16(m.oxigeno_mgl, 100));
   ponerU16(b, 6,  aU16(m.ph, 100));
-  ponerU16(b, 8,  aU16(m.ec_uscm, 1));
+  ponerU16(b, 8,  0xFFFF);                  // reservado: antes conductividad, ya no se mide
   ponerU16(b, 10, aU16(m.nivel_mm, 1));
   ponerU16(b, 12, aU16(m.bateria_mv, 1));
   ponerU16(b, 14, aU16(m.caudal_lmin, 100));

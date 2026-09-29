@@ -1,17 +1,14 @@
-// Lectura de sensores del nodo: ADS1115 (pH, EC, nivel, batería), SEN0681 por RS485 y presencia de agua.
+// Lectura de sensores del nodo: ADS1115 (pH, nivel, batería), SEN0681 por RS485 y presencia de agua.
 #include "sensores.h"
 #include "config.h"
 #include <Wire.h>
 #include <Adafruit_ADS1X15.h>
 #include <ModbusMaster.h>
 #include <Preferences.h>
+#include "i2c_compartido.h"
 
 #ifndef AGUA_ACTIVO_ALTO
 #define AGUA_ACTIVO_ALTO 1   // TODO VERIFICAR: nivel de la salida del SEN0204 cuando detecta agua
-#endif
-
-#if EC_TIPO_SONDA != 1
-#error "Sonda K=10: implementar la formula de la libreria DFRobot_EC10 en calcularEC()"
 #endif
 
 static Adafruit_ADS1115 ads;
@@ -21,11 +18,10 @@ static volatile uint32_t pulsosCaudal = 0;
 static void IRAM_ATTR contarPulso() { pulsosCaudal++; }
 
 // ---------- Calibración guardada en la flash (NVS) ----------
-// Valores por defecto = los de la librería DFRobot_PH (pH V2) y K=1 para EC.
+// Valores por defecto = los de la librería DFRobot_PH (pH V2).
 struct Calibracion {
   float ph7_mv = 1500.0f;
   float ph4_mv = 2032.44f;
-  float ec_k   = 1.0f;
 };
 static Calibracion cal;
 
@@ -34,7 +30,6 @@ static void cargarCalibracion() {
   p.begin("cal", true);
   cal.ph7_mv = p.getFloat("ph7", cal.ph7_mv);
   cal.ph4_mv = p.getFloat("ph4", cal.ph4_mv);
-  cal.ec_k   = p.getFloat("eck", cal.ec_k);
   p.end();
 }
 
@@ -43,7 +38,6 @@ static void guardarCalibracion() {
   p.begin("cal", false);
   p.putFloat("ph7", cal.ph7_mv);
   p.putFloat("ph4", cal.ph4_mv);
-  p.putFloat("eck", cal.ec_k);
   p.end();
 }
 
@@ -75,7 +69,9 @@ static float leerMv(uint8_t canal) {
   if (!adsOk) return NAN;
   float v[N_MUESTRAS];
   for (int i = 0; i < N_MUESTRAS; i++) {
+    i2cTomar();                           // el bus I2C se comparte con la pantalla
     v[i] = ads.computeVolts(ads.readADC_SingleEnded(canal)) * 1000.0f;
+    i2cSoltar();
     delay(20);
   }
   return mediana(v, N_MUESTRAS);
@@ -87,13 +83,6 @@ static float calcularPH(float mv, float tempC) {
   float pendiente = 3.0f / (cal.ph4_mv - cal.ph7_mv);          // pH por mV a 25 °C
   float factorT = 298.15f / (tempC + 273.15f);
   return 7.0f - (mv - cal.ph7_mv) * pendiente * factorT;
-}
-
-// Conductividad K=1: misma fórmula que la librería DFRobot_EC (RES2 = 820, ECREF = 200)
-static float calcularEC(float mv, float tempC) {
-  float ecCrudo = 1000.0f * mv / 820.0f / 200.0f;              // mS/cm sin compensar
-  float ec25 = ecCrudo * cal.ec_k / (1.0f + 0.0185f * (tempC - 25.0f));
-  return ec25 * 1000.0f;                                       // µS/cm referido a 25 °C
 }
 
 // Nivel: convertidor 4-20 mA → tensión en una resistencia
@@ -115,6 +104,7 @@ void sensoresIniciar() {
   pinMode(PIN_CAUDAL, INPUT);
   if (RS485_DE >= 0) { pinMode(RS485_DE, OUTPUT); digitalWrite(RS485_DE, LOW); }
 
+  i2cIniciarMutex();
   Wire.begin(I2C_SDA, I2C_SCL);
   adsOk = ads.begin(ADS_DIRECCION, &Wire);
   if (adsOk) ads.setGain(GAIN_ONE);                            // ±4,096 V
@@ -170,16 +160,14 @@ Medida sensoresMedir() {
 
   // 2) Analógicos
   float mvPH = leerMv(CANAL_PH);
-  float mvEC = leerMv(CANAL_EC);
   float mvNivel = leerMv(CANAL_NIVEL);
   float mvBat = leerMv(CANAL_BATERIA);
 
   if (!isnan(mvPH))    m.ph = calcularPH(mvPH, tComp);
-  if (!isnan(mvEC))    m.ec_uscm = calcularEC(mvEC, tComp);
   if (!isnan(mvNivel)) m.nivel_mm = calcularNivel(mvNivel);
   if (!isnan(mvBat))   m.bateria_mv = mvBat * DIVISOR_BATERIA;
 
-  // 3) Presencia de agua en la cámara de medida
+  // 3) Presencia de agua (nivel mínimo del depósito)
   m.agua_presente = (digitalRead(PIN_AGUA) == (AGUA_ACTIVO_ALTO ? HIGH : LOW));
 
   if (m.ph < 0 || m.ph > 14) m.ph = NAN;                       // lectura imposible = sin dato
@@ -188,14 +176,14 @@ Medida sensoresMedir() {
 
 // ---------- Modo calibración (monitor serie a 115200) ----------
 static void imprimir(const Medida& m) {
-  Serial.printf("T=%.2f C  O2=%.2f mg/L  pH=%.2f  EC=%.0f uS/cm  nivel=%.0f mm  bat=%.0f mV  agua=%d  rs485_err=%d\n",
-                m.temperatura_c, m.oxigeno_mgl, m.ph, m.ec_uscm, m.nivel_mm, m.bateria_mv,
+  Serial.printf("T=%.2f C  O2=%.2f mg/L  pH=%.2f  nivel=%.0f mm  bat=%.0f mV  agua=%d  rs485_err=%d\n",
+                m.temperatura_c, m.oxigeno_mgl, m.ph, m.nivel_mm, m.bateria_mv,
                 m.agua_presente, m.fallo_rs485);
 }
 
 void modoCalibracion() {
   Serial.println("\n=== MODO CALIBRACION ===");
-  Serial.println("Comandos: leer | bomba | ph7 | ph4 | ec | ver | reset | salir");
+  Serial.println("Comandos: leer | bomba | ph7 | ph4 | ver | reset | salir");
   sensoresEncender();
   Serial.println("Esperando calentamiento de sensores (60 s)...");
   delay(T_CALENTAMIENTO_MS);
@@ -205,7 +193,6 @@ void modoCalibracion() {
     String c = Serial.readStringUntil('\n');
     c.trim();
     Medida m = sensoresMedir();
-    float t = isnan(m.temperatura_c) ? TEMP_DEFECTO_C : m.temperatura_c;
 
     if (c == "leer") {
       imprimir(m);
@@ -219,14 +206,8 @@ void modoCalibracion() {
     } else if (c == "ph4") {
       cal.ph4_mv = leerMv(CANAL_PH); guardarCalibracion();
       Serial.printf("pH4 guardado: %.1f mV\n", cal.ph4_mv);
-    } else if (c == "ec") {
-      // Sonda en solución de 1413 uS/cm (formula de calibracion de DFRobot_EC)
-      float mv = leerMv(CANAL_EC);
-      cal.ec_k = 820.0f * 200.0f * 1.413f * (1.0f + 0.0185f * (t - 25.0f)) / 1000.0f / mv;
-      guardarCalibracion();
-      Serial.printf("K de EC guardado: %.3f (T=%.1f C)\n", cal.ec_k, t);
     } else if (c == "ver") {
-      Serial.printf("ph7=%.1f mV  ph4=%.1f mV  ec_k=%.3f\n", cal.ph7_mv, cal.ph4_mv, cal.ec_k);
+      Serial.printf("ph7=%.1f mV  ph4=%.1f mV\n", cal.ph7_mv, cal.ph4_mv);
     } else if (c == "reset") {
       cal = Calibracion(); guardarCalibracion(); Serial.println("Calibracion por defecto");
     } else if (c == "salir") {

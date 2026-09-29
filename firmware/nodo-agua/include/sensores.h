@@ -6,7 +6,6 @@ struct Medida {
   float temperatura_c = NAN;
   float oxigeno_mgl   = NAN;
   float ph            = NAN;
-  float ec_uscm       = NAN;
   float nivel_mm      = NAN;
   float bateria_mv    = NAN;
   float caudal_lmin   = NAN;

@@ -1,7 +1,12 @@
 # Conexionado y montaje del nodo
 
-> Pines de la LILYGO según `firmware/nodo-agua/include/config.h`. **Verificar con el pinout oficial
-> de la placa exacta antes de soldar nada.** Los de abajo son para la T3 V1.6.1 (SX1276).
+> Pines de la LILYGO según `firmware/nodo-agua/include/config.h`, sacados del `utilities.h` oficial de LilyGO
+> (https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series). **Verificar con la placa exacta antes de soldar nada.**
+> Los de abajo son para la T3 V1.6.1 (SX1276).
+
+![Conexionado del nodo](img/conexionado-nodo.png)
+
+(El dibujo se puede editar: `img/conexionado-nodo.svg`.)
 
 ## 1. Idea general: no soldar los sensores a la LILYGO
 
@@ -40,7 +45,7 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
 |---|---|---|---|
 | 5 V entrada | 5V / VBUS | Salida DC-DC 5 V | No conectar USB y 5 V externo a la vez sin revisar el esquema de la placa |
 | GND | GND | Masa común (punto estrella en la placa base) | |
-| I2C SDA | GPIO 21 | ADS1115 SDA | Compartido con la OLED (0x3C). ADS1115 en 0x48 |
+| I2C SDA | GPIO 21 | ADS1115 SDA | Compartido con la OLED de la placa (0x3C). ADS1115 en 0x48 |
 | I2C SCL | GPIO 22 | ADS1115 SCL | |
 | RS485 TX | GPIO 13 | Adaptador RS485 RX(D) | UART2 |
 | RS485 RX | GPIO 14 | Adaptador RS485 TX(D) | |
@@ -48,10 +53,14 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
 | EN_5V | GPIO 25 | Puerta/driver del conmutador 5 V | HIGH = sensores 5 V encendidos (el LED de la placa también parpadea) |
 | AGUA | GPIO 39 | Salida SEN0204 | Solo entrada; poner pull-up externa 10 kΩ a 3,3 V. Comprobar nivel de salida (≤3,3 V) |
 | MODO_CAL | GPIO 36 | Puente a GND | Solo entrada; pull-up externa 10 kΩ. Puente puesto al arrancar = modo calibración |
-| BOMBA | GPIO 2 | Puerta del N-MOSFET (IRLZ44N) de la bomba | Pull-down 100 kΩ obligatoria (GPIO2 debe estar a 0 al arrancar) |
+| BOMBA | GPIO 12 | Puerta del N-MOSFET (IRLZ44N) de la bomba | Pull-down 100 kΩ obligatoria: GPIO12 es pin de arranque y tiene que estar a 0 al encender (si no, el ESP32 no arranca y la bomba podría encenderse sola) |
 | CAUDAL | GPIO 34 | Salida del caudalímetro por divisor 10k/20k | Solo entrada; el caudalímetro va a 5 V y sus pulsos llegan a ~3,3 V |
 | Radio LoRa | 5,18,19,23,26,27,33 | Internos | No usar |
 | Antena | Conector u.FL/SMA | Pigtail a pasamuros SMA | **Nunca encender sin antena** |
+| OLED | Interna (I2C 21/22, 0x3C) | — | Ya viene en la placa. Muestra el logo de Los Viveros, la fase del ciclo y el temporizador del envío LoRa |
+
+**No poner tarjeta microSD en la LILYGO.** En la T3 V1.6.1 el lector de tarjetas usa los GPIO 2, 13, 14 y 15
+(`utilities.h` de LilyGO) y nosotros usamos el 13 y el 14 para el RS485. Por eso la bomba tampoco va en el GPIO 2.
 
 ### ADS1115 (dirección 0x48, ADDR a GND)
 | Canal | Señal | Rango esperado |
@@ -105,3 +114,19 @@ El diodo protege el MOSFET del pico que da el motor al apagarse.
 - Barniz protector (conformal coating) sobre la placa base una vez probada.
 - Etiquetar cada cable en los dos extremos.
 - Sondas colgadas del soporte dentro del depósito, con el cable sujeto para que no tire del conector.
+
+## 7. Instalación física de las sondas en el depósito
+
+![Instalación de las sondas](img/instalacion-sensores.png)
+
+| Sensor | Dónde va | Cómo se sujeta | Ojo con |
+|---|---|---|---|
+| pH SEN0169-V2 | Colgado del soporte de la tapa, a media altura, lado contrario a la bomba | Prensaestopas o abrazadera en el soporte; la punta siempre por debajo del nivel mínimo | Nunca dejarlo en seco. Cable BNC sin tensión |
+| Oxígeno SEN0681 | Colgado junto al pH, membrana hacia abajo | Igual que el pH | Lejos del retorno y de la bomba (las burbujas falsean el O2) |
+| Nivel KIT0139 | Apoyado en el fondo | Colgado de su propio cable hasta tocar fondo | El cable lleva un tubo de aire dentro: no aplastarlo ni doblarlo fuerte; el extremo del cable, dentro de la caja seca |
+| Bomba 12 V | En el fondo, lado contrario a las sondas | Con su rejilla de aspiración | Que no aspire lodo: un par de cm por encima del fondo si tiene patas |
+| Presencia de agua SEN0204 | Pegado por fuera de la pared del depósito, a la altura del nivel mínimo | Cinta de doble cara o adhesivo | Detecta a través de una pared de hasta 13 mm (wiki DFRobot SEN0204: "thickness of induction 0 ~ 13 mm"); sin metal cerca |
+| Caudalímetro YF-S201 | En la tubería de salida, horizontal, antes de la válvula | Racores de espiga 1/2" | La flecha del cuerpo en el sentido del agua |
+
+Los cables salen de la caja 1 por los prensaestopas y conectores GX16, **siempre hacia abajo** para que el agua
+de lluvia gotee y no entre. Etiquetar cada conector con el nombre del sensor.

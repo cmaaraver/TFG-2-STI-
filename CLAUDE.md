@@ -79,9 +79,12 @@ docs/
   05-indice-memoria.md        ← índice provisional de la memoria
   06-maqueta.md               ← maqueta exterior, ciclo de bombeo y balance de energía
   07-lista-compra.md          ← lo que hay que comprar, con enlaces y precios
-  img/esquema-sistema.png     ← dibujo del sistema completo
+  08-guia-instalacion.md      ← guía de instalación completa, de la caja de material a la web funcionando
+  img/                        ← esquema del sistema, conexionado del nodo, sondas en el depósito, pantalla OLED
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
-firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO
+firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
+  herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
+pruebas/payload/              ← prueba sin hardware: payload.h (C++) → decoder.js → campos del ingestor
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
   docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy, DuckDNS
   .env.example                ← plantilla de contraseñas y token de DuckDNS (.env no se sube)
@@ -102,9 +105,9 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [x] Ubicación: maqueta FUERA del edificio con alimentación solar; gateway dentro del centro (o en fachada).
 - [x] Agua de red (dulce): salinidad del SEN0681 a 0 ‰ (es un ajuste del sensor de oxígeno, no un sensor).
 - [x] Sin sonda de conductividad; sondas dentro del depósito, sin cámara de medida.
-- [ ] Quitar la conductividad del firmware (`config.h`, `sensores.cpp`), del payload (`docs/04`),
-      de `decoder.js` y de `10-init.sql`/ingestor (la web ya no la enseña). Decidir si el payload pasa a v3 o se
-      manda 0xFFFF ("sin dato") en esos bytes. **Preguntar antes de cambiar el formato.**
+- [x] Conductividad quitada del firmware (`config.h`, `sensores.cpp`). El formato del payload **no cambia**:
+      los bytes 8-9 van siempre a 0xFFFF ("sin dato"), `decoder.js` da `null` y la BD guarda NULL (`docs/04`).
+      Si algún día se quiere quitar también de `decoder.js`/`10-init.sql`/ingestor, sería payload v3: preguntar antes.
 - [ ] Modelo concreto de bomba (12 V, ≤ 1 A) y de caudalímetro (factor de pulsos por L/min).
 - [ ] Consumo real del DFR1120 en reposo (si es clase C escucha siempre y gasta más).
 - [ ] Registros Modbus del SEN0681 (copiar de la wiki oficial de DFRobot).
