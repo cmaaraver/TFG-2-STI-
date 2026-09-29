@@ -4,16 +4,16 @@
 // Qué se enseña y cómo. "bien"/"aviso" son rangos orientativos para agua de red; ajustarlos
 // cuando tengamos datos reales de la maqueta.
 const VARIABLES = [
-  { id: "temperatura_c", nombre: "Temperatura", unidad: "°C", dec: 1, color: "#f97316",
+  { id: "temperatura_c", nombre: "Temperatura", unidad: "°C", dec: 1, color: "#f97316", rangoMin: 4,
     estado: v => v > 35 ? "mal" : v > 30 ? "aviso" : "bien" },
-  { id: "oxigeno_mgl", nombre: "Oxígeno disuelto", unidad: "mg/L", dec: 2, color: "#0ea5e9",
+  { id: "oxigeno_mgl", nombre: "Oxígeno disuelto", unidad: "mg/L", dec: 2, color: "#0ea5e9", rangoMin: 2,
     estado: v => v < 4 ? "mal" : v < 6 ? "aviso" : "bien" },
-  { id: "ph", nombre: "pH", unidad: "", dec: 2, color: "#a855f7",
+  { id: "ph", nombre: "pH", unidad: "", dec: 2, color: "#a855f7", rangoMin: 1,
     estado: v => (v < 6 || v > 9) ? "mal" : (v < 6.5 || v > 8.5) ? "aviso" : "bien" },
-  { id: "nivel_mm", nombre: "Nivel del depósito", unidad: "mm", dec: 0, color: "#14b8a6" },
-  { id: "caudal_lmin", nombre: "Caudal de la bomba", unidad: "L/min", dec: 2, color: "#3b82f6",
+  { id: "nivel_mm", nombre: "Nivel del depósito", unidad: "mm", dec: 0, color: "#14b8a6", rangoMin: 200 },
+  { id: "caudal_lmin", nombre: "Caudal de la bomba", unidad: "L/min", dec: 2, color: "#3b82f6", rangoMin: 2,
     estado: v => v < 0.3 ? "mal" : "bien" },
-  { id: "bateria_v", nombre: "Batería", unidad: "V", dec: 2, color: "#22c55e",
+  { id: "bateria_v", nombre: "Batería", unidad: "V", dec: 2, color: "#22c55e", rangoMin: 1,
     estado: v => v < 12.0 ? "mal" : v < 12.6 ? "aviso" : "bien" },
   { id: "rssi_dbm", nombre: "RSSI", unidad: "dBm", dec: 0, color: "#64748b",
     estado: v => v < -120 ? "mal" : v < -110 ? "aviso" : "bien" },
@@ -107,7 +107,10 @@ function crearGraficas() {
         axisPointer: { type: "cross", label: { formatter: p => p.axisDimension === "x" ? fmtFecha(p.value) : fmtNum(p.value, v.dec) } } },
       xAxis: { type: "time", axisLabel: { color: colorTexto(), hideOverlap: true,
                formatter: val => fmtFecha(val) }, axisLine: { lineStyle: { color: colorBorde() } } },
+      // Eje Y con un rango mínimo: si no, una variación de 0,05 de pH se vería enorme
       yAxis: { type: "value", scale: true, axisLabel: { color: colorTexto() },
+               min: v.rangoMin ? r => Math.floor(Math.min(r.min, (r.min + r.max - v.rangoMin) / 2) * 10) / 10 : null,
+               max: v.rangoMin ? r => Math.ceil(Math.max(r.max, (r.min + r.max + v.rangoMin) / 2) * 10) / 10 : null,
                splitLine: { lineStyle: { color: colorBorde() } } },
       dataZoom: [{ type: "inside" }, { type: "slider", height: 18, bottom: 8, borderColor: colorBorde(),
                   labelFormatter: val => fmtFecha(val), textStyle: { color: colorTexto(), fontSize: 10 } }],
