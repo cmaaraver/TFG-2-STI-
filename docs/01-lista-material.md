@@ -17,6 +17,7 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 | Nodo | LILYGO ESP32 con LoRa (modelo por confirmar) | Lee sensores, controla la bomba y envía por LoRaWAN |
 | Gateway | MikroTik wAP LR8 kit (con fuente 24 V e inyector PoE) | Recibe LoRaWAN y reenvía a la Raspberry |
 | Servidor completo | Raspberry Pi 5 4 GB | ChirpStack, MQTT, base de datos, web, DuckDNS, NAT, NTP |
+| Almacenamiento de la Raspberry | microSD 64 GB | Sistema y datos (sin SSD NVMe, decisión de 2026-09-29) |
 | Oxígeno disuelto + temperatura | DFRobot SEN0681 (RS485, 10-30 V, 0,2 W) | Sensor principal; su temperatura compensa el pH |
 | pH | DFRobot SEN0169-V2 (sonda industrial) | Inmersión continua dentro del depósito |
 | Nivel de agua | DFRobot KIT0139 (4-20 mA) | Nivel del depósito (evaporación, alarma de rellenar) |
@@ -110,7 +111,6 @@ retorno por la tapa al mismo depósito. Como no hay cámara que vaciar, **no hac
 |---|---|---|
 | 1 | Adaptador USB 3.0 a Gigabit Ethernet (chip Realtek RTL8153) | Salida a la red del instituto (funciona sin drivers) |
 | 2 | Latiguillos Cat6 (+ 1 cable Cat6 exterior si el wAP va en fachada) | Raspberry-inyector PoE y red del instituto (sin switch: solo está el wAP) |
-| 1 | SSD NVMe 256 GB + Raspberry Pi M.2 HAT+ | La SD se corrompe con escrituras continuas |
 | 1 | Batería RTC oficial Raspberry Pi 5 | Mantener la hora sin corriente ni Internet |
 | 1 | Fuente oficial Raspberry Pi 27 W USB-C + Active Cooler | Estabilidad |
 | 1 | SAI pequeño (opcional) | Evitar corrupción por cortes |

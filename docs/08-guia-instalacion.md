@@ -135,7 +135,8 @@ da 4,00 ± 0,1; `rs485_err=0`; la temperatura cuadra con un termómetro; `bat` c
 
 Pasos detallados en `raspberry/README.md` (apartados 1 a 3). Resumen:
 
-1. Raspberry Pi OS Lite 64 bits en el NVMe, SSH con clave, `apt full-upgrade`, Docker.
+1. Raspberry Pi OS Lite 64 bits en la microSD de 64 GB, SSH con clave, `apt full-upgrade`, Docker y límite del diario
+   del sistema para no desgastar la tarjeta.
 2. Red **con teclado y monitor conectados** (para no quedarse fuera):
    `IF_LORA=eth0 IF_INSTITUTO=eth1 ./red/configurar-red.sh` y copiar `red/chrony.conf`.
 3. `cp .env.example .env`, cambiar **todas** las contraseñas y poner el subdominio y el token de DuckDNS.

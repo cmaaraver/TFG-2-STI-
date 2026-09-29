@@ -7,12 +7,21 @@
 #            docker compose up -d --build
 name: calidad-agua
 
+# La Raspberry arranca desde una microSD de 64 GB: los registros de cada contenedor se limitan
+# a 3 ficheros de 10 MB para que no crezcan sin fin ni desgasten la tarjeta.
+x-registros: &registros
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   db:
     # PostgreSQL 16 + TimescaleDB. Una sola instancia con dos bases de datos:
     # "calidad_agua" (medidas) y "chirpstack" (servidor LoRaWAN)
     image: timescale/timescaledb:latest-pg16
     restart: unless-stopped
+    logging: *registros
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -34,6 +43,7 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    logging: *registros
     command: redis-server --save 300 1 --save 60 100 --appendonly no
     volumes:
       - datos_redis:/data
@@ -45,6 +55,7 @@ services:
   mosquitto:
     image: eclipse-mosquitto:2
     restart: unless-stopped
+    logging: *registros
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - datos_mosquitto:/mosquitto/data
@@ -58,6 +69,7 @@ services:
     image: chirpstack/chirpstack:4
     command: -c /etc/chirpstack
     restart: unless-stopped
+    logging: *registros
     environment:
       CHIRPSTACK_DB_PASSWORD: ${CHIRPSTACK_DB_PASSWORD}
       CHIRPSTACK_API_SECRET: ${CHIRPSTACK_API_SECRET}
@@ -74,6 +86,7 @@ services:
   gateway-bridge:
     image: chirpstack/chirpstack-gateway-bridge:4
     restart: unless-stopped
+    logging: *registros
     environment:
       - INTEGRATION__MQTT__EVENT_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/event/{{ .EventType }}
       - INTEGRATION__MQTT__STATE_TOPIC_TEMPLATE=eu868/gateway/{{ .GatewayID }}/state/{{ .StateType }}
@@ -89,6 +102,7 @@ services:
   ingestor:
     build: ./ingestor
     restart: unless-stopped
+    logging: *registros
     environment:
       MQTT_HOST: mosquitto
       MQTT_PORT: 1883
@@ -101,6 +115,7 @@ services:
   web:
     build: ./web
     restart: unless-stopped
+    logging: *registros
     environment:
       PG_DSN: postgresql://web_lector:${WEB_DB_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
@@ -109,6 +124,7 @@ services:
   caddy:
     build: ./caddy
     restart: unless-stopped
+    logging: *registros
     environment:
       DUCKDNS_DOMINIO: ${DUCKDNS_DOMINIO}
       DUCKDNS_TOKEN: ${DUCKDNS_TOKEN}
@@ -129,6 +145,7 @@ services:
     # Actualiza cada 5 min la IP pública del instituto en <dominio>.duckdns.org
     image: lscr.io/linuxserver/duckdns:latest
     restart: unless-stopped
+    logging: *registros
     environment:
       SUBDOMAINS: ${DUCKDNS_DOMINIO}
       TOKEN: ${DUCKDNS_TOKEN}

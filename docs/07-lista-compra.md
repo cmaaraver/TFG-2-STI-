@@ -6,7 +6,8 @@ La misma lista en hoja de cálculo, para pasarla al centro: [`07-lista-compra.xl
 Precios unitarios con IVA salvo DFRobot (en dólares, sin IVA ni envío). Pueden cambiar.
 
 No hace falta comprar: el convertidor 4-20 mA (viene con el KIT0139), el switch (con solo el wAP no hace falta),
-el PC de datos (todo va en la Raspberry) ni el DC-DC para el DFR1120 (admite 12-24 V según la wiki de DFRobot).
+el PC de datos (todo va en la Raspberry), el DC-DC para el DFR1120 (admite 12-24 V según la wiki de DFRobot)
+ni SSD para la Raspberry (se queda con la microSD de 64 GB).
 
 ## 1. Electrónica del nodo
 
@@ -115,8 +116,6 @@ Subtotal: **502,84 €**
 
 | Cant. | Artículo | Tienda | Precio ud. | Subtotal | Notas |
 |---|---|---|---|---|---|
-| 1 | [SSD NVMe M.2 2242 256 GB Waveshare](https://www.kubii.com/es/medios-de-almacenamiento/4997-disco-duro-ssd-nvme-m2-2242-3272496325340.html) | Kubii | 79,90 € | 79,90 € | El SSD oficial está agotado |
-| 1 | [Raspberry Pi M.2 HAT+ oficial](https://www.kubii.com/es/hat-dac-modulos/4114-m2-hat-para-raspberry-pi-5-5056561803463.html) | Kubii | 14,10 € | 14,10 € |  |
 | 1 | [Batería RTC oficial Raspberry Pi 5](https://www.kubii.com/es/baterias-pilas/4110-bateria-rtc-para-raspberry-pi-5-5056561803739.html) | Kubii | 6,00 € | 6,00 € |  |
 | 1 | [Fuente oficial Raspberry Pi 27 W USB-C](https://www.kubii.com/es/fuentes-de-alimentacion/4107-1890-fuente-de-alimentacion-raspberry-pi-27w-usb-c-3272496315761.html) | Kubii | 12,90 € | 12,90 € |  |
 | 1 | [Active Cooler oficial Raspberry Pi 5](https://www.kubii.com/es/ventiladores-disipadores-de-calor/4109-ventilador-disipador-para-raspberry-pi-5-5056561803357.html) | Kubii | 6,00 € | 6,00 € |  |
@@ -124,7 +123,7 @@ Subtotal: **502,84 €**
 | 2 | [Latiguillo UTP Cat6 1 m](https://www.electronicaembajadores.com/es/Productos/Detalle/CX3A601/) | Electrónica Embajadores | 1,38 € | 2,76 € | Raspberry-inyector PoE y red del instituto |
 | 1 | [SAI Salicru SPS 500 ONE v2 (opcional)](https://www.discoazul.com/sai-linea-interactiva-salicru-sps-500-one-v2-500va-240w-2-schuko.html) | Discoazul | 63,99 € | 63,99 € | Opcional |
 
-Subtotal: **198,60 €**
+Subtotal: **104,60 €**
 
 ## 6. Calibración y medida
 
@@ -149,9 +148,9 @@ Subtotal: **78,73 €**
 | 2. Cajas, conectores y cableado exterior | 190,83 | — |
 | 3. Circuito de agua y soporte de sondas | 168,70 | — |
 | 4. Energía autónoma (panel + batería) | 502,84 | — |
-| 5. Raspberry Pi 5 y red | 198,60 | — |
+| 5. Raspberry Pi 5 y red | 104,60 | — |
 | 6. Calibración y medida | 78,73 | — |
-| **Total** | **1.240,74 €** | **41.40 $** |
+| **Total** | **1.146,74 €** | **41.40 $** |
 
 Sin contar 5 artículos sin precio (bomba, AO3401, tapones de ventilación, gel de sílice, agua destilada; unos 40 € más)
 ni los portes de cada tienda. El SAI (64 €) es opcional.

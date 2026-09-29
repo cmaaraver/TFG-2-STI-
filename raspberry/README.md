@@ -6,13 +6,20 @@ base de datos (TimescaleDB), la web y el HTTPS con DuckDNS. Red explicada en `do
 Orden recomendado. Cada paso tiene su comprobación; no pasar al siguiente sin que funcione.
 
 ## 1. Sistema
-1. Raspberry Pi Imager → Raspberry Pi OS Lite (64-bit) → grabar en el SSD NVMe (con el M.2 HAT+).
+1. Raspberry Pi Imager → Raspberry Pi OS Lite (64-bit) → grabar en la **microSD de 64 GB** (mejor una de marca A1/A2
+   o de tipo *High Endurance*, que aguantan más escrituras).
    Opciones: hostname `rpi-lora`, usuario propio, SSH con clave pública, zona horaria Europe/Madrid.
 2. `sudo apt update && sudo apt full-upgrade -y && sudo apt install -y chrony ufw git`
 3. Docker: `curl -fsSL https://get.docker.com | sh && sudo usermod -aG docker $USER` (cerrar sesión y volver a entrar).
-4. Batería RTC oficial (recargable): añadir `dtparam=rtc_bbat_vchg=3000000` a `/boot/firmware/config.txt`.
+4. Cuidar la microSD (lo que más la estropea son las escrituras continuas):
+   - Limitar el diario del sistema: en `/etc/systemd/journald.conf` poner `SystemMaxUse=100M` y
+     `sudo systemctl restart systemd-journald`.
+   - Los registros de los contenedores ya están limitados en `docker-compose.yml` (3 × 10 MB cada uno).
+   - Los datos ocupan poco: unos 100 mensajes al día son pocos MB al año, así que no hace falta borrar medidas.
+   - Lo importante es tener copia **fuera de la tarjeta** (apartado 8) por si la SD falla.
+5. Batería RTC oficial (recargable): añadir `dtparam=rtc_bbat_vchg=3000000` a `/boot/firmware/config.txt`.
    Comprobar: `timedatectl` y `sudo hwclock -r`.
-5. `git clone https://github.com/cmaaraver/TFG-2-STI-.git && cd TFG-2-STI-/raspberry`
+6. `git clone https://github.com/cmaaraver/TFG-2-STI-.git && cd TFG-2-STI-/raspberry`
 
 ## 2. Red (con teclado y monitor conectados)
 ```bash
@@ -70,6 +77,9 @@ Probar desde un móvil con datos: `https://<dominio>.duckdns.org`. Si no se pued
 ## 8. Copias de seguridad
 `crontab -e` → `0 3 * * * $HOME/TFG-2-STI-/raspberry/backup.sh >> $HOME/backup-agua.log 2>&1`
 Guarda las dos bases de datos (medidas y ChirpStack, que tiene las claves de los nodos).
+Como todo va en la microSD, las copias hay que sacarlas de la Raspberry: por ejemplo, una vez a la semana
+`scp -r rpi-lora:TFG-2-STI-/raspberry/backups/ .` desde un PC, o a un pendrive. Si la tarjeta muere, se graba otra,
+se repiten los pasos 1-3 y se restauran las dos copias.
 Probar la restauración una vez:
 `docker compose exec -T db pg_restore -U agua_admin -d calidad_agua --clean < backups/agua_XXXX.dump`
 

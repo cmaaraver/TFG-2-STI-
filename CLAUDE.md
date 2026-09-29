@@ -133,7 +133,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - **Hecho cuando**: el monitor serie muestra valores coherentes con las soluciones patrón (±0,1 pH).
 
 ### Fase 3 — Red y servidor en la Raspberry Pi 5 (`raspberry/README.md`)
-- [ ] Raspberry Pi OS Lite 64 bits sobre NVMe, SSH con clave, usuario propio, actualizaciones.
+- [ ] Raspberry Pi OS Lite 64 bits en la microSD de 64 GB (sin NVMe, decisión de 2026-09-29), SSH con clave, usuario propio, actualizaciones.
 - [ ] Red con `raspberry/red/configurar-red.sh`: eth0 = 192.168.50.1/24 en modo compartido (DHCP + NAT)
       hacia el wAP, eth1 (USB) = red del instituto por DHCP (`docs/02`).
 - [ ] chrony como servidor NTP de la red privada; batería RTC colocada; comprobar `timedatectl`.
