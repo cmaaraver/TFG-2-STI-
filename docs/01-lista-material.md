@@ -40,7 +40,7 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 ### C1. Electrónica del nodo (dentro de la caja estanca de electrónica)
 | Cant. | Material | Motivo |
 |---|---|---|
-| 1 | ADC ADS1115 16 bits I2C (p. ej. Gravity DFR0553) | Lecturas analógicas estables (pH, nivel, batería) |
+| 1 | ADC ADS1115 16 bits I2C (Adafruit, dirección 0x48) | Lecturas analógicas estables (pH, nivel, batería) |
 | 1 | Aislador de señal analógica Gravity (DFR0504) | Aísla el pH de la masa de la bomba, que está en la misma agua |
 | 1 | Adaptador RS485↔UART aislado (3,3 V, dirección automática) | Leer el SEN0681 |
 | 1 | Convertidor DC-DC 12 V → 5 V, 1-2 A, bajo consumo en reposo (< 1 mA) | Alimentar la LILYGO y los módulos de 5 V |
