@@ -27,6 +27,7 @@ accesible desde Internet con DuckDNS.
 | Firmware de la LILYGO | [`firmware/nodo-agua/README.md`](firmware/nodo-agua/README.md) |
 | Servidor en la Raspberry: instalación con un script (`raspberry/instalar.sh`) | [`raspberry/README.md`](raspberry/README.md) |
 | Web desde Internet con DuckDNS (y qué pedir al coordinador TIC) | [`docs/09-guia-duckdns.md`](docs/09-guia-duckdns.md) |
+| Prompts para que Claude Code instale la Raspberry por SSH y grabe la LILYGO por USB | [`docs/10-prompts-claude-code.md`](docs/10-prompts-claude-code.md) |
 | Pruebas sin hardware | [`pruebas/README.md`](pruebas/README.md) |
 
 ## Cómo está organizado
