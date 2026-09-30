@@ -83,6 +83,7 @@ docs/
   07-lista-compra.xlsx        ← la misma lista en hoja de cálculo, para el centro
   08-guia-instalacion.md      ← guía de instalación completa, de la caja de material a la web funcionando
   09-guia-duckdns.md          ← DuckDNS paso a paso, qué pedir al coordinador TIC y plan B
+  10-prompts-claude-code.md   ← prompts para Claude Code: Raspberry por SSH y LILYGO por USB
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
