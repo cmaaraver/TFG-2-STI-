@@ -1,20 +1,21 @@
 # Lista de compra con enlaces
 
 Solo lo que hay que comprar (el material que ya tenemos está en `01-lista-material.md`, apartado A).
-Enlaces comprobados el 29/09/2026: todos abrían la ficha del producto con stock, salvo los marcados **SIN VERIFICAR**.
+Enlaces comprobados el 29 y 30/09/2026: todos abrían la ficha del producto con stock, salvo los marcados **SIN VERIFICAR**.
 La misma lista en hoja de cálculo, para pasarla al centro: [`07-lista-compra.xlsx`](07-lista-compra.xlsx).
-Precios unitarios con IVA salvo DFRobot (en dólares, sin IVA ni envío). Pueden cambiar.
+Todos los precios en euros, con IVA, de tiendas que venden y envían en España. Pueden cambiar.
 
 No hace falta comprar: el convertidor 4-20 mA (viene con el KIT0139), el switch (con solo el wAP no hace falta),
-el PC de datos (todo va en la Raspberry) ni el DC-DC para el DFR1120 (admite 12-24 V según la wiki de DFRobot).
+el PC de datos (todo va en la Raspberry), el DC-DC para el DFR1120 (admite 12-24 V según la wiki de DFRobot)
+ni SSD para la Raspberry (se queda con la microSD de 64 GB).
 
 ## 1. Electrónica del nodo
 
 | Cant. | Artículo | Tienda | Precio ud. | Subtotal | Notas |
 |---|---|---|---|---|---|
-| 1 | [ADC 16 bits I2C Gravity ADS1115 (DFR0553)](https://www.dfrobot.com/product-1730.html) | DFRobot (oficial) | 15.50 $ | 15.50 $ | Envío desde China; IVA y aduana aparte. Alternativa en España: Adafruit ADS1115 en Embajadores, 21,63 €: https://www.electronicaembajadores.com/es/Productos/Detalle/LCINDD7/ |
-| 1 | [Aislador de señal analógica Gravity (DFR0504)](https://www.dfrobot.com/product-1621.html) | DFRobot (oficial) | 19.90 $ | 19.90 $ | No lo vende ninguna tienda española comprobable |
-| 1 | [Adaptador RS485-UART aislado Gravity (DFR0845)](https://www.electronicaembajadores.com/es/Productos/Detalle/LCHR006/) | Electrónica Embajadores | 36,14 € | 36,14 € | En DFRobot cuesta 19,90 USD |
+| 1 | [ADC 16 bits I2C ADS1115 Adafruit (STEMMA QT)](https://www.electronicaembajadores.com/es/Productos/Detalle/LCINDD7/) | Electrónica Embajadores | 21,63 € | 21,63 € | Mismo chip y dirección 0x48 (ADDR a GND); se conecta por pines a la placa base |
+| 1 | [Aislador de señal analógica Gravity DFRobot (DFR0504)](https://opencircuit.es/producto/gravity-analog-signal-isolator) | Opencircuit | 29,50 € | 29,50 € | Trae 2 cables PH2.0. Tienda en español con precios en euros; envío a España desde 12,50 € (gratis desde 150 €) |
+| 1 | [Adaptador RS485-UART aislado Gravity (DFR0845)](https://www.electronicaembajadores.com/es/Productos/Detalle/LCHR006/) | Electrónica Embajadores | 36,14 € | 36,14 € |  |
 | 1 | [Convertidor DC-DC 12 V a 5 V 2,5 A Pololu D24V25F5 (reposo < 1 mA)](https://www.electan.com/pololu-25a-stepdown-voltage-regulator-d24v25f5-p-6473.html) | Electan | 29,26 € | 29,26 € |  |
 | 1 | [MOSFET P IRF4905 (conmutador 12 V)](https://www.electronicaembajadores.com/es/Productos/Detalle/SMTRIRF4905/) | Electrónica Embajadores | 1,28 € | 1,28 € | Sustituye al IRF9540N, que está sin stock |
 | 1 | [MOSFET P AO3401 SOT-23 (conmutador 5 V)](https://www.amazon.es/s?k=AO3401+SOT-23) | Amazon.es (búsqueda) | — | — | SIN VERIFICAR: Amazon no deja comprobarlo. Suele venir en lotes |
@@ -29,12 +30,12 @@ el PC de datos (todo va en la Raspberry) ni el DC-DC para el DFR1120 (admite 12-
 | 2 | [Tira de pines macho 2,54 mm 40 pines](https://www.electronicaembajadores.com/es/Productos/Detalle/CTO1MR40/) | Electrónica Embajadores | 0,50 € | 1,00 € |  |
 | 6 | [Borna de tornillo PCB 5,08 mm 2 vías](https://www.electronicaembajadores.com/es/Productos/Detalle/CTNA5102/) | Electrónica Embajadores | 0,30 € | 1,80 € |  |
 | 4 | [Borna de tornillo PCB 5,08 mm 3 vías](https://www.electronicaembajadores.com/es/Productos/Detalle/CTNA5103/) | Electrónica Embajadores | 0,43 € | 1,72 € |  |
-| 1 | [Cables Gravity PH2.0 3 pines (pack) FIT0896](https://www.dfrobot.com/product-2552.html) | DFRobot (oficial) | 6.00 $ | 6.00 $ |  |
+| 1 | [Cables Gravity PH2.0 3 pines a Dupont hembra, 50 cm (10 uds) FIT0769](https://opencircuit.es/producto/gravity-analog-sensor-cable-arduino-50cm-10) | Opencircuit | 4,60 € | 4,60 € | Placa de pH y aislador a los pines de la placa base. Mismo pedido que el aislador |
 | 1 | [Kit antena LoRaWAN 868 MHz exterior + cable IPEX-SMA](https://www.tiendatec.es/maker-zone/comunicaciones-redes/2762-seeed-kit-antena-lorawan-para-wm1302.html) | Tiendatec | 6,95 € | 6,95 € |  |
 | 1 | [Pigtail u.FL a SMA hembra de pasamuros 15 cm](https://www.electronicaembajadores.com/es/Productos/Detalle/CXRF001/) | Electrónica Embajadores | 5,15 € | 5,15 € | Para sacar la antena por la pared de la caja |
 | 1 | [Cable USB-A a USB-C de datos 1 m](https://www.electronicaembajadores.com/es/Productos/Detalle/CX313101/) | Electrónica Embajadores | 5,83 € | 5,83 € | Si la LILYGO es micro-USB, cambiarlo |
 
-Subtotal: **101,04 €** + **41.40 $**
+Subtotal: **156,77 €**
 
 ## 2. Cajas, conectores y cableado exterior
 
@@ -115,8 +116,6 @@ Subtotal: **502,84 €**
 
 | Cant. | Artículo | Tienda | Precio ud. | Subtotal | Notas |
 |---|---|---|---|---|---|
-| 1 | [SSD NVMe M.2 2242 256 GB Waveshare](https://www.kubii.com/es/medios-de-almacenamiento/4997-disco-duro-ssd-nvme-m2-2242-3272496325340.html) | Kubii | 79,90 € | 79,90 € | El SSD oficial está agotado |
-| 1 | [Raspberry Pi M.2 HAT+ oficial](https://www.kubii.com/es/hat-dac-modulos/4114-m2-hat-para-raspberry-pi-5-5056561803463.html) | Kubii | 14,10 € | 14,10 € |  |
 | 1 | [Batería RTC oficial Raspberry Pi 5](https://www.kubii.com/es/baterias-pilas/4110-bateria-rtc-para-raspberry-pi-5-5056561803739.html) | Kubii | 6,00 € | 6,00 € |  |
 | 1 | [Fuente oficial Raspberry Pi 27 W USB-C](https://www.kubii.com/es/fuentes-de-alimentacion/4107-1890-fuente-de-alimentacion-raspberry-pi-27w-usb-c-3272496315761.html) | Kubii | 12,90 € | 12,90 € |  |
 | 1 | [Active Cooler oficial Raspberry Pi 5](https://www.kubii.com/es/ventiladores-disipadores-de-calor/4109-ventilador-disipador-para-raspberry-pi-5-5056561803357.html) | Kubii | 6,00 € | 6,00 € |  |
@@ -124,7 +123,7 @@ Subtotal: **502,84 €**
 | 2 | [Latiguillo UTP Cat6 1 m](https://www.electronicaembajadores.com/es/Productos/Detalle/CX3A601/) | Electrónica Embajadores | 1,38 € | 2,76 € | Raspberry-inyector PoE y red del instituto |
 | 1 | [SAI Salicru SPS 500 ONE v2 (opcional)](https://www.discoazul.com/sai-linea-interactiva-salicru-sps-500-one-v2-500va-240w-2-schuko.html) | Discoazul | 63,99 € | 63,99 € | Opcional |
 
-Subtotal: **198,60 €**
+Subtotal: **104,60 €**
 
 ## 6. Calibración y medida
 
@@ -143,15 +142,15 @@ Subtotal: **78,73 €**
 
 ## Total
 
-| Bloque | €, IVA incl. | $ (DFRobot) |
-|---|---|---|
-| 1. Electrónica del nodo | 101,04 | 41.40 |
-| 2. Cajas, conectores y cableado exterior | 190,83 | — |
-| 3. Circuito de agua y soporte de sondas | 168,70 | — |
-| 4. Energía autónoma (panel + batería) | 502,84 | — |
-| 5. Raspberry Pi 5 y red | 198,60 | — |
-| 6. Calibración y medida | 78,73 | — |
-| **Total** | **1.240,74 €** | **41.40 $** |
+| Bloque | €, IVA incl. |
+|---|---|
+| 1. Electrónica del nodo | 156,77 |
+| 2. Cajas, conectores y cableado exterior | 190,83 |
+| 3. Circuito de agua y soporte de sondas | 168,70 |
+| 4. Energía autónoma (panel + batería) | 502,84 |
+| 5. Raspberry Pi 5 y red | 104,60 |
+| 6. Calibración y medida | 78,73 |
+| **Total** | **1.202,47 €** |
 
 Sin contar 5 artículos sin precio (bomba, AO3401, tapones de ventilación, gel de sílice, agua destilada; unos 40 € más)
 ni los portes de cada tienda. El SAI (64 €) es opcional.
@@ -160,4 +159,4 @@ ni los portes de cada tienda. El SAI (64 €) es opcional.
 - **Electrónica Embajadores** (Madrid): casi toda la electrónica, cajas, conectores y cables en un pedido. Pedido mínimo 10 € sin IVA.
 - **FuenteJardín** (Bollullos de la Mitación, Sevilla, tel. 955 692 234): fontanería.
 - **Kubii**: Raspberry Pi. **Solarmat** y **Damia Solar**: panel, regulador y cable solar.
-- **DFRobot**: aislador, ADS1115 y cables Gravity (envío internacional).
+- **Opencircuit** (tienda en español, precios en euros): aislador y cables Gravity de DFRobot.

@@ -25,7 +25,8 @@ accesible desde Internet con DuckDNS.
 | Maqueta, ciclo de bombeo y energía solar | [`docs/06-maqueta.md`](docs/06-maqueta.md) |
 | Índice de la memoria del TFG | [`docs/05-indice-memoria.md`](docs/05-indice-memoria.md) |
 | Firmware de la LILYGO | [`firmware/nodo-agua/README.md`](firmware/nodo-agua/README.md) |
-| Servidor en la Raspberry (Docker) | [`raspberry/README.md`](raspberry/README.md) |
+| Servidor en la Raspberry: instalación con un script (`raspberry/instalar.sh`) | [`raspberry/README.md`](raspberry/README.md) |
+| Web desde Internet con DuckDNS (y qué pedir al coordinador TIC) | [`docs/09-guia-duckdns.md`](docs/09-guia-duckdns.md) |
 | Pruebas sin hardware | [`pruebas/README.md`](pruebas/README.md) |
 
 ## Cómo está organizado
@@ -41,6 +42,7 @@ firmware/nodo-agua/        ← código de la LILYGO (PlatformIO)
   include/  src/           ← configuración, sensores, LoRaWAN, pantalla OLED
   herramientas/            ← script para generar el logo de la pantalla
 raspberry/                 ← todo el servidor
+  instalar.sh              ← instala y deja lista la Raspberry de una vez
   docker-compose.yml       ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy, DuckDNS
   .env.example             ← plantilla de contraseñas (el .env de verdad no se sube)
   configuracion/ codec/ mosquitto/ db/ ingestor/ web/ caddy/ red/
