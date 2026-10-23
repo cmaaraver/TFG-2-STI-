@@ -8,16 +8,16 @@
 #    cd TFG-2-STI-/raspberry
 #    ./instalar.sh
 #
-#  Deja listo: sistema actualizado, cuidado de la microSD, reloj RTC, Docker, las dos redes
-#  (wAP y red del instituto), NTP para el wAP, contraseñas generadas, DuckDNS, todos los
+#  Deja listo: sistema actualizado, cuidado de la microSD, reloj RTC, Docker, la red con IP fija
+#  en la VLAN 500 del instituto (red/red.env), NTP para el wAP, contraseñas generadas, DuckDNS, todos los
 #  contenedores (ChirpStack, MQTT, base de datos, web, HTTPS), firewall, copia de seguridad
 #  diaria y, si se quiere, Tailscale.
 #
 #  Se puede volver a ejecutar sin miedo: lo que ya está hecho se salta.
 #  Antes, leer docs/09-guia-duckdns.md y tener a mano el subdominio y el token de DuckDNS.
 #
-#  Opciones (variables de entorno):
-#    IF_LORA=eth0 IF_INSTITUTO=eth1 ./instalar.sh     # si las interfaces se llaman distinto
+#  La IP fija, la puerta de enlace y el DNS están en red/red.env. Se pueden cambiar ahí o al ejecutar:
+#    IF_RED=eth0 IP_RASPBERRY=172.16.50.3 DNS=172.16.50.1 ./instalar.sh
 # =====================================================================
 set -euo pipefail
 
@@ -49,33 +49,21 @@ paso "0. Comprobaciones previas"
 command -v nmcli >/dev/null || fallo "no está NetworkManager (nmcli). Usa Raspberry Pi OS Bookworm o posterior."
 sudo -v
 
-# Interfaces: eth0 (integrada) va al wAP; el adaptador USB va a la red del instituto
-IF_LORA="${IF_LORA:-eth0}"
-if [ -z "${IF_INSTITUTO:-}" ]; then
-  for i in /sys/class/net/*; do
-    n="$(basename "$i")"
-    [ "$n" = "$IF_LORA" ] && continue
-    [ -e "$i/device" ] || continue                 # solo interfaces físicas
-    [ -d "$i/wireless" ] && continue               # sin WiFi
-    [ "$(cat "$i/type")" = "1" ] || continue       # Ethernet
-    IF_INSTITUTO="$n"; break
-  done
-fi
-[ -n "${IF_INSTITUTO:-}" ] || fallo "no encuentro el adaptador USB-Ethernet. Conéctalo (con el cable del instituto) y repite."
-ip link show "$IF_LORA" >/dev/null 2>&1 || fallo "no existe la interfaz $IF_LORA."
-echo "Red del wAP (LoRa):     $IF_LORA  → 192.168.50.1/24"
-echo "Red del instituto:      $IF_INSTITUTO  → DHCP"
+# Red: un solo interfaz (eth0) con IP fija en la VLAN 500. Ya no hace falta adaptador USB.
+# shellcheck disable=SC1091
+source red/red.env
+ip link show "$IF_RED" >/dev/null 2>&1 || fallo "no existe la interfaz $IF_RED."
+echo "Red del instituto (VLAN 500): $IF_RED → $IP_RASPBERRY/$PREFIJO, puerta de enlace $PUERTA_ENLACE, DNS $DNS"
+echo "Gateway LoRa (wAP LR8):       $IP_WAP"
 
-# Si entramos por SSH justo por la interfaz que va a cambiar, nos quedaríamos fuera (CLAUDE.md, regla 8)
-if [ -n "${SSH_CONNECTION:-}" ]; then
-  ip_cliente="$(echo "$SSH_CONNECTION" | awk '{print $1}')"
-  if_ssh="$(ip route get "$ip_cliente" 2>/dev/null | grep -o 'dev [^ ]*' | awk '{print $2}')"
-  if [ "$if_ssh" = "$IF_LORA" ] && ! nmcli -t -f NAME con show --active | grep -qx red-lora; then
-    rojo "Estás conectado por SSH a través de $IF_LORA, que va a pasar a ser la red del wAP."
-    rojo "Conecta el cable del instituto al adaptador USB ($IF_INSTITUTO), entra por esa IP"
-    rojo "o usa teclado y monitor, y vuelve a ejecutar el script."
-    exit 1
-  fi
+# Si entramos por SSH con la IP del DHCP, al poner la IP fija nos quedaríamos fuera (CLAUDE.md, regla 8).
+# En ese caso se prepara la red, se reinicia y se vuelve a ejecutar el script entrando por la IP fija.
+CAMBIO_IP_PENDIENTE=n
+ip_actual="$(ip -4 -o addr show "$IF_RED" | awk '{print $4}' | cut -d/ -f1 | head -n1)"
+if [ -n "${SSH_CONNECTION:-}" ] && [ -n "$ip_actual" ] && [ "$ip_actual" != "$IP_RASPBERRY" ]; then
+  amarillo "Estás por SSH con la IP $ip_actual. La IP fija $IP_RASPBERRY se aplicará al reiniciar;"
+  amarillo "el script se para después de configurar la red para que no se corte a medias."
+  CAMBIO_IP_PENDIENTE=s
 fi
 
 # ---------- 1. Datos que hay que preguntar ----------
@@ -147,13 +135,18 @@ sudo usermod -aG docker "$USUARIO"
 sudo systemctl enable --now docker
 
 # ---------- 6. Red ----------
-paso "6. Red: $IF_LORA → wAP (192.168.50.1) y $IF_INSTITUTO → instituto (DHCP)"
-IF_LORA="$IF_LORA" IF_INSTITUTO="$IF_INSTITUTO" ./red/configurar-red.sh
-sudo cp red/chrony.conf /etc/chrony/chrony.conf
+paso "6. Red: $IF_RED → $IP_RASPBERRY/$PREFIJO (VLAN 500), puerta de enlace $PUERTA_ENLACE"
+./red/configurar-red.sh
+# chrony sirve la hora al wAP (la IP del wAP sale de red/red.env)
+sed "s|^allow .*|allow $IP_WAP|" red/chrony.conf | sudo tee /etc/chrony/chrony.conf >/dev/null
 sudo systemctl restart chrony
+if [ "$CAMBIO_IP_PENDIENTE" = "s" ]; then
+  verde "Red preparada. Ahora: sudo reboot, entra con  ssh $USUARIO@$IP_RASPBERRY  y vuelve a ejecutar ./instalar.sh"
+  exit 0
+fi
 echo "Esperando salida a Internet..."
 for _ in $(seq 1 30); do ping -c1 -W2 1.1.1.1 >/dev/null 2>&1 && break; sleep 2; done
-ping -c1 -W2 1.1.1.1 >/dev/null 2>&1 || fallo "sin Internet por $IF_INSTITUTO. Revisa el cable y vuelve a ejecutar."
+ping -c1 -W2 1.1.1.1 >/dev/null 2>&1 || fallo "sin Internet por $IF_RED. Revisa el cable, que el puerto del switch esté en la VLAN 500 y la puerta de enlace $PUERTA_ENLACE."
 
 # ---------- 7. Contenedores ----------
 paso "7. Arrancando todos los servicios (la primera vez compila Caddy: 5-15 min)"
@@ -167,7 +160,7 @@ verde "Web funcionando."
 
 # ---------- 8. Firewall ----------
 paso "8. Firewall"
-IF_LORA="$IF_LORA" IF_INSTITUTO="$IF_INSTITUTO" ./red/firewall.sh
+./red/firewall.sh
 
 # ---------- 9. Copia de seguridad diaria ----------
 paso "9. Copia de seguridad diaria (03:00)"
@@ -186,13 +179,12 @@ if [ "$INSTALAR_TAILSCALE" = "s" ]; then
 fi
 
 # ---------- Resumen ----------
-ip_instituto="$(ip -4 -o addr show "$IF_INSTITUTO" | awk '{print $4}' | cut -d/ -f1)"
-mac_instituto="$(cat "/sys/class/net/$IF_INSTITUTO/address" 2>/dev/null || echo "(ver ip link)")"
+ip_instituto="$IP_RASPBERRY"
 echo
 verde "=================== INSTALACIÓN TERMINADA ==================="
 echo "Web en el instituto:   http://$ip_instituto"
 echo "Web desde Internet:    https://$DUCKDNS_DOMINIO.duckdns.org  (cuando el TIC abra el 443, ver docs/09)"
-echo "Pedir al coordinador TIC: reservar $ip_instituto para la MAC $mac_instituto y reenviar TCP 443."
+echo "Pedir al coordinador TIC: dejar $IP_RASPBERRY y $IP_WAP fuera del DHCP de la VLAN 500 y reenviar TCP 443 → $IP_RASPBERRY."
 if [ "$INSTALAR_TAILSCALE" = "s" ]; then
   echo "ChirpStack:            la dirección https://...ts.net:8443 que sale en: sudo tailscale serve status"
 else
@@ -200,7 +192,7 @@ else
 fi
 echo
 amarillo "Queda a mano (docs/08-guia-instalacion.md, pasos 5 y 6):"
-echo "  1. Configurar el wAP LR8 (IP 192.168.50.2, servidor LoRa 192.168.50.1:1700)."
+echo "  1. Configurar el wAP LR8 (IP $IP_WAP/$PREFIJO, puerta de enlace $PUERTA_ENLACE, NTP y servidor LoRa $IP_RASPBERRY:1700)."
 echo "  2. ChirpStack: cambiar la contraseña de admin/admin, dar de alta el gateway, el perfil con"
 echo "     codec/decoder.js y el dispositivo; copiar sus claves a firmware/nodo-agua/include/secrets.h."
 echo "  3. Guardar una copia del fichero .env fuera de la Raspberry (tiene todas las contraseñas)."

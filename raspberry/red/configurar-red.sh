@@ -1,42 +1,41 @@
 #!/bin/bash
-# Configura las dos redes de la Raspberry con NetworkManager (Raspberry Pi OS Bookworm o posterior).
-#   IF_LORA:      puerto integrado, va al inyector PoE del wAP LR8 → red privada 192.168.50.0/24
-#   IF_INSTITUTO: adaptador USB-Ethernet, va a la red del instituto (192.168.155.x por DHCP)
-# Comprobar los nombres con "ip link" antes de ejecutar. Si se hace por SSH, entrar por el
-# adaptador USB (IF_INSTITUTO), nunca por IF_LORA: al cambiarla te quedas fuera (CLAUDE.md, regla 8).
-# Se puede ejecutar varias veces: si los perfiles ya existen, se modifican en vez de duplicarse.
+# Configura la red de la Raspberry con NetworkManager (Raspberry Pi OS Bookworm o posterior).
+# La Raspberry y el wAP LR8 están los dos en la VLAN 500 del instituto, así que basta con UN
+# interfaz (eth0, el integrado) con IP fija. Ya no hay red privada, ni NAT, ni adaptador USB.
+# Los datos (IP, máscara, puerta de enlace, DNS) están en red.env.
+#
+# OJO (CLAUDE.md, regla 8): si se ejecuta por SSH y la Raspberry todavía tiene otra IP (la que le
+# dio el DHCP), al aplicar la IP fija se corta la sesión. Por eso, en ese caso, el perfil se deja
+# preparado y se aplica al reiniciar; después se entra por SSH a la IP fija.
+# Se puede ejecutar varias veces: si el perfil ya existe, se modifica en vez de duplicarse.
 set -euo pipefail
-IF_LORA=${IF_LORA:-eth0}
-IF_INSTITUTO=${IF_INSTITUTO:-eth1}
+cd "$(dirname "$0")"
+# shellcheck disable=SC1091
+source ./red.env
 
-# crear_o_modificar <nombre> <interfaz> <opciones de nmcli...>
-crear_o_modificar() {
-  local nombre="$1" interfaz="$2"; shift 2
-  if nmcli -t -f NAME con show | grep -qx "$nombre"; then
-    sudo nmcli con modify "$nombre" connection.interface-name "$interfaz" "$@"
-  else
-    sudo nmcli con add type ethernet ifname "$interfaz" con-name "$nombre" "$@"
-  fi
-}
-
-# Red privada del gateway: IP fija + DHCP + NAT automáticos (modo "shared")
-crear_o_modificar red-lora "$IF_LORA" \
-  ipv4.method shared ipv4.addresses 192.168.50.1/24 ipv6.method disabled \
+NOMBRE=red-vlan500
+if nmcli -t -f NAME con show | grep -qx "$NOMBRE"; then
+  sudo nmcli con modify "$NOMBRE" connection.interface-name "$IF_RED"
+else
+  sudo nmcli con add type ethernet ifname "$IF_RED" con-name "$NOMBRE"
+fi
+sudo nmcli con modify "$NOMBRE" \
+  ipv4.method manual ipv4.addresses "$IP_RASPBERRY/$PREFIJO" \
+  ipv4.gateway "$PUERTA_ENLACE" ipv4.dns "$DNS" ipv4.ignore-auto-dns yes \
+  ipv6.method disabled \
   connection.autoconnect yes connection.autoconnect-priority 20
 
-# Red del instituto por DHCP. Se pide al coordinador TIC que reserve la IP para la MAC
-# del adaptador (se ve con "ip link show $IF_INSTITUTO"), así el reenvío de puertos no se rompe.
-crear_o_modificar red-instituto "$IF_INSTITUTO" \
-  ipv4.method auto ipv6.method auto \
-  connection.autoconnect yes connection.autoconnect-priority 10
+# El perfil que crea Raspberry Pi OS por defecto (DHCP) se deja sin arranque automático
+# para que no compita con el nuestro en el mismo puerto.
+nmcli -t -f NAME,DEVICE con show | awk -F: -v n="$NOMBRE" -v d="$IF_RED" '$1!=n && $2==d {print $1}' |
+  while read -r otro; do sudo nmcli con modify "$otro" connection.autoconnect no; done
 
-sudo nmcli con up red-lora
-# Si el adaptador del instituto ya tiene IP (por ejemplo, estamos entrando por él con SSH) no se
-# reinicia ahora para no cortar la sesión: el perfil nuevo se usa solo en el siguiente arranque.
-if ip -4 addr show "$IF_INSTITUTO" | grep -q "inet "; then
-  echo "$IF_INSTITUTO ya tiene IP: el perfil red-instituto se aplicará al reiniciar."
-else
-  sudo nmcli con up red-instituto
+ip_actual="$(ip -4 -o addr show "$IF_RED" | awk '{print $4}' | cut -d/ -f1 | head -n1)"
+if [ -n "${SSH_CONNECTION:-}" ] && [ -n "$ip_actual" ] && [ "$ip_actual" != "$IP_RASPBERRY" ]; then
+  echo "Estás por SSH con la IP $ip_actual: el perfil $NOMBRE se aplicará al reiniciar."
+  echo "Después: ssh $(id -un)@$IP_RASPBERRY"
+  exit 0
 fi
-ip -4 addr show "$IF_LORA"
-ip -4 addr show "$IF_INSTITUTO"
+sudo nmcli con up "$NOMBRE"
+ip -4 addr show "$IF_RED"
+ip route | grep default

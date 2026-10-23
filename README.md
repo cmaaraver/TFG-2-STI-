@@ -19,7 +19,7 @@ accesible desde Internet con DuckDNS.
 | Plan del proyecto, fases y tareas pendientes | [`CLAUDE.md`](CLAUDE.md) |
 | Material (lo que hay y lo que falta) | [`docs/01-lista-material.md`](docs/01-lista-material.md) |
 | Lista de compra con enlaces para el centro | [`docs/07-lista-compra.md`](docs/07-lista-compra.md) · [hoja de cálculo](docs/07-lista-compra.xlsx) |
-| Red: IPs, puertos, NAT, DuckDNS, seguridad | [`docs/02-arquitectura-red.md`](docs/02-arquitectura-red.md) |
+| Red: VLAN 500 e IPs, puertos, DuckDNS, seguridad | [`docs/02-arquitectura-red.md`](docs/02-arquitectura-red.md) |
 | Conexionado del nodo e instalación de las sondas | [`docs/03-conexionado-nodo.md`](docs/03-conexionado-nodo.md) |
 | Formato del mensaje LoRaWAN | [`docs/04-formato-payload.md`](docs/04-formato-payload.md) |
 | Maqueta, ciclo de bombeo y energía solar | [`docs/06-maqueta.md`](docs/06-maqueta.md) |

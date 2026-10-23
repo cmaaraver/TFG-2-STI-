@@ -22,23 +22,26 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
 ## 2. Arquitectura (resumen)
 
 ```
- [Sondas] → [LILYGO ESP32 LoRa] ~~~ LoRaWAN EU868 ~~~ [MikroTik wAP LR8]
-                 (nodo solar)                               │ PoE, 192.168.50.2
+ [Sondas] → [LILYGO ESP32 LoRa] ~~~ LoRaWAN EU868 ~~~ [MikroTik wAP LR8] 172.16.50.2 (fija)
+                 (nodo solar)                               │ PoE (inyector)
                                                             ▼
-                                  eth0 192.168.50.1 ┌─────────────────┐
-                                                    │ Raspberry Pi 5  │ todo el servidor en Docker
-                                  eth1 (USB, DHCP)  └────────┬────────┘
-                                                             ▼
-                                   red del instituto 192.168.155.x → Internet
-                                   https://<nombre>.duckdns.org (web pública)
+                              switch del instituto, VLAN 500 (172.16.50.0/24, sin etiquetar)
+                                     │                                   │
+                  ┌─────────────────┐│                                   │ puerta de enlace 172.16.50.1
+                  │ Raspberry Pi 5  ├┘ eth0 172.16.50.3 (fija)           ▼ (router del instituto) → Internet
+                  └─────────────────┘ todo el servidor en Docker    https://<nombre>.duckdns.org (web pública)
 ```
+
+Red (decisión de 2026-10-23): VLAN 500 del instituto, puerta de enlace 172.16.50.1, wAP en 172.16.50.2 y
+Raspberry en 172.16.50.3, las dos con IP fija. Sin red privada, sin NAT en la Raspberry y sin adaptador USB.
+Los datos de red están solo en `raspberry/red/red.env`.
 
 | Equipo | Función | Software |
 |---|---|---|
 | LILYGO (nodo, maqueta exterior) | Remueve el agua del depósito con la bomba, mide caudal y sensores, envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
 | DFR1120-868 (maqueta, fase 7) | Relé controlado por downlink (llenado, alarma o anulación de la bomba) | Configuración propia de DFRobot |
 | wAP LR8 | Gateway LoRaWAN, reenvía por UDP 1700 | RouterOS (packet forwarder nativo) |
-| Raspberry Pi 5 | **Todo el servidor**: router/NAT/firewall, NTP, servidor LoRaWAN, MQTT, base de datos, web con HTTPS y DuckDNS | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy + DuckDNS |
+| Raspberry Pi 5 | **Todo el servidor**: firewall, NTP para el wAP, servidor LoRaWAN, MQTT, base de datos, web con HTTPS y DuckDNS | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy + DuckDNS |
 
 Ya **no hay PC de datos ni Grafana** (decisión de 2026-09-29): la base de datos y una web propia
 van en la Raspberry.
@@ -74,7 +77,7 @@ README.md                     ← portada del repositorio con el índice de todo
 CLAUDE.md                     ← este plan
 docs/
   01-lista-material.md        ← material disponible y lista de compra
-  02-arquitectura-red.md      ← IPs, NAT, NTP, acceso remoto, seguridad
+  02-arquitectura-red.md      ← VLAN 500 e IPs, NTP, acceso remoto, seguridad
   03-conexionado-nodo.md      ← cómo cablear y montar la LILYGO y los sensores
   04-formato-payload.md       ← formato binario del mensaje LoRaWAN (v2, con caudal)
   05-indice-memoria.md        ← índice provisional de la memoria
@@ -100,7 +103,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
   ingestor/                   ← MQTT → TimescaleDB
   web/                        ← API (FastAPI) + página en tiempo real con gráficas (ECharts)
   caddy/                      ← HTTPS con certificado de Let's Encrypt por DNS de DuckDNS
-  red/                        ← NetworkManager, chrony y firewall
+  red/                        ← red.env (IPs de la VLAN 500), NetworkManager, chrony y firewall
   backup.sh                   ← copia diaria de las dos bases de datos
 ```
 
@@ -116,9 +119,11 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [ ] Modelo concreto de bomba (12 V, ≤ 1 A) y de caudalímetro (factor de pulsos por L/min).
 - [ ] Consumo real del DFR1120 en reposo (si es clase C escucha siempre y gasta más).
 - [ ] Registros Modbus del SEN0681 (copiar de la wiki oficial de DFRobot).
-- [ ] Permiso del coordinador TIC del centro para conectar la Raspberry a la red del instituto y usar Tailscale.
-- [ ] Subred real del instituto (en principio 192.168.155.x) y si el centro tiene IP pública propia.
-- [ ] Permiso del coordinador TIC para reservar la IP de la Raspberry y reenviar el puerto 443 (DuckDNS). Si no, plan B con Tailscale Funnel.
+- [ ] Permiso del coordinador TIC del centro para conectar la Raspberry y el wAP a la VLAN 500 y usar Tailscale.
+- [x] Red: VLAN 500, puerta de enlace 172.16.50.1, wAP 172.16.50.2 y Raspberry 172.16.50.3 con IP fija (2026-10-23).
+- [ ] Confirmar con el TIC: máscara /24, DNS (se supone 172.16.50.1), tomas del switch en VLAN 500 sin etiquetar
+      y que .2 y .3 quedan fuera del DHCP. Si cambia algo, se toca solo `raspberry/red/red.env`.
+- [ ] Si el centro tiene IP pública propia y permiso del TIC para reenviar el puerto 443 a 172.16.50.3 (DuckDNS). Si no, plan B con Tailscale Funnel.
 
 ## 6. Fases, tareas y criterios de aceptación
 
@@ -137,12 +142,12 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 
 ### Fase 3 — Red y servidor en la Raspberry Pi 5 (`raspberry/README.md`)
 - [ ] Raspberry Pi OS Lite 64 bits en la microSD de 64 GB (sin NVMe, decisión de 2026-09-29), SSH con clave, usuario propio, actualizaciones.
-- [ ] Red con `raspberry/red/configurar-red.sh`: eth0 = 192.168.50.1/24 en modo compartido (DHCP + NAT)
-      hacia el wAP, eth1 (USB) = red del instituto por DHCP (`docs/02`).
-- [ ] chrony como servidor NTP de la red privada; batería RTC colocada; comprobar `timedatectl`.
+- [ ] Red con `raspberry/red/configurar-red.sh`: eth0 = 172.16.50.3/24 fija en la VLAN 500, puerta de enlace
+      y DNS 172.16.50.1 (`raspberry/red/red.env`, `docs/02`).
+- [ ] chrony como servidor NTP para el wAP (172.16.50.2); batería RTC colocada; comprobar `timedatectl`.
 - [ ] `.env` rellenado y `docker compose up -d --build`: ChirpStack v4 (eu868, MQTT **QoS 1**),
       Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web, Caddy y DuckDNS.
-- [ ] wAP LR8: IP estática 192.168.50.2, NTP → 192.168.50.1, servidor LoRa → 192.168.50.1:1700.
+- [ ] wAP LR8: IP estática 172.16.50.2/24, puerta de enlace 172.16.50.1, NTP → 172.16.50.3, servidor LoRa → 172.16.50.3:1700.
 - [ ] Alta en ChirpStack: gateway (EUI del wAP), perfil de dispositivo EU868 / LoRaWAN 1.1 / OTAA / clase A,
       codec `decoder.js`, dispositivo con DevEUI y claves.
 - [ ] Firewall con `raspberry/red/firewall.sh`.
@@ -157,7 +162,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 
 ### Fase 5 — Acceso remoto
 - [ ] DuckDNS: cuenta, subdominio y token en `.env`; Caddy obtiene el certificado HTTPS.
-- [ ] Coordinador TIC: reserva de IP de la Raspberry y reenvío del TCP 443. Si no es posible, `tailscale funnel`.
+- [ ] Coordinador TIC: 172.16.50.2 y .3 fuera del DHCP de la VLAN 500 y reenvío del TCP 443 a 172.16.50.3. Si no es posible, `tailscale funnel`.
 - [ ] Tailscale en la Raspberry y en los equipos del grupo; ChirpStack solo por `tailscale serve`.
 - **Hecho cuando**: se ve la web desde un móvil con datos móviles, fuera del instituto.
 

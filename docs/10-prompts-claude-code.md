@@ -35,7 +35,7 @@ leer lo que va a ejecutar antes de aceptar.
 
 | Hueco | Dónde se saca | Prompt |
 |---|---|---|
-| `<<IP_RASPBERRY>>` | IP que da el instituto al **adaptador USB-Ethernet** de la Raspberry (router, `hostname -I` con teclado y monitor, o `ping rpi-lora.local`) | 1 |
+| `<<IP_INICIAL>>` | IP que tiene la Raspberry **antes** de instalar: la que le da el DHCP de la VLAN 500 al primer arranque (`hostname -I` con teclado y monitor, o `ping rpi-lora.local`). Si ya se le puso a mano la fija, es `172.16.50.3` | 1 |
 | `<<USUARIO_RASPBERRY>>` | Usuario creado en Raspberry Pi Imager | 1 |
 | `<<SUBDOMINIO_DUCKDNS>>` | `docs/09-guia-duckdns.md`, apartado 1 (solo el nombre, sin `.duckdns.org`) | 1 |
 | Token de DuckDNS | Página de DuckDNS. **No se pega en el prompt**: se mete en una variable de entorno antes de abrir Claude Code (ver abajo) | 1 |
@@ -52,32 +52,40 @@ claude
 
 Claude Code hereda la variable y la usa como `$DUCKDNS_TOKEN` sin tener que verla ni escribirla en el chat.
 
+La IP fija de la Raspberry (`172.16.50.3`), la del wAP (`172.16.50.2`) y la puerta de enlace (`172.16.50.1`, VLAN 500)
+ya están en el prompt y en `raspberry/red/red.env`, no hay que rellenarlas. El PC con Claude Code tiene que llegar a
+la VLAN 500 (estar conectado a ella o que el centro deje pasar el tráfico desde la red del aula).
+
 ## 2. Prompt 1: instalar la Raspberry Pi 5 por SSH
 
 Antes: la microSD grabada con **Raspberry Pi OS Lite 64 bits** (Bookworm o posterior, que traen NetworkManager),
-el **cable del instituto en el adaptador USB-Ethernet**, el puerto integrado (eth0) al inyector PoE del wAP y
-teclado y monitor a mano por si acaso (CLAUDE.md, regla 8).
+el puerto integrado (eth0) en una toma del switch de la **VLAN 500** (sin etiquetar) y teclado y monitor a mano
+por si acaso (CLAUDE.md, regla 8). Ya no se usa adaptador USB-Ethernet.
 
 ````text
 Eres mi ayudante para instalar el servidor de mi TFG en una Raspberry Pi 5 por SSH. Estás abierto en la carpeta
 del repositorio https://github.com/cmaaraver/TFG-2-STI- (rama main) en mi PC con Windows. Responde siempre en español.
 
 DATOS
-- Raspberry: usuario <<USUARIO_RASPBERRY>>, IP <<IP_RASPBERRY>> (es la IP del adaptador USB-Ethernet, red del instituto).
+- Red: VLAN 500 del instituto, máscara /24, puerta de enlace 172.16.50.1. Raspberry con IP fija 172.16.50.3 y gateway
+  LoRa (wAP LR8) con IP fija 172.16.50.2. Estos datos están en raspberry/red/red.env; no los cambies sin preguntarme.
+- Raspberry: usuario <<USUARIO_RASPBERRY>>. Ahora mismo tiene la IP <<IP_INICIAL>>; después de la instalación será
+  172.16.50.3 (la llamo IP_ACTUAL: al principio <<IP_INICIAL>>, y 172.16.50.3 cuando la red esté configurada).
 - Subdominio de DuckDNS: <<SUBDOMINIO_DUCKDNS>>
 - El token de DuckDNS está en la variable de entorno DUCKDNS_TOKEN. Úsala como "$DUCKDNS_TOKEN" en los comandos;
   no la imprimas nunca, no me la pidas y no la escribas en ningún archivo del repositorio.
 - Sistema de la Raspberry: Raspberry Pi OS Lite 64 bits (Bookworm o posterior), en microSD de 64 GB, sin NVMe.
 
 LEE PRIMERO (enteros) y sigue lo que dicen, sin inventar pasos ni parámetros:
-CLAUDE.md, raspberry/README.md, raspberry/instalar.sh, raspberry/red/configurar-red.sh, raspberry/.env.example,
+CLAUDE.md, raspberry/README.md, raspberry/instalar.sh, raspberry/red/red.env, raspberry/red/configurar-red.sh, raspberry/.env.example,
 docs/02-arquitectura-red.md, docs/08-guia-instalacion.md (apartados 4, 5 y 7) y docs/09-guia-duckdns.md.
 
 REGLAS
-1. Todos los comandos en la Raspberry van por: ssh -o BatchMode=yes <<USUARIO_RASPBERRY>>@<<IP_RASPBERRY>> '...'
+1. Todos los comandos en la Raspberry van por: ssh -o BatchMode=yes <<USUARIO_RASPBERRY>>@IP_ACTUAL '...'
    Para transferir archivos, scp. No cambies la configuración SSH de la Raspberry.
-2. Nunca toques eth0 a mano ni cortes la interfaz por la que estamos conectados. La SSH tiene que entrar por el
-   adaptador USB (red del instituto). Si compruebas que entramos por eth0, para y avísame.
+2. Nunca toques la red a mano (nmcli, ip) ni cortes la interfaz por la que estamos conectados. El cambio a la IP
+   fija lo hace instalar.sh: si entramos con otra IP, prepara la red, se para y pide reiniciar. No hay adaptador USB:
+   solo eth0.
 3. Los secretos (raspberry/.env, token de DuckDNS, claves LoRaWAN) no se enseñan, no se copian al repo y no se suben
    a git. El .env lo genera instalar.sh en la Raspberry con contraseñas aleatorias.
 4. instalar.sh tarda (actualiza el sistema y compila Caddy). Nunca lo lances en primer plano: déjalo corriendo en
@@ -88,8 +96,8 @@ REGLAS
 
 PASOS
 0. Comprobación inicial (un solo ssh): uname -m (tiene que ser aarch64), cat /etc/os-release, nmcli -v,
-   sudo -n true && echo SUDO_OK, ip -br a, echo $SSH_CONNECTION. Dime por qué interfaz entramos y cómo se llaman
-   las dos interfaces (la integrada va al wAP; la USB, al instituto). Si sudo pide contraseña, instalar.sh no puede
+   sudo -n true && echo SUDO_OK, ip -br a, ip route, echo $SSH_CONNECTION. Dime qué IP tiene eth0 y si ya es la
+   fija 172.16.50.3, y comprueba que la puerta de enlace es 172.16.50.1. Si sudo pide contraseña, instalar.sh no puede
    ir desatendido: explícame cómo dar sudo sin contraseña a mi usuario o si lo lanzo yo con ssh -t.
 1. En la Raspberry: sudo apt-get update && sudo apt-get install -y git. Si no existe ~/TFG-2-STI-, git clone del
    repositorio; si existe, git -C ~/TFG-2-STI- pull.
@@ -100,18 +108,24 @@ PASOS
    (si ~/TFG-2-STI-/raspberry/.env ya existe, el fichero solo lleva las dos últimas respuestas).
 3. Lanza la instalación en segundo plano:
      ssh ... 'cd ~/TFG-2-STI-/raspberry && setsid nohup ./instalar.sh < ~/respuestas-instalar.txt > ~/instalar.log 2>&1 &'
-   Si las interfaces no se llaman eth0/eth1, añade delante IF_LORA=... IF_INSTITUTO=...
+   Si el puerto integrado no se llama eth0, añade delante IF_RED=...
    Revisa con: ssh ... 'tail -n 25 ~/instalar.log; pgrep -f instalar.sh >/dev/null && echo SIGUE || echo TERMINADO'
    Cuando en el log salga el enlace de Tailscale (login.tailscale.com/...), enséñamelo para que inicie sesión
    con la cuenta del equipo, y sigue esperando.
+   Si <<IP_INICIAL>> no es 172.16.50.3, el script se para después del paso 6 con "Red preparada ... sudo reboot".
+   Entonces: pídeme permiso, sudo reboot, espera a que responda ssh <<USUARIO_RASPBERRY>>@172.16.50.3 (a partir de
+   aquí IP_ACTUAL = 172.16.50.3), deja en ~/respuestas-instalar.txt solo las dos últimas respuestas (ya existe .env)
+   y vuelve a lanzar el script igual que antes. Si tras reiniciar no responde en 172.16.50.3, para y avísame: lo
+   miro con teclado y monitor.
 4. Al terminar: borra ~/respuestas-instalar.txt y dime si salió "INSTALACIÓN TERMINADA" o en qué paso falló.
-   Enséñame el resumen del final del log (web, IP, MAC, qué pedir al coordinador TIC).
+   Enséñame el resumen del final del log (web, IP, qué pedir al coordinador TIC).
 5. Comprobaciones (las de docs/08-guia-instalacion.md apartado 4 y raspberry/README.md), con su salida resumida:
    - cd ~/TFG-2-STI-/raspberry && sudo docker compose ps → todo running, y healthy los que tienen healthcheck.
    - curl -fsS http://127.0.0.1/api/salud → {"estado":"ok"}
    - sudo docker compose logs caddy | grep -i certificate → certificado de <<SUBDOMINIO_DUCKDNS>>.duckdns.org
      (se saca por DNS de DuckDNS, no necesita el puerto 443 abierto).
-   - chronyc tracking, ip -br a (192.168.50.1 en la interfaz del wAP), sudo ufw status verbose, crontab -l.
+   - chronyc tracking, ip -br a (172.16.50.3/24 en eth0), ip route (default via 172.16.50.1), getent hosts duckdns.org,
+     sudo ufw status verbose, sudo iptables -L DOCKER-USER -n (UDP 1700 solo desde 172.16.50.2), crontab -l.
    - Prueba de la web sin el nodo: el comando mosquitto_pub del apartado "Probar la web sin el nodo" de
      raspberry/README.md, luego comprobar que la fila entra en la tabla medidas y borrar los datos de prueba
      (dev_eui 0000000000000001 en medidas, nodos y uplinks_raw), como dice ese mismo apartado.
@@ -120,9 +134,10 @@ PASOS
    (tiene todas las contraseñas). No lo ejecutes sin que te diga la carpeta.
 8. Resumen final para mí: qué ha quedado funcionando, qué ha fallado y lo que queda a mano, que NO debes hacer tú:
    - configurar el wAP LR8 (raspberry/README.md, apartado 4),
-   - entrar en ChirpStack por Tailscale o con túnel ssh -L 8080:127.0.0.1:8080 <<USUARIO_RASPBERRY>>@<<IP_RASPBERRY>>,
+   - entrar en ChirpStack por Tailscale o con túnel ssh -L 8080:127.0.0.1:8080 <<USUARIO_RASPBERRY>>@172.16.50.3,
      cambiar admin/admin y dar de alta gateway, perfil con codec/decoder.js y dispositivo (apartado 5),
-   - pedir al coordinador TIC la reserva de IP y el TCP 443 (docs/09-guia-duckdns.md).
+   - pedir al coordinador TIC que 172.16.50.2 y 172.16.50.3 queden fuera del DHCP de la VLAN 500 y el TCP 443 hacia
+     172.16.50.3 (docs/09-guia-duckdns.md).
    Apunta también los problemas que hayas encontrado y cómo se resolvieron, para la memoria (CLAUDE.md, regla 7).
 ````
 

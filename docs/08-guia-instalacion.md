@@ -137,15 +137,17 @@ Se hace con un solo script. Detalle en `raspberry/README.md` ("Instalación auto
 
 1. Crear el subdominio y el token de DuckDNS: [`09-guia-duckdns.md`](09-guia-duckdns.md), apartado 1.
 2. Grabar Raspberry Pi OS Lite 64 bits en la microSD de 64 GB con Raspberry Pi Imager (SSH con clave).
-3. Cable del instituto en el adaptador USB, eth0 al inyector PoE del wAP, y entrar por SSH por el adaptador USB.
+3. eth0 de la Raspberry a una toma del switch en la **VLAN 500** (sin etiquetar). Mejor con teclado y monitor; si se
+   entra por SSH con la IP que da el DHCP, el script prepara la IP fija **172.16.50.3**, pide reiniciar y se vuelve a
+   ejecutar entrando por `ssh usuario@172.16.50.3`. Ya no hace falta adaptador USB-Ethernet.
 4. `git clone` del repositorio y `./instalar.sh` dentro de `raspberry/`. Pide el subdominio y el token de DuckDNS
    y deja todo instalado: red, NTP, Docker, contraseñas, contenedores, firewall y copia diaria.
-5. Pedir al coordinador TIC lo que dice el final del script (reserva de IP y puerto 443, `09-guia-duckdns.md`).
+5. Pedir al coordinador TIC lo que dice el final del script (172.16.50.2 y .3 fuera del DHCP y puerto 443, `09-guia-duckdns.md`).
 
 **Comprobación**:
 - `sudo docker compose ps` → todos los servicios `running` y los que tienen healthcheck `healthy`.
 - `curl http://localhost/api/salud` → `{"estado":"ok"}`.
-- Desde un PC del aula, `http://<ip-de-la-raspberry>` → se abre la web (sin datos todavía).
+- Desde un PC de la VLAN 500, `http://172.16.50.3` → se abre la web (sin datos todavía).
 - Simular un uplink con el comando de `raspberry/README.md` ("Probar la web sin el nodo") → la tarjeta de la web
   cambia **sin recargar la página**. Después borrar los datos de prueba.
 
@@ -153,10 +155,10 @@ Se hace con un solo script. Detalle en `raspberry/README.md` ("Instalación auto
 
 ## 5. Gateway MikroTik wAP LR8
 
-Configuración en `raspberry/README.md` (apartado 4): IP 192.168.50.2, NTP y servidor LoRa hacia 192.168.50.1:1700.
-Conectarlo con su inyector PoE al puerto eth0 de la Raspberry.
+Configuración en `raspberry/README.md` (apartado 4): IP fija 172.16.50.2/24, puerta de enlace y DNS 172.16.50.1,
+NTP 172.16.50.3 y servidor LoRa 172.16.50.3:1700. Conectarlo con su inyector PoE a una toma del switch en la VLAN 500.
 
-**Comprobación**: `ping 192.168.50.2` desde la Raspberry, y `docker compose logs gateway-bridge` enseña
+**Comprobación**: `ping 172.16.50.2` desde la Raspberry, y `docker compose logs gateway-bridge` enseña
 mensajes del gateway (estadísticas cada 30 s aprox.).
 
 ---

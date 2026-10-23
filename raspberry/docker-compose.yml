@@ -96,7 +96,7 @@ services:
     depends_on:
       mosquitto: { condition: service_healthy }
     ports:
-      # Paquetes del wAP LR8. Desde la red del instituto se bloquea con red/firewall.sh
+      # Paquetes del wAP LR8 (172.16.50.2). El resto de la VLAN 500 se bloquea con red/firewall.sh
       - "1700:1700/udp"
 
   ingestor:
