@@ -11,7 +11,7 @@
 	}
 }
 
-# Acceso por IP dentro de la red del instituto o por Tailscale, sin certificado: http://<ip-raspberry>
+# Acceso por IP dentro de la red del instituto o por Tailscale, sin certificado: http://172.16.50.3
 :80 {
 	encode gzip
 	reverse_proxy web:8000 {

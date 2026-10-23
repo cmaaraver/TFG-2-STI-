@@ -1,7 +1,11 @@
 # Puesta en marcha de la Raspberry Pi 5 y del wAP LR8
 
-La Raspberry lo hace todo: router de la red del gateway, servidor LoRaWAN (ChirpStack), MQTT,
+La Raspberry lo hace todo: servidor LoRaWAN (ChirpStack), MQTT,
 base de datos (TimescaleDB), la web y el HTTPS con DuckDNS. Red explicada en `docs/02-arquitectura-red.md`.
+
+**Red**: VLAN 500 del instituto, máscara /24, puerta de enlace `172.16.50.1`. wAP LR8 en `172.16.50.2` y
+Raspberry en `172.16.50.3`, las dos con IP fija. Los datos están en `red/red.env`; si algo cambia (por
+ejemplo el DNS) se cambia ahí y se vuelve a ejecutar el script.
 
 ## Instalación automática (recomendada)
 
@@ -10,9 +14,11 @@ base de datos (TimescaleDB), la web y el HTTPS con DuckDNS. Red explicada en `do
 1. **Antes**: crear el subdominio y el token de DuckDNS (`docs/09-guia-duckdns.md`, apartado 1).
 2. Grabar la microSD con **Raspberry Pi Imager** → Raspberry Pi OS Lite (64-bit). En la configuración:
    hostname `rpi-lora`, usuario propio, **SSH con clave pública**, zona horaria Europe/Madrid.
-3. Conectar el **cable del instituto al adaptador USB-Ethernet** y el puerto integrado (eth0) al inyector
-   PoE del wAP. Encender y entrar por SSH a la IP que tenga el adaptador USB (o con teclado y monitor).
-   *No* entrar por eth0: el script la convierte en la red del wAP y cortaría la sesión (el script lo comprueba).
+3. Conectar el puerto integrado (eth0) a una toma del switch que esté en la **VLAN 500** (sin etiquetar).
+   Lo más cómodo es hacer la instalación con **teclado y monitor**. Si se hace por SSH, al principio la
+   Raspberry tendrá una IP del DHCP de la VLAN: el script prepara la IP fija `172.16.50.3`, se para y pide
+   reiniciar; después se entra con `ssh usuario@172.16.50.3` y se vuelve a ejecutar `./instalar.sh`
+   (lo que ya está hecho se salta). Así nunca se corta la sesión a medias (CLAUDE.md, regla 8).
 4. Ejecutar:
    ```bash
    sudo apt update && sudo apt install -y git
@@ -50,11 +56,13 @@ Cada paso tiene su comprobación; no pasar al siguiente sin que funcione.
 
 ## 2. Red (con teclado y monitor conectados)
 ```bash
-ip link                                   # ver cómo se llaman las interfaces
-IF_LORA=eth0 IF_INSTITUTO=eth1 ./red/configurar-red.sh
+ip link                                   # comprobar que el puerto integrado se llama eth0
+nano red/red.env                          # IP, máscara, puerta de enlace y DNS (VLAN 500)
+./red/configurar-red.sh                   # perfil "red-vlan500" con IP fija
 sudo cp red/chrony.conf /etc/chrony/chrony.conf && sudo systemctl restart chrony
 ```
-Comprobar: `ip a` (192.168.50.1 en eth0 y una 192.168.155.x en eth1), `ping -c3 8.8.8.8`, `chronyc tracking`.
+Comprobar: `ip -br a` (172.16.50.3/24 en eth0), `ip route` (default via 172.16.50.1), `ping -c3 172.16.50.1`,
+`ping -c3 8.8.8.8`, `getent hosts duckdns.org` (DNS) y `chronyc tracking`.
 El firewall se pone al final (paso 6), cuando Docker ya está funcionando.
 
 ## 3. Arrancar todo
@@ -67,16 +75,25 @@ docker compose ps                          # todo "running"/"healthy"
 Comprobar:
 - `docker compose logs -f caddy` → "certificate obtained successfully" para `<dominio>.duckdns.org`.
 - `curl http://localhost/api/salud` → `{"estado":"ok"}`.
-- Desde el aula: `http://<ip-192.168.155.x-de-la-raspberry>` → sale la web (sin datos todavía).
+- Desde un equipo de la VLAN 500: `http://172.16.50.3` → sale la web (sin datos todavía).
 
 ## 4. MikroTik wAP LR8 (RouterOS, WinBox o WebFig)
-- IP estática 192.168.50.2/24, gateway 192.168.50.1, DNS 192.168.50.1.
-- NTP cliente → 192.168.50.1.
+El inyector PoE del wAP va a una toma del switch en la **VLAN 500** (sin etiquetar). Configuración (RouterOS 7, terminal):
+```
+/ip dhcp-client disable [find]
+/ip address add address=172.16.50.2/24 interface=ether1
+/ip route add dst-address=0.0.0.0/0 gateway=172.16.50.1
+/ip dns set servers=172.16.50.1
+/system ntp client set enabled=yes servers=172.16.50.3
+```
+(Si la configuración de fábrica mete ether1 en un bridge, la IP se pone en el bridge en vez de en ether1:
+mirar `/interface bridge port print`. TODO VERIFICAR con el wAP delante.)
 - Actualizar RouterOS e instalar el paquete `iot`/`lora` si falta.
-- Servidor LoRa: `/iot lora servers add name=chirpstack address=192.168.50.1 up-port=1700 down-port=1700`
+- Servidor LoRa: `/iot lora servers add name=chirpstack address=172.16.50.3 up-port=1700 down-port=1700`
   y asignarlo al dispositivo LoRa, red "Public", y activarlo (TODO VERIFICAR comandos en la versión de RouterOS instalada).
 - Anotar el Gateway EUI (`/iot lora print`) para darlo de alta en ChirpStack.
-- Desactivar la WiFi si no se usa.
+- Desactivar la WiFi si no se usa y poner contraseña al usuario `admin` (está en una VLAN compartida).
+- Comprobar desde la Raspberry: `ping -c3 172.16.50.2`.
 
 ## 5. ChirpStack
 1. Tailscale: `curl -fsSL https://tailscale.com/install.sh | sh && sudo tailscale up`
@@ -92,12 +109,14 @@ Comprobar:
 
 ## 6. Firewall
 ```bash
-IF_LORA=eth0 IF_INSTITUTO=eth1 ./red/firewall.sh
+./red/firewall.sh
 ```
-Comprobar desde otro equipo del instituto que la web sigue entrando y que `nc -u -z <ip> 1700` no llega.
+Comprobar desde otro equipo de la VLAN que la web sigue entrando, y con `sudo iptables -L DOCKER-USER -n -v`
+que la regla del UDP 1700 deja pasar solo al wAP (172.16.50.2): el gateway sigue "online" en ChirpStack.
 
 ## 7. Acceso desde Internet
-Pedir al coordinador TIC la reserva de IP y el reenvío del puerto 443 (ver `docs/02-arquitectura-red.md`).
+Pedir al coordinador TIC que deje 172.16.50.2 y 172.16.50.3 fuera del DHCP de la VLAN 500 y que reenvíe el
+puerto 443 a 172.16.50.3 (ver `docs/09-guia-duckdns.md`).
 Probar desde un móvil con datos: `https://<dominio>.duckdns.org`. Si no se puede abrir el puerto:
 `sudo tailscale funnel --bg 80` (plan B).
 

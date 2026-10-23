@@ -53,25 +53,30 @@ por una red compartida del operador (CGNAT) y **no se puede abrir un puerto**: p
 
 ## 3. Lo que hay que pedir al coordinador TIC
 
-Al final de la instalación, el script escribe la IP y la MAC del adaptador USB de la Raspberry. Con esos
-datos se le pide:
+Trabajamos en la **VLAN 500** del instituto con IP fija: la Raspberry es `172.16.50.3` y el gateway LoRa
+(wAP LR8) `172.16.50.2`, con puerta de enlace `172.16.50.1`. Como ya tiene IP fija, no hace falta reservar
+nada por MAC. Se le pide:
 
-1. **Permiso** para conectar la Raspberry a la red del centro (si no se ha pedido ya).
-2. **Reservar la IP** de la Raspberry en el DHCP del centro para esa MAC, para que no cambie.
-3. **Reenviar el puerto TCP 443** de la IP pública del centro a esa IP de la Raspberry.
+1. **Permiso** para conectar la Raspberry y el wAP a la VLAN 500 (si no se ha pedido ya), y que las dos
+   tomas del switch estén en esa VLAN **sin etiquetar** (modo acceso).
+2. Que **172.16.50.2 y 172.16.50.3 queden fuera del rango del DHCP** de la VLAN 500, para que no se las
+   den a otro equipo.
+3. Confirmar la **máscara** (suponemos /24) y el **DNS** (suponemos 172.16.50.1).
+4. **Reenviar el puerto TCP 443** de la IP pública del centro a `172.16.50.3`.
    El 80 no hace falta: el certificado se saca por DNS.
 
 Texto para mandárselo:
 
 > Hola. Para el proyecto final de 2º de STI (monitorización de la calidad del agua con LoRaWAN) tenemos
-> una Raspberry Pi conectada a la red del centro con la MAC `XX:XX:XX:XX:XX:XX`, que ahora tiene la IP
-> `192.168.155.YY`. Necesitaríamos, si es posible:
-> 1. Reservar esa IP para esa MAC en el DHCP.
-> 2. Reenviar el puerto TCP 443 de la IP pública del centro a `192.168.155.YY:443`.
+> una Raspberry Pi con IP fija `172.16.50.3` y un gateway LoRa MikroTik con IP fija `172.16.50.2`, los dos
+> en la VLAN 500 con puerta de enlace `172.16.50.1`. Necesitaríamos, si es posible:
+> 1. Que esas dos IP queden fuera del rango del DHCP de la VLAN 500, y que las tomas donde los conectemos
+>    estén en la VLAN 500 sin etiquetar. ¿La máscara es /24 y el DNS 172.16.50.1?
+> 2. Reenviar el puerto TCP 443 de la IP pública del centro a `172.16.50.3:443`.
 >
 > Por ese puerto solo se publica una página web de consulta con HTTPS (certificado de Let's Encrypt);
 > no hay escritorio remoto ni SSH abiertos a Internet. La Raspberry tiene firewall y el resto de servicios
-> solo se usan dentro de su propia red. Si no se puede abrir el puerto, usaremos Tailscale Funnel,
+> solo los usamos nosotros (el puerto del gateway LoRa solo acepta tráfico del MikroTik). Si no se puede abrir el puerto, usaremos Tailscale Funnel,
 > que no necesita tocar el router. Gracias.
 > Carlos Maraver y Rubén Trillo
 
@@ -80,7 +85,7 @@ Texto para mandárselo:
 - Con un **móvil con datos móviles** (WiFi apagada): abrir `https://calidad-agua-viveros.duckdns.org`.
   Tiene que salir la web con el candado y los datos al momento.
 - **Desde dentro del instituto puede no funcionar el nombre** aunque desde fuera sí (muchos routers no
-  dejan entrar a la IP pública desde la red interna). Dentro del centro se usa `http://<IP de la Raspberry>`.
+  dejan entrar a la IP pública desde la red interna). Dentro del centro se usa `http://172.16.50.3`.
 
 ## 5. Plan B: sin abrir puertos (Tailscale Funnel)
 
@@ -101,6 +106,7 @@ El dominio de DuckDNS no se usaría en ese caso (el contenedor `duckdns` puede s
 |---|---|---|
 | `instalar.sh` dice que DuckDNS rechaza el token | Token o subdominio mal copiados | Copiarlos otra vez de la web de DuckDNS |
 | Caddy no saca el certificado | Token mal en `.env` o sin Internet | `sudo docker compose logs caddy`; corregir `.env` y `sudo docker compose up -d` |
-| Desde el móvil no carga (tiempo agotado) | El 443 no está reenviado o la IP de la Raspberry cambió | Revisar con el TIC la reserva de IP y el reenvío |
-| Desde el móvil carga, desde el aula no | El router no permite entrar a la IP pública desde dentro | Normal: dentro, usar la IP de la Raspberry |
+| Desde el móvil no carga (tiempo agotado) | El 443 no está reenviado a 172.16.50.3 | Revisar con el TIC el reenvío |
+| Desde el móvil carga, desde el aula no | El router no permite entrar a la IP pública desde dentro | Normal: dentro, usar `http://172.16.50.3` |
 | DuckDNS apunta a una IP antigua | Contenedor `duckdns` parado | `sudo docker compose ps duckdns` y `sudo docker compose logs duckdns` |
+| La Raspberry no sale a Internet | Toma del switch fuera de la VLAN 500, IP repetida o DNS distinto | `ping 172.16.50.1`, `ip -br a`; si falla el nombre pero no la IP, cambiar `DNS` en `raspberry/red/red.env` |

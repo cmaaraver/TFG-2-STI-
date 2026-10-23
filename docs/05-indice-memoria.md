@@ -13,7 +13,7 @@
    3.1 Arquitectura general
    3.2 Nodo de medida (hardware, conexionado, alimentación solar)
    3.3 Red LoRaWAN privada (gateway y ChirpStack)
-   3.4 Red de datos: router/NAT, NTP, firewall y acceso remoto
+   3.4 Red de datos: VLAN 500 con IP fija, NTP, firewall y acceso remoto
    3.5 Base de datos, web en tiempo real y acceso por DuckDNS
 4. Implementación
    4.1 Montaje del nodo
