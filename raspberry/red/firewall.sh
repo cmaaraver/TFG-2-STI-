@@ -14,7 +14,7 @@ RED="$(python3 -c "import ipaddress; print(ipaddress.ip_interface('$IP_RASPBERRY
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow in on tailscale0                                 # el equipo, por Tailscale (SSH, ChirpStack)
-sudo ufw allow 80,443/tcp                                       # la web (instituto e Internet)
+sudo ufw allow 80/tcp                                           # la web en el instituto (Internet entra por Tailscale Funnel)
 sudo ufw allow from "$RED" to any port 22 proto tcp             # SSH desde la VLAN (solo con clave)
 sudo ufw allow from "$IP_WAP" to any port 123 proto udp         # NTP para el wAP
 sudo ufw --force enable

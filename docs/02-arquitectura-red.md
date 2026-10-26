@@ -17,11 +17,11 @@ directamente: la Raspberry ya no hace de router ni de NAT y **no hace falta adap
                                   │               │
              Raspberry Pi 5  172.16.50.3 (fija)   │ puerta de enlace 172.16.50.1
              Docker: ChirpStack, Mosquitto,       │ (router del instituto, NAT a Internet)
-             TimescaleDB, ingestor, web,          │  reenvío TCP 443 (y 80) → 172.16.50.3
-             Caddy, DuckDNS                       ▼
-                                               Internet
+             TimescaleDB, ingestor, web,          │  (sin reenvío de puertos)
+             Caddy, Tailscale ──── salida ───────▼
+                                               Internet ── Tailscale Funnel
                                                   │
-            https://<nombre>.duckdns.org  ←  cualquier navegador o móvil
+            https://rpi-lora.<red>.ts.net  ←  cualquier navegador o móvil
 ```
 
 ## Direcciones
@@ -56,7 +56,7 @@ compatible con el wAP se podría quitar el inyector, pero eso hay que mirarlo en
 
 | Servicio | Puerto | Desde dónde se llega |
 |---|---|---|
-| Web (Caddy → web) | TCP 443 HTTPS, TCP 80 | Internet (DuckDNS), red del instituto, Tailscale |
+| Web (Caddy → web) | TCP 80 | Red del instituto y Tailscale. Desde Internet, por Tailscale Funnel (HTTPS en la red de Tailscale, no en el router del centro) |
 | Gateway Bridge | UDP 1700 | Solo desde el wAP (172.16.50.2). Bloqueado para el resto de la VLAN |
 | ChirpStack (web de administración) | TCP 8080 | Solo `127.0.0.1`; el equipo entra con `tailscale serve` |
 | Mosquitto (MQTT) | 1883 | Solo dentro de Docker, no se publica |
@@ -64,30 +64,20 @@ compatible con el wAP se podría quitar el inyector, pero eso hay que mirarlo en
 | NTP (chrony) | UDP 123 | Solo el wAP (172.16.50.2) |
 | SSH | TCP 22 | VLAN 500 (solo con clave) y Tailscale. Nunca desde Internet |
 
-## DuckDNS y acceso desde Internet
+## Acceso desde Internet: Tailscale Funnel
 
-1. Crear la cuenta en https://www.duckdns.org (con la cuenta de Google o GitHub del equipo),
-   elegir el subdominio (p. ej. `calidad-agua-viveros`) y copiar el **token** al `.env`.
-2. El contenedor `duckdns` actualiza cada 5 minutos la IP pública con la que sale el instituto.
-   DuckDNS apunta a la IP pública del centro, no a la 172.16.50.3.
-3. El contenedor `caddy` saca el certificado HTTPS de Let's Encrypt **por DNS** (reto DNS-01 con el
-   token de DuckDNS), así que funciona aunque el puerto 80 esté cerrado.
-4. **Para entrar desde fuera hace falta que el coordinador TIC**:
-   - deje **172.16.50.2 y 172.16.50.3 fuera del DHCP** de la VLAN 500 (la Raspberry ya tiene IP fija,
-     así que el reenvío de puertos siempre apunta a ella);
-   - **reenvíe el puerto TCP 443** (y el 80 si quiere) de la IP pública del centro a `172.16.50.3`.
-   - Si el centro sale a Internet por CGNAT o por la red de la Junta sin IP pública propia,
-     el reenvío es imposible. Entonces se usa el **plan B**.
-5. **Dentro del instituto** muchas veces el router no deja entrar a la IP pública desde dentro
-   (NAT loopback). Para verlo desde el aula: `http://172.16.50.3` (desde un equipo con acceso a la VLAN 500).
+El instituto **no puede abrir puertos** en su router (decisión de 2026-10-26), así que no se usa DuckDNS
+ni reenvío del 443. La web se publica con **Tailscale Funnel**:
 
-### Plan B sin abrir puertos: Tailscale Funnel
-Si no se puede abrir el 443, la web se publica con Tailscale, que sale hacia fuera:
-```bash
-sudo tailscale funnel --bg 80
-```
-La web queda en `https://<nombre-raspberry>.<red>.ts.net`, con HTTPS y sin tocar el router.
-El dominio DuckDNS no se usaría en ese caso.
+1. La Raspberry tiene Tailscale y abre una conexión **de salida** hacia sus servidores; no entra nada
+   por el router del centro.
+2. `sudo tailscale funnel --bg --https=443 http://127.0.0.1:80` publica la web (Caddy en el puerto 80) en
+   `https://rpi-lora.<red>.ts.net`, con HTTPS y certificado de Let's Encrypt que gestiona Tailscale.
+3. Cualquiera con el enlace la ve desde fuera (el móvil no necesita Tailscale). ChirpStack, en cambio, solo
+   se publica dentro del tailnet con `tailscale serve`.
+4. **Dentro del instituto** también se entra por `http://172.16.50.3` (desde un equipo con acceso a la VLAN 500).
+
+Paso a paso, comprobaciones y qué pedir al coordinador TIC: `docs/09-acceso-internet.md`.
 
 ## Acceso del equipo (administración)
 - Tailscale en la Raspberry y en los portátiles o móviles del equipo: `sudo tailscale up`.
@@ -104,7 +94,7 @@ El dominio DuckDNS no se usaría en ese caso.
 ## Firewall
 `raspberry/red/firewall.sh`:
 Como la Raspberry comparte la VLAN con otros equipos del instituto, se filtra por **IP de origen**:
-- ufw: se deniega todo lo entrante salvo Tailscale, 80/443 (la web), SSH desde la VLAN 500
+- ufw: se deniega todo lo entrante salvo Tailscale, el 80 (la web), SSH desde la VLAN 500
   y NTP solo desde el wAP.
 - Docker publica puertos saltándose ufw. Por eso el UDP 1700 se limita al wAP (172.16.50.2) con una
   regla en la cadena `DOCKER-USER` (servicio `docker-user-reglas`), y ChirpStack solo escucha en `127.0.0.1`.
@@ -114,7 +104,8 @@ Como la Raspberry comparte la VLAN con otros equipos del instituto, se filtra po
 - SSH solo con clave pública, sin contraseña, y no expuesto a Internet.
 - La web es de solo lectura: entra a la base de datos con el usuario `web_lector`, que no puede
   modificar nada.
-- Contraseñas y token de DuckDNS en `raspberry/.env`, que no se sube a git.
+- Contraseñas en `raspberry/.env`, que no se sube a git.
+- Ningún puerto abierto a Internet: lo público entra solo por Tailscale Funnel, y solo la web.
 - WiFi del wAP desactivada y su administración (WinBox/web) protegida con contraseña, porque ahora
   está en una VLAN compartida.
 - **Antes de conectar nada a la red del instituto hay que pedir permiso al coordinador TIC.**
