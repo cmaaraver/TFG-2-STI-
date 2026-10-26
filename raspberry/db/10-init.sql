@@ -21,7 +21,7 @@ CREATE TABLE medidas (
   conductividad_uscm  real,
   nivel_mm            real,
   bateria_v           real,
-  caudal_lmin         real,                     -- caudal de la bomba de recirculación
+  caudal_lmin         real,                     -- caudal de la bomba de recirculación (va aparte del nodo)
   agua_presente       boolean,
   bomba_sin_caudal    boolean,
   flags               smallint,

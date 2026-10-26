@@ -11,7 +11,7 @@ algún día se añade otro sensor (sería la versión 3).
 | Byte | Campo | Tipo | Escala | Ejemplo |
 |---|---|---|---|---|
 | 0 | versión | uint8 | — | 2 |
-| 1 | flags | uint8 | bit0 agua presente, bit1 fallo RS485, bit2 fallo ADS1115, bit3 batería baja, bit4 temperatura por defecto, bit5 bomba sin caudal | 0x01 |
+| 1 | flags | uint8 | bit0 agua presente, bit1 fallo RS485, bit2 fallo ADS1115, bit3 batería baja, bit4 temperatura por defecto, bit5 bomba sin caudal (caudal < 0,3 L/min; la bomba va aparte y el nodo solo la vigila) | 0x01 |
 | 2-3 | temperatura agua | int16 | ×100 °C | 2150 → 21,50 °C |
 | 4-5 | oxígeno disuelto | uint16 | ×100 mg/L | 812 → 8,12 mg/L |
 | 6-7 | pH | uint16 | ×100 | 734 → 7,34 |

@@ -26,8 +26,8 @@
   #define PIN_EN_5V  25
   #define PIN_AGUA   39     // solo entrada; SEN0204 por divisor 10k/20k (su salida da 5 V)
   #define PIN_MODO_CAL 36   // solo entrada, pull-up externa; a GND = calibración
-  #define PIN_BOMBA  12     // puerta del N-MOSFET de la bomba. Pull-down 100k obligatoria: GPIO12 tiene
-                            // que estar a 0 al arrancar (pin de arranque) y así la bomba no se enciende sola.
+  // GPIO12 se queda libre: la bomba va aparte, con su propia alimentación (decisión de 2026-10-26).
+  // Es pin de arranque y tiene que estar a 0 al encender, así que no se le conecta nada.
                             // No se usa GPIO2 porque es la línea MISO del lector microSD de la placa.
   #define PIN_CAUDAL 34     // solo entrada; pulsos del caudalímetro a través de divisor 5 V → 3,3 V
 #elif defined(PLACA_LILYGO_T3S3_SX1262)
@@ -52,13 +52,11 @@
 #define T_CALENTAMIENTO_MS       60000UL   // SEN0681: tiempo de respuesta <= 60 s
 #define N_MUESTRAS               15        // muestras por medida (se usa la mediana)
 #define T_REINTENTO_JOIN_S       300       // si falla el join, reintentar en 5 min
-#define T_BOMBA_MS               45000UL   // recirculación antes de medir (renueva el agua en las sondas)
-#define T_MEDIDA_CAUDAL_MS       10000UL   // últimos 10 s de bomba: contar pulsos
-#define T_REPOSO_AGUA_MS         5000UL    // bomba parada y agua quieta antes de leer el pH
+#define T_MEDIDA_CAUDAL_MS       10000UL   // contar pulsos del caudalímetro durante 10 s
 
 // ---------- Caudalímetro de efecto Hall ----------
 #define CAUDAL_HZ_POR_LMIN  7.5f   // TODO VERIFICAR con el modelo comprado (YF-S201: F = 7,5 × Q)
-#define CAUDAL_MINIMO_LMIN  0.3f   // por debajo con la bomba encendida = bomba atascada o sin agua
+#define CAUDAL_MINIMO_LMIN  0.3f   // por debajo = la bomba (que va aparte) está parada, atascada o sin agua
 
 // ---------- LoRaWAN ----------
 #define FPORT_DATOS   1

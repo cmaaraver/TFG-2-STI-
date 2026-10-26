@@ -6,7 +6,8 @@ Carlos Maraver Román y Rubén Trillo García.
 Una maqueta exterior con energía solar mide el oxígeno disuelto, el pH, la temperatura, el nivel del depósito
 y el caudal de la bomba. Envía los datos por LoRaWAN al gateway del edificio. La Raspberry Pi 5 lo hace todo:
 servidor LoRaWAN, base de datos y una web con los datos en tiempo real y gráficas del histórico,
-accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto).
+accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto):
+**https://rpi-lora.taile056a6.ts.net**. Dentro del instituto, también en `http://172.16.50.3`.
 
 ![Esquema del sistema](docs/img/esquema-sistema.png)
 
@@ -17,12 +18,12 @@ accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto
 | Tema | Documento |
 |---|---|
 | Plan del proyecto, fases y tareas pendientes | [`CLAUDE.md`](CLAUDE.md) |
-| Material (lo que hay y lo que falta) | [`docs/01-lista-material.md`](docs/01-lista-material.md) |
-| Lista de compra con enlaces para el centro | [`docs/07-lista-compra.md`](docs/07-lista-compra.md) · [hoja de cálculo](docs/07-lista-compra.xlsx) |
+| Material (ya lo tenemos todo) | [`docs/01-lista-material.md`](docs/01-lista-material.md) |
+| Lista de compra con enlaces (ya comprado, se guarda para la memoria) | [`docs/07-lista-compra.md`](docs/07-lista-compra.md) · [hoja de cálculo](docs/07-lista-compra.xlsx) |
 | Red: VLAN 500 e IPs, puertos, acceso desde Internet, seguridad | [`docs/02-arquitectura-red.md`](docs/02-arquitectura-red.md) |
 | Conexionado del nodo e instalación de las sondas | [`docs/03-conexionado-nodo.md`](docs/03-conexionado-nodo.md) |
 | Formato del mensaje LoRaWAN | [`docs/04-formato-payload.md`](docs/04-formato-payload.md) |
-| Maqueta, ciclo de bombeo y energía solar | [`docs/06-maqueta.md`](docs/06-maqueta.md) |
+| Maqueta, ciclo de medida y energía solar | [`docs/06-maqueta.md`](docs/06-maqueta.md) |
 | Índice de la memoria del TFG | [`docs/05-indice-memoria.md`](docs/05-indice-memoria.md) |
 | Firmware de la LILYGO | [`firmware/nodo-agua/README.md`](firmware/nodo-agua/README.md) |
 | Servidor en la Raspberry: instalación con un script (`raspberry/instalar.sh`) | [`raspberry/README.md`](raspberry/README.md) |
@@ -36,7 +37,7 @@ accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto
 README.md                  ← esta página
 CLAUDE.md                  ← plan maestro: arquitectura, reglas, fases y pendientes
 docs/                      ← documentación (numerada en el orden de lectura)
-  01 … 08 *.md
+  01 … 10 *.md
   07-lista-compra.xlsx     ← lista de compra en hoja de cálculo
   img/                     ← esquemas (.png y .svg editables) y capturas
 firmware/nodo-agua/        ← código de la LILYGO (PlatformIO)

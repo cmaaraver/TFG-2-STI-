@@ -33,11 +33,10 @@
 <text x="485.0" y="592.0" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Conmutador 12 V</text>
 <text x="485.0" y="610.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">P-MOSFET + NPN BC547</text>
 <text x="485.0" y="628.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">HIGH = sondas 12 V ON</text>
-<rect x="360" y="680" width="250" height="80" rx="8" fill="#fee2e2" stroke="#334155" stroke-width="2"/>
-<text x="485.0" y="698.0" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Driver de la bomba</text>
-<text x="485.0" y="716.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">N-MOSFET IRLZ44N</text>
-<text x="485.0" y="734.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">220 Ω puerta, 100 kΩ a GND</text>
-<text x="485.0" y="752.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">diodo 1N5819 en la bomba</text>
+<rect x="360" y="680" width="250" height="80" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="485.0" y="703.0" text-anchor="middle" font-size="15" font-weight="700" fill="#475569">GPIO 12 sin conectar</text>
+<text x="485.0" y="723.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">sin driver de bomba (va aparte)</text>
+<text x="485.0" y="741.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">pin de arranque: a 0 al encender</text>
 <rect x="360" y="800" width="250" height="60" rx="8" fill="#e0e7ff" stroke="#334155" stroke-width="2"/>
 <text x="485.0" y="826.0" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Divisor batería</text>
 <text x="485.0" y="844.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">100 kΩ / 22 kΩ</text>
@@ -45,16 +44,13 @@
 <circle cx="320" cy="390" r="5" fill="#d62828"/>
 <polyline points="320,605 358,605" fill="none" stroke="#d62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#fd62828)"/>
 <circle cx="320" cy="605" r="5" fill="#d62828"/>
-<polyline points="320,720 358,720" fill="none" stroke="#d62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#fd62828)"/>
-<circle cx="320" cy="720" r="5" fill="#d62828"/>
 <polyline points="320,830 358,830" fill="none" stroke="#d62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#fd62828)"/>
 <circle cx="320" cy="830" r="5" fill="#d62828"/>
 <polyline points="485,420 485,458" fill="none" stroke="#f77f00" stroke-width="3" stroke-linejoin="round" marker-end="url(#ff77f00)"/>
-<rect x="30" y="680" width="230" height="80" rx="8" fill="#dbeafe" stroke="#334155" stroke-width="2"/>
-<text x="145.0" y="707.0" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">Bomba 12 V sumergida</text>
-<text x="145.0" y="725.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">sin escobillas, ≤ 1 A</text>
-<text x="145.0" y="743.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">(+) al +12 V · (−) al driver</text>
-<polyline points="360,745 300,745 300,720 262,720" fill="none" stroke="#d62828" stroke-width="3" stroke-linejoin="round" marker-end="url(#fd62828)"/>
+<rect x="30" y="680" width="230" height="80" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="145.0" y="705.0" text-anchor="middle" font-size="15" font-weight="700" fill="#475569">Bomba 12 V sumergida</text>
+<text x="145.0" y="725.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">va APARTE, con su propia</text>
+<text x="145.0" y="743.0" text-anchor="middle" font-size="12" font-weight="400" fill="#475569">alimentación: no se conecta</text>
 <rect x="660" y="330" width="330" height="560" rx="10" fill="#111827" stroke="#000" stroke-width="2"/>
 <text x="825.0" y="360" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">LILYGO T3 V1.6.1</text>
 <text x="825.0" y="380" text-anchor="middle" font-size="12" fill="#cbd5e1">ESP32 + SX1276 868 MHz</text>
@@ -76,13 +72,12 @@
 <text x="672" y="499" font-size="12.5" font-family="monospace" fill="#fde68a">GPIO25 EN_5V</text>
 <rect x="655" y="600" width="10" height="10" fill="#fbbf24" stroke="#78350f"/>
 <text x="672" y="609" font-size="12.5" font-family="monospace" fill="#fde68a">GPIO4 EN_12V</text>
-<rect x="655" y="735" width="10" height="10" fill="#fbbf24" stroke="#78350f"/>
-<text x="672" y="744" font-size="12.5" font-family="monospace" fill="#fde68a">GPIO12 BOMBA</text>
+<rect x="655" y="735" width="10" height="10" fill="#475569" stroke="#94a3b8"/>
+<text x="672" y="744" font-size="12.5" font-family="monospace" fill="#94a3b8">GPIO12 libre</text>
 <polyline points="610,390 653,390" fill="none" stroke="#f77f00" stroke-width="3" stroke-linejoin="round" marker-end="url(#ff77f00)"/>
 <text x="614" y="382" font-size="11" fill="#f77f00">5 V</text>
 <polyline points="653,495 612,495" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linejoin="round" marker-end="url(#f1d4ed8)"/>
 <polyline points="653,605 612,605" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linejoin="round" marker-end="url(#f1d4ed8)"/>
-<polyline points="653,740 612,740" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linejoin="round" marker-end="url(#f1d4ed8)"/>
 <rect x="985" y="415" width="10" height="10" fill="#fbbf24" stroke="#78350f"/>
 <text x="978" y="424" text-anchor="end" font-size="12.5" font-family="monospace" fill="#fde68a">GPIO21 SDA</text>
 <rect x="985" y="440" width="10" height="10" fill="#fbbf24" stroke="#78350f"/>
@@ -112,7 +107,8 @@
 <text x="1150.0" y="716.0" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Divisor 10k / 20k</text>
 <text x="1150.0" y="734.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">pulsos 5 V → 3,3 V</text>
 <rect x="1040" y="765" width="220" height="50" rx="8" fill="#e0e7ff" stroke="#334155" stroke-width="2"/>
-<text x="1150.0" y="795.0" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Pull-up 10 kΩ a 3,3 V</text>
+<text x="1150.0" y="786.0" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Divisor 10k / 20k</text>
+<text x="1150.0" y="804.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">salida 5 V → 3,3 V</text>
 <rect x="1040" y="830" width="220" height="50" rx="8" fill="#e0e7ff" stroke="#334155" stroke-width="2"/>
 <text x="1150.0" y="851.0" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Puente MODO_CAL</text>
 <text x="1150.0" y="869.0" text-anchor="middle" font-size="12" font-weight="400" fill="#0f172a">pull-up 10 kΩ; a GND = calibrar</text>
@@ -173,7 +169,7 @@
 <rect x="330" y="90" width="560" height="150" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
 <text x="345" y="112" font-size="14" font-weight="700" fill="#0f172a">Leyenda</text>
 <line x1="345" y1="134" x2="395" y2="134" stroke="#d62828" stroke-width="4"/>
-<text x="405" y="138" font-size="13" fill="#0f172a">12 V (batería / sondas / bomba)</text>
+<text x="405" y="138" font-size="13" fill="#0f172a">12 V (batería / sondas)</text>
 <line x1="345" y1="156" x2="395" y2="156" stroke="#f77f00" stroke-width="4"/>
 <text x="405" y="160" font-size="13" fill="#0f172a">5 V</text>
 <line x1="345" y1="178" x2="395" y2="178" stroke="#1d4ed8" stroke-width="4"/>

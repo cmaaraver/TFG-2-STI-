@@ -39,7 +39,7 @@ leer lo que va a ejecutar antes de aceptar.
 | `<<USUARIO_RASPBERRY>>` | Usuario creado en Raspberry Pi Imager | 1 |
 | Cuenta de Tailscale | `docs/09-acceso-internet.md`, apartado 1. No se pega nada: durante la instalación Claude Code enseña un enlace y se inicia sesión en el navegador | 1 |
 | `<<PUERTO_COM>>` | Administrador de dispositivos → *Puertos (COM y LPT)*, o `pio device list` | 2 |
-| `<<MODELO_PLACA>>` | Serigrafía de la LILYGO. El firmware está preparado para la **T3 V1.6.1** (la T3-S3 aún tiene pines sin confirmar) | 2 |
+| `<<MODELO_PLACA>>` | Serigrafía de la LILYGO. La nuestra es la **T3 V1.6.1** (`T3_V1.6.1 20210104`, confirmado el 2026-10-26) | 2 |
 | `<<DEV_EUI>>`, `<<APP_KEY>>`, `<<NWK_KEY>>` | ChirpStack → dispositivo → *OTAA keys* (`docs/08-guia-instalacion.md`, apartado 6). Si aún no están, poner `AUN NO` | 2 |
 
 La IP fija de la Raspberry (`172.16.50.3`), la del wAP (`172.16.50.2`) y la puerta de enlace (`172.16.50.1`, VLAN 500)
@@ -77,7 +77,7 @@ REGLAS
    solo eth0.
 3. Los secretos (raspberry/.env, claves LoRaWAN) no se enseñan, no se copian al repo y no se suben
    a git. El .env lo genera instalar.sh en la Raspberry con contraseñas aleatorias.
-4. instalar.sh tarda (actualiza el sistema y compila Caddy). Nunca lo lances en primer plano: déjalo corriendo en
+4. instalar.sh tarda (actualiza el sistema, descarga las imágenes de Docker y construye las propias). Nunca lo lances en primer plano: déjalo corriendo en
    segundo plano en la Raspberry con su salida en un log y revísalo cada poco.
 5. Si algo falla, lee el log, explícame la causa y proponme el arreglo antes de tocar nada fuera del repo.
    No cambies parámetros de ChirpStack, RouterOS ni del hardware que no estén en el repo (CLAUDE.md, regla 2).
@@ -154,8 +154,8 @@ firmware/nodo-agua/include/secrets.example.h, docs/03-conexionado-nodo.md y docs
 REGLAS
 1. Antes de grabar, pregúntame si la antena está puesta y si no hay microSD en la placa. Sin mi "sí", no grabes.
 2. No cambies pines, registros Modbus, factores de sondas ni nada de config.h sin fuente oficial
-   (CLAUDE.md, regla 2). Lo que esté como TODO VERIFICAR se queda así; MODBUS_REGISTROS_OK sigue a 0 hasta que
-   le pasemos los registros de la wiki de DFRobot.
+   (CLAUDE.md, regla 2). Lo que esté como TODO VERIFICAR se queda así. Los registros del SEN0681 ya están
+   (wiki del SEN0680, 4800 baudios) y MODBUS_REGISTROS_OK vale 1: si rs485_err=1, dímelo antes de tocarlos.
 3. Si la placa es una T3-S3, config.h tiene un #error a propósito: para y dime qué pines faltan. No los inventes.
 4. include/secrets.h no se sube nunca a git (ya está en .gitignore). Compruébalo con git status antes de terminar.
 5. No uses el monitor serie interactivo (pio device monitor) porque se queda bloqueado: lee el puerto con el

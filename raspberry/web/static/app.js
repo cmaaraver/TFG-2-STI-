@@ -61,7 +61,7 @@ function pintarTarjetas(m, destacar) {
   const avisos = [];
   if (m) {
     if (m.agua_presente === false) avisos.push(["mal", "El sensor de presencia no detecta agua: rellenar el depósito."]);
-    if (m.bomba_sin_caudal) avisos.push(["mal", "La bomba no da caudal (atasco, sin agua o avería)."]);
+    if (m.bomba_sin_caudal) avisos.push(["mal", "No hay caudal: la bomba está apagada, atascada o sin agua."]);
     if (m.flags & 0x02) avisos.push(["aviso", "Fallo de lectura del sensor de oxígeno (RS485)."]);
     if (m.flags & 0x04) avisos.push(["aviso", "Fallo del convertidor analógico (ADS1115)."]);
     if (m.flags & 0x08) avisos.push(["aviso", "El nodo avisa de batería baja."]);

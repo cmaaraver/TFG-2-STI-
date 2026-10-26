@@ -9,7 +9,7 @@ struct Medida {
   float nivel_mm      = NAN;
   float bateria_mv    = NAN;
   float caudal_lmin   = NAN;
-  bool  bomba_sin_caudal = false;
+  bool  bomba_sin_caudal = false;   // caudal < CAUDAL_MINIMO_LMIN (el nombre se mantiene por el payload)
   bool  agua_presente = false;
   bool  fallo_rs485   = false;
   bool  fallo_ads     = false;
@@ -19,8 +19,6 @@ struct Medida {
 void sensoresIniciar();
 void sensoresEncender();
 void sensoresApagar();
-void bombaEncender();
-void bombaApagar();
 float medirCaudal(uint32_t duracionMs);   // L/min, contando pulsos durante duracionMs
 Medida sensoresMedir();
 void modoCalibracion();   // menú por el monitor serie (puente MODO_CAL a GND)

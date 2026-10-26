@@ -5,14 +5,14 @@
    1.2 Objetivos
    1.3 Alcance y limitaciones
 2. Fundamentos
-   2.1 Parámetros de calidad del agua: oxígeno disuelto, pH, conductividad, temperatura
+   2.1 Parámetros de calidad del agua: oxígeno disuelto, pH, temperatura (y por qué no se mide la conductividad)
    2.2 Comunicaciones LoRa y LoRaWAN (modulación, SF, clases, OTAA)
    2.3 Normativa de la banda de 868 MHz (ETSI EN 300 220, ciclo de trabajo del 1 %)
    2.4 Protocolos usados: RS485/Modbus, I2C, MQTT
 3. Diseño del sistema
    3.1 Arquitectura general
-   3.2 Nodo de medida (hardware, conexionado, alimentación solar)
-   3.3 Red LoRaWAN privada (gateway y ChirpStack)
+   3.2 Nodo de medida (hardware, conexionado, alimentación solar; la bomba va aparte)
+   3.3 Red LoRaWAN privada (gateway en el mástil de la azotea, ChirpStack con alta automática)
    3.4 Red de datos: VLAN 500 con IP fija, NTP, firewall y acceso remoto
    3.5 Base de datos, web en tiempo real y acceso desde Internet con Tailscale Funnel
 4. Implementación
