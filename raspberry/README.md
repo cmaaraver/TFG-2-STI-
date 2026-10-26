@@ -1,7 +1,7 @@
 # Puesta en marcha de la Raspberry Pi 5 y del wAP LR8
 
 La Raspberry lo hace todo: servidor LoRaWAN (ChirpStack), MQTT,
-base de datos (TimescaleDB), la web y el HTTPS con DuckDNS. Red explicada en `docs/02-arquitectura-red.md`.
+base de datos (TimescaleDB) y la web, publicada en Internet con Tailscale Funnel. Red explicada en `docs/02-arquitectura-red.md`.
 
 **Red**: VLAN 500 del instituto, máscara /24, puerta de enlace `172.16.50.1`. wAP LR8 en `172.16.50.2` y
 Raspberry en `172.16.50.3`, las dos con IP fija. Los datos están en `red/red.env`; si algo cambia (por
@@ -9,9 +9,9 @@ ejemplo el DNS) se cambia ahí y se vuelve a ejecutar el script.
 
 ## Instalación automática (recomendada)
 
-`instalar.sh` hace los apartados 1, 2, 3, 6 y 8 de abajo (y Tailscale del 5) de una vez:
+`instalar.sh` hace los apartados 1, 2, 3, 5, 6 y 8 de abajo de una vez, incluida el alta en ChirpStack:
 
-1. **Antes**: crear el subdominio y el token de DuckDNS (`docs/09-guia-duckdns.md`, apartado 1).
+1. **Antes**: tener la cuenta de Tailscale del equipo (`docs/09-acceso-internet.md`, apartado 1).
 2. Grabar la microSD con **Raspberry Pi Imager** → Raspberry Pi OS Lite (64-bit). En la configuración:
    hostname `rpi-lora`, usuario propio, **SSH con clave pública**, zona horaria Europe/Madrid.
 3. Conectar el puerto integrado (eth0) a una toma del switch que esté en la **VLAN 500** (sin etiquetar).
@@ -26,12 +26,14 @@ ejemplo el DNS) se cambia ahí y se vuelve a ejecutar el script.
    cd TFG-2-STI-/raspberry
    ./instalar.sh
    ```
-   Pregunta el subdominio y el token de DuckDNS, si se instala Tailscale y si está la batería RTC oficial.
-   Todo lo demás lo hace solo: sistema, microSD, Docker, red, NTP, contraseñas aleatorias en `.env`,
-   todos los contenedores, firewall y copia diaria. Se puede repetir sin problema.
-5. Al terminar enseña la dirección de la web y lo que hay que pedir al coordinador TIC. Quedan a mano el
-   wAP (apartado 4) y el alta en ChirpStack (apartado 5), porque dependen del EUI del gateway y de las
-   claves del nodo.
+   Solo pregunta el EUI del wAP (si aún no se sabe, Enter) y si está la batería RTC oficial; al final enseña
+   un enlace para iniciar sesión en Tailscale. Todo lo demás lo hace solo: sistema, microSD, Docker, red, NTP,
+   contraseñas y claves del nodo aleatorias en `.env`, todos los contenedores, **alta en ChirpStack** (contenedor
+   `provisionar`: contraseña de admin, gateway, perfil con `decoder.js`, aplicación y nodo), firewall y copia
+   diaria. Se puede repetir sin problema.
+5. Al terminar enseña la dirección de la web y lo que hay que pedir al coordinador TIC. Queda a mano el
+   wAP (apartado 4) y copiar `firmware/nodo-agua/include/secrets.h` (lo genera `provisionar`) al PC con el que
+   se graba la LILYGO.
 6. `sudo reboot` y comprobar que todo vuelve solo: `sudo docker compose ps`.
 
 ## Instalación paso a paso (lo mismo que hace el script)
@@ -62,18 +64,17 @@ nano red/red.env                          # IP, máscara, puerta de enlace y DNS
 sudo cp red/chrony.conf /etc/chrony/chrony.conf && sudo systemctl restart chrony
 ```
 Comprobar: `ip -br a` (172.16.50.3/24 en eth0), `ip route` (default via 172.16.50.1), `ping -c3 172.16.50.1`,
-`ping -c3 8.8.8.8`, `getent hosts duckdns.org` (DNS) y `chronyc tracking`.
+`ping -c3 8.8.8.8`, `getent hosts tailscale.com` (DNS) y `chronyc tracking`.
 El firewall se pone al final (paso 6), cuando Docker ya está funcionando.
 
 ## 3. Arrancar todo
 ```bash
 cp .env.example .env
-nano .env                                  # cambiar TODAS las contraseñas y poner el token de DuckDNS
-docker compose up -d --build               # la primera vez tarda (compila Caddy con el módulo de DuckDNS)
+nano .env                                  # cambiar TODAS las contraseñas
+docker compose up -d --build               # la primera vez tarda (descarga las imágenes)
 docker compose ps                          # todo "running"/"healthy"
 ```
 Comprobar:
-- `docker compose logs -f caddy` → "certificate obtained successfully" para `<dominio>.duckdns.org`.
 - `curl http://localhost/api/salud` → `{"estado":"ok"}`.
 - Desde un equipo de la VLAN 500: `http://172.16.50.3` → sale la web (sin datos todavía).
 
@@ -99,11 +100,21 @@ mirar `/interface bridge port print`. TODO VERIFICAR con el wAP delante.)
 1. Tailscale: `curl -fsSL https://tailscale.com/install.sh | sh && sudo tailscale up`
 2. Publicar ChirpStack solo para el equipo: `sudo tailscale serve --bg --https=8443 http://127.0.0.1:8080`
    y entrar a `https://rpi-lora.<red>.ts.net:8443` (o con un túnel SSH: `ssh -L 8080:127.0.0.1:8080 rpi-lora`).
-3. Usuario `admin` / contraseña `admin` → **cambiarla nada más entrar**.
-4. Crear:
-   - Gateway con el EUI del wAP → debe salir "online".
-   - Perfil de dispositivo: EU868, LoRaWAN 1.1.0, OTAA, clase A, codec JavaScript = contenido de `codec/decoder.js`.
-   - Aplicación "calidad-agua" y dispositivo (DevEUI + claves → `firmware/nodo-agua/include/secrets.h`).
+3. El alta es automática con el contenedor `provisionar` (lo lanza `instalar.sh`; se puede repetir cuando se quiera):
+   ```bash
+   sudo docker compose run --rm provisionar
+   ```
+   Lee del `.env` `CHIRPSTACK_ADMIN_PASSWORD`, `GATEWAY_EUI`, `NODO_DEV_EUI`, `NODO_JOIN_EUI`, `NODO_APP_KEY` y
+   `NODO_NWK_KEY`, y deja hecho:
+   - Contraseña de `admin` cambiada por la del `.env` (la de fábrica `admin` deja de valer).
+   - Gateway `wap-lr8-azotea` con el EUI del wAP → debe salir "online". Si `GATEWAY_EUI` está vacío, se salta:
+     poner el EUI en el `.env` y volver a lanzarlo.
+   - Perfil `nodo-agua-eu868`: EU868, LoRaWAN 1.1.0, RP002-1.0.3, OTAA, clase A, codec JavaScript = `codec/decoder.js`
+     (si se cambia el decoder, basta con volver a lanzar `provisionar`).
+   - Aplicación `calidad-agua` y dispositivo `nodo-agua` con sus claves OTAA.
+   - `firmware/nodo-agua/include/secrets.h` con esas mismas claves, listo para compilar.
+   Salida esperada: `Gateway ... creado`, `Perfil nodo-agua-eu868 creado`, ..., `ChirpStack listo`.
+4. Si se prefiere hacerlo a mano: usuario `admin` / contraseña `admin`, cambiarla al entrar y crear lo mismo que la lista de arriba.
 5. Comprobar: el nodo hace join, los uplinks salen decodificados en ChirpStack, `docker compose logs ingestor`
    dice "Guardado ..." y la web enseña los valores al momento.
 
@@ -115,10 +126,13 @@ Comprobar desde otro equipo de la VLAN que la web sigue entrando, y con `sudo ip
 que la regla del UDP 1700 deja pasar solo al wAP (172.16.50.2): el gateway sigue "online" en ChirpStack.
 
 ## 7. Acceso desde Internet
-Pedir al coordinador TIC que deje 172.16.50.2 y 172.16.50.3 fuera del DHCP de la VLAN 500 y que reenvíe el
-puerto 443 a 172.16.50.3 (ver `docs/09-guia-duckdns.md`).
-Probar desde un móvil con datos: `https://<dominio>.duckdns.org`. Si no se puede abrir el puerto:
-`sudo tailscale funnel --bg 80` (plan B).
+El instituto no abre puertos, así que la web sale por Tailscale Funnel (ver `docs/09-acceso-internet.md`):
+```bash
+sudo tailscale funnel --bg --https=443 http://127.0.0.1:80
+sudo tailscale funnel status        # https://rpi-lora.<red>.ts.net (Funnel on)
+```
+Probar desde un móvil con datos (sin Tailscale): `https://rpi-lora.<red>.ts.net`.
+Al coordinador TIC solo hay que pedirle que deje 172.16.50.2 y 172.16.50.3 fuera del DHCP de la VLAN 500.
 
 ## 8. Copias de seguridad
 `crontab -e` → `0 3 * * * $HOME/TFG-2-STI-/raspberry/backup.sh >> $HOME/backup-agua.log 2>&1`
@@ -134,6 +148,17 @@ Probar la restauración una vez:
 2. Esperar a que el nodo envíe 2 mensajes.
 3. `docker compose start ingestor` → en los logs aparecen los 2 mensajes guardados (cola persistente de Mosquitto, QoS 1).
 4. `docker compose exec db psql -U agua_admin -d calidad_agua -c "SELECT count(*) FROM medidas;"` antes y después.
+
+## Probar todo el servidor sin hardware (gateway y nodo simulados)
+`pruebas/servidor/simular_nodo.py` hace de wAP y de LILYGO: se conecta al Gateway Bridge por UDP 1700, hace el join
+OTAA (LoRaWAN 1.1) con las claves del `.env` y manda una medida. Recorre todo el camino real: Gateway Bridge →
+ChirpStack (decoder.js) → MQTT → ingestor → TimescaleDB → web.
+```bash
+pip install cryptography          # una vez
+python3 ../pruebas/servidor/simular_nodo.py .env
+```
+Salida esperada: `Join aceptado`, `Uplink enviado`; luego `docker compose logs ingestor` dice `Guardado <deveui> fcnt=0`
+y la web enseña 21,5 °C, 8,3 mg/L, pH 7,2. El gateway del `.env` tiene que estar dado de alta (`provisionar`).
 
 ## Probar la web sin el nodo (datos simulados)
 Publicar un uplink falso con el mismo formato que ChirpStack:

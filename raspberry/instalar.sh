@@ -9,12 +9,12 @@
 #    ./instalar.sh
 #
 #  Deja listo: sistema actualizado, cuidado de la microSD, reloj RTC, Docker, la red con IP fija
-#  en la VLAN 500 del instituto (red/red.env), NTP para el wAP, contraseñas generadas, DuckDNS, todos los
-#  contenedores (ChirpStack, MQTT, base de datos, web, HTTPS), firewall, copia de seguridad
-#  diaria y, si se quiere, Tailscale.
+#  en la VLAN 500 del instituto (red/red.env), NTP para el wAP, contraseñas generadas, todos los
+#  contenedores (ChirpStack, MQTT, base de datos, web), firewall, copia de seguridad diaria y
+#  Tailscale (acceso del equipo y web pública con HTTPS por Tailscale Funnel, sin abrir puertos).
 #
 #  Se puede volver a ejecutar sin miedo: lo que ya está hecho se salta.
-#  Antes, leer docs/09-guia-duckdns.md y tener a mano el subdominio y el token de DuckDNS.
+#  Antes, leer docs/09-acceso-internet.md y tener a mano la cuenta de Tailscale del equipo.
 #
 #  La IP fija, la puerta de enlace y el DNS están en red/red.env. Se pueden cambiar ahí o al ejecutar:
 #    IF_RED=eth0 IP_RASPBERRY=172.16.50.3 DNS=172.16.50.1 ./instalar.sh
@@ -67,16 +67,8 @@ if [ -n "${SSH_CONNECTION:-}" ] && [ -n "$ip_actual" ] && [ "$ip_actual" != "$IP
 fi
 
 # ---------- 1. Datos que hay que preguntar ----------
-paso "1. Datos de DuckDNS (ver docs/09-guia-duckdns.md)"
+paso "1. Contraseñas (.env)"
 if [ ! -f .env ]; then
-  read -r -p "Subdominio de DuckDNS (solo el nombre, sin .duckdns.org): " dominio
-  read -r -p "Token de DuckDNS: " token
-  dominio="${dominio%.duckdns.org}"
-  [[ "$dominio" =~ ^[a-z0-9-]+$ ]] || fallo "el subdominio solo puede tener minúsculas, números y guiones."
-  [[ "$token" =~ ^[0-9a-f-]{36}$ ]] || fallo "el token de DuckDNS tiene el formato xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx."
-  # Comprobar el token contra DuckDNS antes de seguir (actualiza la IP una vez)
-  respuesta="$(curl -fsS "https://www.duckdns.org/update?domains=$dominio&token=$token" || true)"
-  [ "$respuesta" = "OK" ] || fallo "DuckDNS rechaza el subdominio o el token (respuesta: '$respuesta')."
   umask 077
   cat > .env <<EOF
 # Generado por instalar.sh el $(date -u +%F). NO se sube a git. Guardar una copia en lugar seguro.
@@ -86,20 +78,29 @@ POSTGRES_PASSWORD=$(contrasena)
 CHIRPSTACK_DB_PASSWORD=$(contrasena)
 WEB_DB_PASSWORD=$(contrasena)
 CHIRPSTACK_API_SECRET=$(contrasena 32)
-DUCKDNS_DOMINIO=$dominio
-DUCKDNS_TOKEN=$token
 EOF
   umask 022
   verde ".env creado con contraseñas aleatorias."
 else
   amarillo ".env ya existe: se deja como está."
 fi
+# Datos del alta automática en ChirpStack. Se añaden también a un .env antiguo que no los tenga.
+anadir_si_falta() { grep -q "^$1=" .env || echo "$1=$2" >> .env; }
+anadir_si_falta CHIRPSTACK_ADMIN_PASSWORD "$(contrasena)"
+anadir_si_falta NODO_DEV_EUI "$(openssl rand -hex 8)"
+anadir_si_falta NODO_JOIN_EUI 0000000000000000
+anadir_si_falta NODO_APP_KEY "$(openssl rand -hex 16)"
+anadir_si_falta NODO_NWK_KEY "$(openssl rand -hex 16)"
+if ! grep -q "^GATEWAY_EUI=." .env; then
+  amarillo "EUI del wAP LR8 (16 cifras hex; en RouterOS: /iot lora print). Enter para darlo de alta más tarde."
+  read -r -p "GATEWAY_EUI: " eui || true
+  sed -i '/^GATEWAY_EUI=/d' .env
+  echo "GATEWAY_EUI=${eui:-}" >> .env
+fi
 # shellcheck disable=SC1091
 source .env
 grep -q "cambiar_esto\|pegar_aqui" .env && fallo ".env tiene valores de ejemplo sin cambiar."
 
-INSTALAR_TAILSCALE=n
-pregunta "¿Instalar Tailscale (acceso del equipo a SSH y ChirpStack desde fuera)?" s && INSTALAR_TAILSCALE=s
 PONER_RTC=n
 pregunta "¿Tiene puesta la batería RTC OFICIAL recargable de Raspberry Pi? (activa su carga; NO con pilas normales)" n && PONER_RTC=s
 
@@ -149,7 +150,7 @@ for _ in $(seq 1 30); do ping -c1 -W2 1.1.1.1 >/dev/null 2>&1 && break; sleep 2;
 ping -c1 -W2 1.1.1.1 >/dev/null 2>&1 || fallo "sin Internet por $IF_RED. Revisa el cable, que el puerto del switch esté en la VLAN 500 y la puerta de enlace $PUERTA_ENLACE."
 
 # ---------- 7. Contenedores ----------
-paso "7. Arrancando todos los servicios (la primera vez compila Caddy: 5-15 min)"
+paso "7. Arrancando todos los servicios (la primera vez descarga las imágenes: unos minutos)"
 sudo docker compose up -d --build
 echo "Esperando a que la web responda..."
 for _ in $(seq 1 60); do
@@ -157,6 +158,11 @@ for _ in $(seq 1 60); do
 done
 curl -fsS http://127.0.0.1/api/salud >/dev/null 2>&1 || { sudo docker compose ps; fallo "la web no responde. Mira: sudo docker compose logs web caddy"; }
 verde "Web funcionando."
+
+# ---------- 7b. Alta en ChirpStack ----------
+paso "7b. Alta automática en ChirpStack (gateway, perfil con decoder.js, aplicación y nodo)"
+sudo docker compose run --rm --build provisionar || fallo "falló el alta en ChirpStack. Mira el mensaje de arriba."
+sudo chown "$USUARIO:" ../firmware/nodo-agua/include/secrets.h
 
 # ---------- 8. Firewall ----------
 paso "8. Firewall"
@@ -170,30 +176,39 @@ printf '%s\n%s\n' "$cron_actual" "$linea_cron" | sed '/^$/d' | crontab -
 crontab -l | grep backup.sh
 
 # ---------- 10. Tailscale ----------
-if [ "$INSTALAR_TAILSCALE" = "s" ]; then
-  paso "10. Tailscale"
-  command -v tailscale >/dev/null || curl -fsSL https://tailscale.com/install.sh | sudo sh
+# El instituto no puede abrir puertos (decisión de 2026-10-26): todo lo de fuera entra por Tailscale,
+# que solo hace conexiones de salida. Comandos sacados de la documentación oficial:
+#   https://tailscale.com/kb/1223/funnel  y  https://tailscale.com/kb/1311/tailscale-funnel
+#   Funnel solo admite los puertos 443, 8443 y 10000; Serve y Funnel no pueden compartir puerto.
+paso "10. Tailscale (acceso del equipo y web pública)"
+command -v tailscale >/dev/null || curl -fsSL https://tailscale.com/install.sh | sudo sh
+if ! sudo tailscale status >/dev/null 2>&1; then
   amarillo "Abre el enlace que sale a continuación e inicia sesión con la cuenta del equipo:"
   sudo tailscale up
-  sudo tailscale serve --bg --https=8443 http://127.0.0.1:8080
 fi
+# ChirpStack: solo para los equipos del tailnet (puerto 8443)
+sudo tailscale serve --bg --https=8443 http://127.0.0.1:8080
+# Web: pública en Internet con HTTPS (puerto 443 de Tailscale → Caddy en el 80)
+amarillo "Si sale un enlace para activar HTTPS y Funnel en el tailnet, ábrelo con la cuenta del equipo y acepta (MagicDNS tiene que estar activado)."
+sudo tailscale funnel --bg --https=443 http://127.0.0.1:80
 
 # ---------- Resumen ----------
 ip_instituto="$IP_RASPBERRY"
 echo
 verde "=================== INSTALACIÓN TERMINADA ==================="
 echo "Web en el instituto:   http://$ip_instituto"
-echo "Web desde Internet:    https://$DUCKDNS_DOMINIO.duckdns.org  (cuando el TIC abra el 443, ver docs/09)"
-echo "Pedir al coordinador TIC: dejar $IP_RASPBERRY y $IP_WAP fuera del DHCP de la VLAN 500 y reenviar TCP 443 → $IP_RASPBERRY."
-if [ "$INSTALAR_TAILSCALE" = "s" ]; then
-  echo "ChirpStack:            la dirección https://...ts.net:8443 que sale en: sudo tailscale serve status"
-else
-  echo "ChirpStack:            ssh -L 8080:127.0.0.1:8080 $USUARIO@$ip_instituto  → http://localhost:8080"
-fi
+nombre_ts="$(sudo tailscale status --json | python3 -c 'import json,sys; print(json.load(sys.stdin)["Self"]["DNSName"].rstrip("."))')"
+echo "Web desde Internet:    https://$nombre_ts  (Tailscale Funnel)"
+echo "ChirpStack (equipo):   https://$nombre_ts:8443  (solo desde equipos con Tailscale)"
+echo "Pedir al coordinador TIC: dejar $IP_RASPBERRY y $IP_WAP fuera del DHCP de la VLAN 500 (no hay que abrir ningún puerto)."
+echo
+echo "ChirpStack: usuario admin, contraseña CHIRPSTACK_ADMIN_PASSWORD del fichero .env"
 echo
 amarillo "Queda a mano (docs/08-guia-instalacion.md, pasos 5 y 6):"
 echo "  1. Configurar el wAP LR8 (IP $IP_WAP/$PREFIJO, puerta de enlace $PUERTA_ENLACE, NTP y servidor LoRa $IP_RASPBERRY:1700)."
-echo "  2. ChirpStack: cambiar la contraseña de admin/admin, dar de alta el gateway, el perfil con"
-echo "     codec/decoder.js y el dispositivo; copiar sus claves a firmware/nodo-agua/include/secrets.h."
+if ! grep -q "^GATEWAY_EUI=." .env; then
+  echo "     Después poner su EUI en GATEWAY_EUI del .env y ejecutar: sudo docker compose run --rm provisionar"
+fi
+echo "  2. Copiar firmware/nodo-agua/include/secrets.h (claves del nodo, ya generadas) al PC donde se graba la LILYGO."
 echo "  3. Guardar una copia del fichero .env fuera de la Raspberry (tiene todas las contraseñas)."
 echo "  4. Reiniciar una vez (sudo reboot) y comprobar que todo vuelve solo: sudo docker compose ps"

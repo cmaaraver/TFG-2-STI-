@@ -1,0 +1,12 @@
+# Ficheros que se ejecutan o se leen en Linux (Raspberry y contenedores): siempre con LF.
+# Sin esto, Git en Windows los baja con CRLF y los scripts fallan ("/bin/bash^M: bad interpreter").
+*.sh        text eol=lf
+*.sql       text eol=lf
+*.conf      text eol=lf
+*.toml      text eol=lf
+*.env       text eol=lf
+*.example   text eol=lf
+*.py        text eol=lf
+*.js        text eol=lf
+Caddyfile   text eol=lf
+Dockerfile  text eol=lf

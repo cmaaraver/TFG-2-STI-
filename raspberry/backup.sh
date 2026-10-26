@@ -4,6 +4,7 @@
 # Mejor copiar además la carpeta backups/ fuera de la Raspberry (pendrive o PC) de vez en cuando.
 set -euo pipefail
 cd "$(dirname "$0")"
+# shellcheck disable=SC1091
 source .env
 mkdir -p backups
 fecha=$(date -u +%Y%m%d_%H%M)

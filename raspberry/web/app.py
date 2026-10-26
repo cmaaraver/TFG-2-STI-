@@ -21,7 +21,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
 
 import psycopg
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from psycopg.rows import dict_row

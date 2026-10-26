@@ -24,7 +24,7 @@
   #define RS485_DE   -1     // -1 si el adaptador RS485 cambia de dirección solo
   #define PIN_EN_12V 4
   #define PIN_EN_5V  25
-  #define PIN_AGUA   39     // solo entrada, pull-up externa
+  #define PIN_AGUA   39     // solo entrada; SEN0204 por divisor 10k/20k (su salida da 5 V)
   #define PIN_MODO_CAL 36   // solo entrada, pull-up externa; a GND = calibración
   #define PIN_BOMBA  12     // puerta del N-MOSFET de la bomba. Pull-down 100k obligatoria: GPIO12 tiene
                             // que estar a 0 al arrancar (pin de arranque) y así la bomba no se enciende sola.
@@ -65,14 +65,20 @@
 #define FPORT_CONFIG  10
 
 // ---------- SEN0681 (Modbus RTU) ----------
-// TODO VERIFICAR en la wiki de DFRobot (SEN0681 → Reference → Register):
-// dirección, baudios, registros y formato del float (big-endian según la wiki).
+// Fuente: wiki DFRobot del SEN0680 (versión de agua dulce del mismo sensor),
+// https://wiki.dfrobot.com/sen0680/docs/21672 → "Register". Por defecto: dirección 1, 4800 baudios, 8N1.
+// Cada medida es un float big-endian en 2 registros, que se leen con 0x03 o 0x04.
+// El SEN0681 es la versión de agua de mar y su wiki no publica la tabla.
+// TODO VERIFICAR con el sensor real que el mapa es el mismo (lectura en modo calibración).
 #define MODBUS_DIRECCION    1
-#define MODBUS_BAUDIOS      9600
-#define MODBUS_REGISTROS_OK 0          // poner a 1 cuando se rellenen los registros de abajo
-#define REG_OXIGENO_MGL     0x0000     // TODO VERIFICAR
-#define REG_TEMPERATURA_C   0x0000     // TODO VERIFICAR
-#define REG_SALINIDAD       0x0000     // TODO VERIFICAR (poner 0 ‰ si el agua es dulce)
+#define MODBUS_BAUDIOS      4800
+#define MODBUS_REGISTROS_OK 1
+#define REG_SATURACION      0x0000     // saturación de oxígeno (1,0 = 100 %), no se envía
+#define REG_OXIGENO_MGL     0x0002     // oxígeno disuelto en mg/L
+#define REG_TEMPERATURA_C   0x0004     // temperatura en °C
+#define REG_SALINIDAD       0x1020     // salinidad (lectura/escritura). Con agua de red tiene que valer 0.
+                                       // TODO VERIFICAR el valor de fábrica del SEN0681 (al ser de agua de mar
+                                       // puede venir distinto de 0) y el formato del dato, que la wiki no indica.
 
 // ---------- ADS1115 ----------
 #define ADS_DIRECCION 0x48
@@ -85,7 +91,7 @@
 #define DIVISOR_BATERIA   ((100.0f + 22.0f) / 22.0f)  // 100k arriba, 22k abajo
 #define BATERIA_BAJA_MV   12400                      // LiFePO4 ~20 % de carga
 #define NIVEL_R_SHUNT_OHM 120.0f    // TODO VERIFICAR con el convertidor 4-20 mA usado
-#define NIVEL_RANGO_MM    5000.0f   // TODO VERIFICAR rango del KIT0139 comprado
+#define NIVEL_RANGO_MM    5000.0f   // KIT0139: 0-5 m (wiki DFRobot SKU_KIT0139, etiqueta del kit comprobada)
 #define TEMP_DEFECTO_C    25.0f     // si no hay temperatura del SEN0681
 
 // ---------- Pantalla OLED (SSD1306 128x64 de la placa) ----------

@@ -8,7 +8,10 @@
 #include "i2c_compartido.h"
 
 #ifndef AGUA_ACTIVO_ALTO
-#define AGUA_ACTIVO_ALTO 1   // TODO VERIFICAR: nivel de la salida del SEN0204 cuando detecta agua
+// SEN0204: salida en alto = VCC y en bajo = 0 V (wiki DFRobot SEN0204); llega a GPIO 39 por un divisor 10k/20k.
+// La wiki no dice qué nivel significa "hay agua". TODO VERIFICAR: acercar agua a la pared con el monitor
+// serie abierto (agua=1 tiene que ser "hay agua"); si sale al revés, poner esto a 0.
+#define AGUA_ACTIVO_ALTO 1
 #endif
 
 static Adafruit_ADS1115 ads;
@@ -45,7 +48,7 @@ static void guardarCalibracion() {
 static void antesTx()   { if (RS485_DE >= 0) digitalWrite(RS485_DE, HIGH); }
 static void despuesTx() { if (RS485_DE >= 0) digitalWrite(RS485_DE, LOW); }
 
-// Lee un float de 2 registros (big-endian según la wiki). TODO VERIFICAR si son holding (0x03) o input (0x04).
+// Lee un float de 2 registros (big-endian). La wiki del SEN0680 admite 0x03 y 0x04; aquí se usa 0x03.
 __attribute__((unused)) static bool leerFloatModbus(uint16_t reg, float& salida) {
   uint8_t r = mb.readHoldingRegisters(reg, 2);
   if (r != mb.ku8MBSuccess) return false;

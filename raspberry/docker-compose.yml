@@ -1,7 +1,8 @@
 # Raspberry Pi 5: todo el sistema en un solo Docker Compose
 #   gateway-bridge ← UDP 1700 ← wAP LR8
 #   chirpstack (servidor LoRaWAN) → mosquitto (MQTT) → ingestor → db (TimescaleDB)
-#   web (API + página) ← caddy (HTTPS con DuckDNS) ← navegador
+#   web (API + página) ← caddy (puerto 80) ← navegador en el instituto
+#                                         ← Tailscale Funnel (HTTPS) ← Internet
 #
 # Arrancar:  cp .env.example .env  (y cambiar todas las contraseñas)
 #            docker compose up -d --build
@@ -79,6 +80,10 @@ services:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
       mosquitto: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
+      interval: 15s
+      retries: 10
     ports:
       # Solo local. El equipo entra por Tailscale ("tailscale serve", ver README)
       - "127.0.0.1:8080:8080"
@@ -121,37 +126,45 @@ services:
     depends_on:
       db: { condition: service_healthy }
 
-  caddy:
-    build: ./caddy
-    restart: unless-stopped
+  provisionar:
+    # Alta automática en ChirpStack (admin, gateway, perfil con decoder.js, aplicación y nodo) y
+    # secrets.h para el firmware. No es un servicio: se lanza una vez desde instalar.sh con
+    #   docker compose run --rm provisionar
+    # (el perfil "herramientas" hace que "docker compose up" no lo arranque solo).
+    build: ./provisionar
+    profiles: ["herramientas"]
+    restart: "no"
     logging: *registros
     environment:
-      DUCKDNS_DOMINIO: ${DUCKDNS_DOMINIO}
-      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN}
+      CHIRPSTACK_ADMIN_PASSWORD: ${CHIRPSTACK_ADMIN_PASSWORD}
+      GATEWAY_EUI: ${GATEWAY_EUI:-}
+      NODO_DEV_EUI: ${NODO_DEV_EUI}
+      NODO_JOIN_EUI: ${NODO_JOIN_EUI:-0000000000000000}
+      NODO_APP_KEY: ${NODO_APP_KEY}
+      NODO_NWK_KEY: ${NODO_NWK_KEY}
+    volumes:
+      - ./codec:/codec:ro
+      - ../firmware/nodo-agua/include:/salida
+    depends_on:
+      chirpstack: { condition: service_healthy }
+
+  caddy:
+    # Proxy delante de la web en el puerto 80. El HTTPS hacia Internet lo pone Tailscale Funnel
+    # en la propia Raspberry (instalar.sh), así que no hace falta abrir puertos en el instituto.
+    image: caddy:2
+    restart: unless-stopped
+    logging: *registros
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - datos_caddy:/data        # certificados HTTPS
+      - datos_caddy:/data
     ports:
       - "80:80"
-      - "443:443"
     depends_on:
       web: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/api/salud"]
       interval: 30s
       retries: 3
-
-  duckdns:
-    # Actualiza cada 5 min la IP pública del instituto en <dominio>.duckdns.org
-    image: lscr.io/linuxserver/duckdns:latest
-    restart: unless-stopped
-    logging: *registros
-    environment:
-      SUBDOMAINS: ${DUCKDNS_DOMINIO}
-      TOKEN: ${DUCKDNS_TOKEN}
-      TZ: Europe/Madrid
-      UPDATE_IP: ipv4
-      LOG_FILE: "false"
 
 volumes:
   datos_bd:
