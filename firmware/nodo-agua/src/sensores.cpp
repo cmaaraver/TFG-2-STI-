@@ -45,7 +45,7 @@ static void guardarCalibracion() {
 static void antesTx()   { if (RS485_DE >= 0) digitalWrite(RS485_DE, HIGH); }
 static void despuesTx() { if (RS485_DE >= 0) digitalWrite(RS485_DE, LOW); }
 
-// Lee un float de 2 registros (big-endian según la wiki). TODO VERIFICAR si son holding (0x03) o input (0x04).
+// Lee un float de 2 registros (big-endian). La wiki del SEN0680 admite 0x03 y 0x04; aquí se usa 0x03.
 __attribute__((unused)) static bool leerFloatModbus(uint16_t reg, float& salida) {
   uint8_t r = mb.readHoldingRegisters(reg, 2);
   if (r != mb.ku8MBSuccess) return false;
