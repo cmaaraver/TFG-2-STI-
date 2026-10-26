@@ -91,7 +91,7 @@
 #define DIVISOR_BATERIA   ((100.0f + 22.0f) / 22.0f)  // 100k arriba, 22k abajo
 #define BATERIA_BAJA_MV   12400                      // LiFePO4 ~20 % de carga
 #define NIVEL_R_SHUNT_OHM 120.0f    // TODO VERIFICAR con el convertidor 4-20 mA usado
-#define NIVEL_RANGO_MM    5000.0f   // TODO VERIFICAR rango del KIT0139 comprado
+#define NIVEL_RANGO_MM    5000.0f   // KIT0139: 0-5 m (wiki DFRobot SKU_KIT0139, etiqueta del kit comprobada)
 #define TEMP_DEFECTO_C    25.0f     // si no hay temperatura del SEN0681
 
 // ---------- Pantalla OLED (SSD1306 128x64 de la placa) ----------
