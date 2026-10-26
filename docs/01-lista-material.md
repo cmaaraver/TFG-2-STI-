@@ -16,7 +16,7 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 |---|---|---|
 | Nodo | LILYGO ESP32 con LoRa (modelo por confirmar) | Lee sensores, controla la bomba y envía por LoRaWAN |
 | Gateway | MikroTik wAP LR8 kit (con fuente 24 V e inyector PoE) | Recibe LoRaWAN y reenvía a la Raspberry |
-| Servidor completo | Raspberry Pi 5 4 GB | ChirpStack, MQTT, base de datos, web, DuckDNS, NTP |
+| Servidor completo | Raspberry Pi 5 4 GB | ChirpStack, MQTT, base de datos, web, Tailscale, NTP |
 | Almacenamiento de la Raspberry | microSD 64 GB | Sistema y datos (sin SSD NVMe, decisión de 2026-09-29) |
 | Oxígeno disuelto + temperatura | DFRobot SEN0681 (RS485, 10-30 V, 0,2 W) | Sensor principal; su temperatura compensa el pH |
 | pH | DFRobot SEN0169-V2 (sonda industrial) | Inmersión continua dentro del depósito |

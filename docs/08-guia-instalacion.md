@@ -135,14 +135,15 @@ da 4,00 ± 0,1; `rs485_err=0`; la temperatura cuadra con un termómetro; `bat` c
 
 Se hace con un solo script. Detalle en `raspberry/README.md` ("Instalación automática"):
 
-1. Crear el subdominio y el token de DuckDNS: [`09-guia-duckdns.md`](09-guia-duckdns.md), apartado 1.
+1. Crear la cuenta de Tailscale del equipo: [`09-acceso-internet.md`](09-acceso-internet.md), apartado 1.
 2. Grabar Raspberry Pi OS Lite 64 bits en la microSD de 64 GB con Raspberry Pi Imager (SSH con clave).
 3. eth0 de la Raspberry a una toma del switch en la **VLAN 500** (sin etiquetar). Mejor con teclado y monitor; si se
    entra por SSH con la IP que da el DHCP, el script prepara la IP fija **172.16.50.3**, pide reiniciar y se vuelve a
    ejecutar entrando por `ssh usuario@172.16.50.3`. Ya no hace falta adaptador USB-Ethernet.
-4. `git clone` del repositorio y `./instalar.sh` dentro de `raspberry/`. Pide el subdominio y el token de DuckDNS
-   y deja todo instalado: red, NTP, Docker, contraseñas, contenedores, firewall y copia diaria.
-5. Pedir al coordinador TIC lo que dice el final del script (172.16.50.2 y .3 fuera del DHCP y puerto 443, `09-guia-duckdns.md`).
+4. `git clone` del repositorio y `./instalar.sh` dentro de `raspberry/`. Deja todo instalado: red, NTP,
+   Docker, contraseñas, contenedores, firewall, copia diaria y Tailscale con la web pública (Funnel).
+5. Pedir al coordinador TIC lo que dice el final del script (172.16.50.2 y .3 fuera del DHCP y permiso para Tailscale,
+   `09-acceso-internet.md`). No hay que abrir puertos.
 
 **Comprobación**:
 - `sudo docker compose ps` → todos los servicios `running` y los que tienen healthcheck `healthy`.
@@ -239,7 +240,7 @@ En ChirpStack mirar RSSI y SNR de los uplinks: con SNR positiva y RSSI mejor que
 | Prueba | Cómo | Se cumple si |
 |---|---|---|
 | 24 h de datos (fase 4) | Dejarlo funcionando un día | La web enseña 24 h de gráficas sin huecos y con la hora correcta |
-| Acceso remoto (fase 5) | Móvil con datos móviles → `https://<nombre>.duckdns.org` | Carga con candado (HTTPS) y datos al momento |
+| Acceso remoto (fase 5) | Móvil con datos móviles → `https://rpi-lora.<red>.ts.net` | Carga con candado (HTTPS) y datos al momento |
 | Autonomía (fase 6) | Una semana a la intemperie | Batería estable o subiendo en la gráfica y menos del 2-3 % de mensajes perdidos (`fcnt`) |
 | Copia de seguridad | `raspberry/backup.sh` en cron y una restauración de prueba | La restauración recupera las medidas |
 

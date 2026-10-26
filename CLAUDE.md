@@ -29,7 +29,7 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
                                      │                                   │
                   ┌─────────────────┐│                                   │ puerta de enlace 172.16.50.1
                   │ Raspberry Pi 5  ├┘ eth0 172.16.50.3 (fija)           ▼ (router del instituto) → Internet
-                  └─────────────────┘ todo el servidor en Docker    https://<nombre>.duckdns.org (web pública)
+                  └─────────────────┘ todo el servidor en Docker    https://rpi-lora.<red>.ts.net (web pública, Funnel)
 ```
 
 Red (decisión de 2026-10-23): VLAN 500 del instituto, puerta de enlace 172.16.50.1, wAP en 172.16.50.2 y
@@ -41,14 +41,15 @@ Los datos de red están solo en `raspberry/red/red.env`.
 | LILYGO (nodo, maqueta exterior) | Remueve el agua del depósito con la bomba, mide caudal y sensores, envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
 | DFR1120-868 (maqueta, fase 7) | Relé controlado por downlink (llenado, alarma o anulación de la bomba) | Configuración propia de DFRobot |
 | wAP LR8 | Gateway LoRaWAN, reenvía por UDP 1700 | RouterOS (packet forwarder nativo) |
-| Raspberry Pi 5 | **Todo el servidor**: firewall, NTP para el wAP, servidor LoRaWAN, MQTT, base de datos, web con HTTPS y DuckDNS | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy + DuckDNS |
+| Raspberry Pi 5 | **Todo el servidor**: firewall, NTP para el wAP, servidor LoRaWAN, MQTT, base de datos, web pública con Tailscale Funnel | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy |
 
 Ya **no hay PC de datos ni Grafana** (decisión de 2026-09-29): la base de datos y una web propia
 van en la Raspberry.
 
 Flujo de datos: nodo → wAP → ChirpStack (decodifica con `raspberry/codec/decoder.js`) → MQTT (QoS 1)
 → ingestor → TimescaleDB → web (tiempo real por NOTIFY + SSE, gráficas del histórico con ECharts)
-→ Caddy (HTTPS) → `https://<nombre>.duckdns.org`.
+→ Caddy (:80) → Tailscale Funnel (HTTPS) → `https://rpi-lora.<red>.ts.net`.
+El instituto no puede abrir puertos (decisión de 2026-10-26): **no se usa DuckDNS**.
 
 Detalle completo en `docs/02-arquitectura-red.md`.
 
@@ -59,7 +60,7 @@ Detalle completo en `docs/02-arquitectura-red.md`.
    parámetros de ChirpStack o RouterOS: si no están confirmados en este repo, se consultan en la
    documentación oficial (wiki DFRobot, pinout LILYGO, docs ChirpStack/MikroTik) y se cita la fuente
    en un comentario. Si no se puede confirmar, se deja un `TODO VERIFICAR` y se avisa.
-3. **Secretos fuera de git**: claves LoRaWAN, contraseñas de la BD y de ChirpStack y el token de DuckDNS en `secrets.h` / `raspberry/.env`
+3. **Secretos fuera de git**: claves LoRaWAN, contraseñas de la BD y de ChirpStack en `secrets.h` / `raspberry/.env`
    (existen plantillas `*.example`). Añadir al `.gitignore`.
 4. **Hora siempre en UTC** en la base de datos (`timestamptz`). La web muestra Europe/Madrid.
 5. **Todo en Docker Compose** (`raspberry/docker-compose.yml`) con `restart: unless-stopped`, volúmenes con nombre y healthchecks.
@@ -85,7 +86,7 @@ docs/
   07-lista-compra.md          ← lo que hay que comprar, con enlaces y precios
   07-lista-compra.xlsx        ← la misma lista en hoja de cálculo, para el centro
   08-guia-instalacion.md      ← guía de instalación completa, de la caja de material a la web funcionando
-  09-guia-duckdns.md          ← DuckDNS paso a paso, qué pedir al coordinador TIC y plan B
+  09-acceso-internet.md       ← web pública con Tailscale Funnel y qué pedir al coordinador TIC
   10-prompts-claude-code.md   ← prompts para Claude Code: Raspberry por SSH y LILYGO por USB
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
@@ -94,15 +95,15 @@ firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con log
 pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
   instalar.sh                 ← instalación completa de la Raspberry con un solo script
-  docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy, DuckDNS
-  .env.example                ← plantilla de contraseñas y token de DuckDNS (.env no se sube)
+  docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy
+  .env.example                ← plantilla de contraseñas (.env no se sube)
   configuracion/              ← ChirpStack (eu868, MQTT QoS 1) y Gateway Bridge
   codec/decoder.js            ← decodificador del payload para ChirpStack v4
   mosquitto/mosquitto.conf    ← broker interno con cola persistente
   db/                         ← creación de las bases de datos, tablas y usuarios
   ingestor/                   ← MQTT → TimescaleDB
   web/                        ← API (FastAPI) + página en tiempo real con gráficas (ECharts)
-  caddy/                      ← HTTPS con certificado de Let's Encrypt por DNS de DuckDNS
+  caddy/                      ← proxy de la web en el puerto 80 (el HTTPS lo pone Tailscale Funnel)
   red/                        ← red.env (IPs de la VLAN 500), NetworkManager, chrony y firewall
   backup.sh                   ← copia diaria de las dos bases de datos
 ```
@@ -123,7 +124,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [x] Red: VLAN 500, puerta de enlace 172.16.50.1, wAP 172.16.50.2 y Raspberry 172.16.50.3 con IP fija (2026-10-23).
 - [ ] Confirmar con el TIC: máscara /24, DNS (se supone 172.16.50.1), tomas del switch en VLAN 500 sin etiquetar
       y que .2 y .3 quedan fuera del DHCP. Si cambia algo, se toca solo `raspberry/red/red.env`.
-- [ ] Si el centro tiene IP pública propia y permiso del TIC para reenviar el puerto 443 a 172.16.50.3 (DuckDNS). Si no, plan B con Tailscale Funnel.
+- [x] El centro no puede abrir puertos (2026-10-26): web pública con Tailscale Funnel, sin DuckDNS (`docs/09`).
 
 ## 6. Fases, tareas y criterios de aceptación
 
@@ -146,7 +147,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
       y DNS 172.16.50.1 (`raspberry/red/red.env`, `docs/02`).
 - [ ] chrony como servidor NTP para el wAP (172.16.50.2); batería RTC colocada; comprobar `timedatectl`.
 - [ ] `.env` rellenado y `docker compose up -d --build`: ChirpStack v4 (eu868, MQTT **QoS 1**),
-      Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web, Caddy y DuckDNS.
+      Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web y Caddy.
 - [ ] wAP LR8: IP estática 172.16.50.2/24, puerta de enlace 172.16.50.1, NTP → 172.16.50.3, servidor LoRa → 172.16.50.3:1700.
 - [ ] Alta en ChirpStack: gateway (EUI del wAP), perfil de dispositivo EU868 / LoRaWAN 1.1 / OTAA / clase A,
       codec `decoder.js`, dispositivo con DevEUI y claves.
@@ -161,8 +162,9 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - **Hecho cuando**: hay 24 h de datos en la BD con hora correcta y se ven en la web.
 
 ### Fase 5 — Acceso remoto
-- [ ] DuckDNS: cuenta, subdominio y token en `.env`; Caddy obtiene el certificado HTTPS.
-- [ ] Coordinador TIC: 172.16.50.2 y .3 fuera del DHCP de la VLAN 500 y reenvío del TCP 443 a 172.16.50.3. Si no es posible, `tailscale funnel`.
+- [ ] Tailscale: cuenta del equipo, Raspberry dada de alta y *key expiry* desactivado para `rpi-lora`.
+- [ ] Coordinador TIC: 172.16.50.2 y .3 fuera del DHCP de la VLAN 500 y permiso para Tailscale (sin abrir puertos).
+- [ ] Web pública con `tailscale funnel` (`docs/09-acceso-internet.md`).
 - [ ] Tailscale en la Raspberry y en los equipos del grupo; ChirpStack solo por `tailscale serve`.
 - **Hecho cuando**: se ve la web desde un móvil con datos móviles, fuera del instituto.
 

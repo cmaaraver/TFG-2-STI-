@@ -1,7 +1,7 @@
 # Puesta en marcha de la Raspberry Pi 5 y del wAP LR8
 
 La Raspberry lo hace todo: servidor LoRaWAN (ChirpStack), MQTT,
-base de datos (TimescaleDB), la web y el HTTPS con DuckDNS. Red explicada en `docs/02-arquitectura-red.md`.
+base de datos (TimescaleDB) y la web, publicada en Internet con Tailscale Funnel. Red explicada en `docs/02-arquitectura-red.md`.
 
 **Red**: VLAN 500 del instituto, máscara /24, puerta de enlace `172.16.50.1`. wAP LR8 en `172.16.50.2` y
 Raspberry en `172.16.50.3`, las dos con IP fija. Los datos están en `red/red.env`; si algo cambia (por
@@ -11,7 +11,7 @@ ejemplo el DNS) se cambia ahí y se vuelve a ejecutar el script.
 
 `instalar.sh` hace los apartados 1, 2, 3, 6 y 8 de abajo (y Tailscale del 5) de una vez:
 
-1. **Antes**: crear el subdominio y el token de DuckDNS (`docs/09-guia-duckdns.md`, apartado 1).
+1. **Antes**: tener la cuenta de Tailscale del equipo (`docs/09-acceso-internet.md`, apartado 1).
 2. Grabar la microSD con **Raspberry Pi Imager** → Raspberry Pi OS Lite (64-bit). En la configuración:
    hostname `rpi-lora`, usuario propio, **SSH con clave pública**, zona horaria Europe/Madrid.
 3. Conectar el puerto integrado (eth0) a una toma del switch que esté en la **VLAN 500** (sin etiquetar).
@@ -26,7 +26,7 @@ ejemplo el DNS) se cambia ahí y se vuelve a ejecutar el script.
    cd TFG-2-STI-/raspberry
    ./instalar.sh
    ```
-   Pregunta el subdominio y el token de DuckDNS, si se instala Tailscale y si está la batería RTC oficial.
+   Solo pregunta si está la batería RTC oficial; al final enseña un enlace para iniciar sesión en Tailscale.
    Todo lo demás lo hace solo: sistema, microSD, Docker, red, NTP, contraseñas aleatorias en `.env`,
    todos los contenedores, firewall y copia diaria. Se puede repetir sin problema.
 5. Al terminar enseña la dirección de la web y lo que hay que pedir al coordinador TIC. Quedan a mano el
@@ -62,18 +62,17 @@ nano red/red.env                          # IP, máscara, puerta de enlace y DNS
 sudo cp red/chrony.conf /etc/chrony/chrony.conf && sudo systemctl restart chrony
 ```
 Comprobar: `ip -br a` (172.16.50.3/24 en eth0), `ip route` (default via 172.16.50.1), `ping -c3 172.16.50.1`,
-`ping -c3 8.8.8.8`, `getent hosts duckdns.org` (DNS) y `chronyc tracking`.
+`ping -c3 8.8.8.8`, `getent hosts tailscale.com` (DNS) y `chronyc tracking`.
 El firewall se pone al final (paso 6), cuando Docker ya está funcionando.
 
 ## 3. Arrancar todo
 ```bash
 cp .env.example .env
-nano .env                                  # cambiar TODAS las contraseñas y poner el token de DuckDNS
-docker compose up -d --build               # la primera vez tarda (compila Caddy con el módulo de DuckDNS)
+nano .env                                  # cambiar TODAS las contraseñas
+docker compose up -d --build               # la primera vez tarda (descarga las imágenes)
 docker compose ps                          # todo "running"/"healthy"
 ```
 Comprobar:
-- `docker compose logs -f caddy` → "certificate obtained successfully" para `<dominio>.duckdns.org`.
 - `curl http://localhost/api/salud` → `{"estado":"ok"}`.
 - Desde un equipo de la VLAN 500: `http://172.16.50.3` → sale la web (sin datos todavía).
 
@@ -115,10 +114,13 @@ Comprobar desde otro equipo de la VLAN que la web sigue entrando, y con `sudo ip
 que la regla del UDP 1700 deja pasar solo al wAP (172.16.50.2): el gateway sigue "online" en ChirpStack.
 
 ## 7. Acceso desde Internet
-Pedir al coordinador TIC que deje 172.16.50.2 y 172.16.50.3 fuera del DHCP de la VLAN 500 y que reenvíe el
-puerto 443 a 172.16.50.3 (ver `docs/09-guia-duckdns.md`).
-Probar desde un móvil con datos: `https://<dominio>.duckdns.org`. Si no se puede abrir el puerto:
-`sudo tailscale funnel --bg 80` (plan B).
+El instituto no abre puertos, así que la web sale por Tailscale Funnel (ver `docs/09-acceso-internet.md`):
+```bash
+sudo tailscale funnel --bg --https=443 http://127.0.0.1:80
+sudo tailscale funnel status        # https://rpi-lora.<red>.ts.net (Funnel on)
+```
+Probar desde un móvil con datos (sin Tailscale): `https://rpi-lora.<red>.ts.net`.
+Al coordinador TIC solo hay que pedirle que deje 172.16.50.2 y 172.16.50.3 fuera del DHCP de la VLAN 500.
 
 ## 8. Copias de seguridad
 `crontab -e` → `0 3 * * * $HOME/TFG-2-STI-/raspberry/backup.sh >> $HOME/backup-agua.log 2>&1`
