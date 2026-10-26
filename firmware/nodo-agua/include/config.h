@@ -24,7 +24,7 @@
   #define RS485_DE   -1     // -1 si el adaptador RS485 cambia de dirección solo
   #define PIN_EN_12V 4
   #define PIN_EN_5V  25
-  #define PIN_AGUA   39     // solo entrada, pull-up externa
+  #define PIN_AGUA   39     // solo entrada; SEN0204 por divisor 10k/20k (su salida da 5 V)
   #define PIN_MODO_CAL 36   // solo entrada, pull-up externa; a GND = calibración
   #define PIN_BOMBA  12     // puerta del N-MOSFET de la bomba. Pull-down 100k obligatoria: GPIO12 tiene
                             // que estar a 0 al arrancar (pin de arranque) y así la bomba no se enciende sola.

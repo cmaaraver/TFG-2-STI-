@@ -46,6 +46,7 @@ raspberry/                 ← todo el servidor
   instalar.sh              ← instala y deja lista la Raspberry de una vez
   docker-compose.yml       ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy
   .env.example             ← plantilla de contraseñas (el .env de verdad no se sube)
+  provisionar/             ← alta automática en ChirpStack y secrets.h del nodo
   configuracion/ codec/ mosquitto/ db/ ingestor/ web/ caddy/ red/
   backup.sh
 pruebas/                   ← pruebas que se pueden hacer en el PC sin hardware

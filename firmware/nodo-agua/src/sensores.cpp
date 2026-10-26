@@ -8,7 +8,10 @@
 #include "i2c_compartido.h"
 
 #ifndef AGUA_ACTIVO_ALTO
-#define AGUA_ACTIVO_ALTO 1   // TODO VERIFICAR: nivel de la salida del SEN0204 cuando detecta agua
+// SEN0204: salida en alto = VCC y en bajo = 0 V (wiki DFRobot SEN0204); llega a GPIO 39 por un divisor 10k/20k.
+// La wiki no dice qué nivel significa "hay agua". TODO VERIFICAR: acercar agua a la pared con el monitor
+// serie abierto (agua=1 tiene que ser "hay agua"); si sale al revés, poner esto a 0.
+#define AGUA_ACTIVO_ALTO 1
 #endif
 
 static Adafruit_ADS1115 ads;

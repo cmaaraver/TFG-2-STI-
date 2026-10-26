@@ -80,6 +80,10 @@ services:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
       mosquitto: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
+      interval: 15s
+      retries: 10
     ports:
       # Solo local. El equipo entra por Tailscale ("tailscale serve", ver README)
       - "127.0.0.1:8080:8080"
@@ -121,6 +125,28 @@ services:
       PG_DSN: postgresql://web_lector:${WEB_DB_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
       db: { condition: service_healthy }
+
+  provisionar:
+    # Alta automática en ChirpStack (admin, gateway, perfil con decoder.js, aplicación y nodo) y
+    # secrets.h para el firmware. No es un servicio: se lanza una vez desde instalar.sh con
+    #   docker compose run --rm provisionar
+    # (el perfil "herramientas" hace que "docker compose up" no lo arranque solo).
+    build: ./provisionar
+    profiles: ["herramientas"]
+    restart: "no"
+    logging: *registros
+    environment:
+      CHIRPSTACK_ADMIN_PASSWORD: ${CHIRPSTACK_ADMIN_PASSWORD}
+      GATEWAY_EUI: ${GATEWAY_EUI:-}
+      NODO_DEV_EUI: ${NODO_DEV_EUI}
+      NODO_JOIN_EUI: ${NODO_JOIN_EUI:-0000000000000000}
+      NODO_APP_KEY: ${NODO_APP_KEY}
+      NODO_NWK_KEY: ${NODO_NWK_KEY}
+    volumes:
+      - ./codec:/codec:ro
+      - ../firmware/nodo-agua/include:/salida
+    depends_on:
+      chirpstack: { condition: service_healthy }
 
   caddy:
     # Proxy delante de la web en el puerto 80. El HTTPS hacia Internet lo pone Tailscale Funnel

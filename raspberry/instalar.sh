@@ -84,6 +84,19 @@ EOF
 else
   amarillo ".env ya existe: se deja como está."
 fi
+# Datos del alta automática en ChirpStack. Se añaden también a un .env antiguo que no los tenga.
+anadir_si_falta() { grep -q "^$1=" .env || echo "$1=$2" >> .env; }
+anadir_si_falta CHIRPSTACK_ADMIN_PASSWORD "$(contrasena)"
+anadir_si_falta NODO_DEV_EUI "$(openssl rand -hex 8)"
+anadir_si_falta NODO_JOIN_EUI 0000000000000000
+anadir_si_falta NODO_APP_KEY "$(openssl rand -hex 16)"
+anadir_si_falta NODO_NWK_KEY "$(openssl rand -hex 16)"
+if ! grep -q "^GATEWAY_EUI=." .env; then
+  amarillo "EUI del wAP LR8 (16 cifras hex; en RouterOS: /iot lora print). Enter para darlo de alta más tarde."
+  read -r -p "GATEWAY_EUI: " eui || true
+  sed -i '/^GATEWAY_EUI=/d' .env
+  echo "GATEWAY_EUI=${eui:-}" >> .env
+fi
 # shellcheck disable=SC1091
 source .env
 grep -q "cambiar_esto\|pegar_aqui" .env && fallo ".env tiene valores de ejemplo sin cambiar."
@@ -146,6 +159,11 @@ done
 curl -fsS http://127.0.0.1/api/salud >/dev/null 2>&1 || { sudo docker compose ps; fallo "la web no responde. Mira: sudo docker compose logs web caddy"; }
 verde "Web funcionando."
 
+# ---------- 7b. Alta en ChirpStack ----------
+paso "7b. Alta automática en ChirpStack (gateway, perfil con decoder.js, aplicación y nodo)"
+sudo docker compose run --rm --build provisionar || fallo "falló el alta en ChirpStack. Mira el mensaje de arriba."
+sudo chown "$USUARIO:" ../firmware/nodo-agua/include/secrets.h
+
 # ---------- 8. Firewall ----------
 paso "8. Firewall"
 ./red/firewall.sh
@@ -184,9 +202,13 @@ echo "Web desde Internet:    https://$nombre_ts  (Tailscale Funnel)"
 echo "ChirpStack (equipo):   https://$nombre_ts:8443  (solo desde equipos con Tailscale)"
 echo "Pedir al coordinador TIC: dejar $IP_RASPBERRY y $IP_WAP fuera del DHCP de la VLAN 500 (no hay que abrir ningún puerto)."
 echo
+echo "ChirpStack: usuario admin, contraseña CHIRPSTACK_ADMIN_PASSWORD del fichero .env"
+echo
 amarillo "Queda a mano (docs/08-guia-instalacion.md, pasos 5 y 6):"
 echo "  1. Configurar el wAP LR8 (IP $IP_WAP/$PREFIJO, puerta de enlace $PUERTA_ENLACE, NTP y servidor LoRa $IP_RASPBERRY:1700)."
-echo "  2. ChirpStack: cambiar la contraseña de admin/admin, dar de alta el gateway, el perfil con"
-echo "     codec/decoder.js y el dispositivo; copiar sus claves a firmware/nodo-agua/include/secrets.h."
+if ! grep -q "^GATEWAY_EUI=." .env; then
+  echo "     Después poner su EUI en GATEWAY_EUI del .env y ejecutar: sudo docker compose run --rm provisionar"
+fi
+echo "  2. Copiar firmware/nodo-agua/include/secrets.h (claves del nodo, ya generadas) al PC donde se graba la LILYGO."
 echo "  3. Guardar una copia del fichero .env fuera de la Raspberry (tiene todas las contraseñas)."
 echo "  4. Reiniciar una vez (sudo reboot) y comprobar que todo vuelve solo: sudo docker compose ps"

@@ -84,7 +84,7 @@ Esquema completo en `03-conexionado-nodo.md`:
 Orden de montaje recomendado (siempre **sin la LILYGO puesta** hasta el último punto):
 
 1. Soldar en la placa de topos: tiras hembra para la LILYGO, bornas, conmutadores de 12 V y 5 V, driver de la
-   bomba (con la **pull-down de 100 kΩ en GPIO 12**, obligatoria), divisores de batería y caudalímetro y las pull-ups.
+   bomba (con la **pull-down de 100 kΩ en GPIO 12**, obligatoria), divisores de batería, caudalímetro y SEN0204 (10k/20k) y la pull-up del modo calibración.
 2. Conectar la alimentación de 12 V (de una fuente de laboratorio limitada a 1 A, todavía no la batería).
 3. Medir con el multímetro:
 
@@ -166,6 +166,11 @@ mensajes del gateway (estadísticas cada 30 s aprox.).
 
 ## 6. Alta del nodo en ChirpStack
 
+**Ahora es automático**: `instalar.sh` lanza el contenedor `provisionar`, que hace los puntos 1 a 5 de abajo con los datos del
+`.env` y deja `firmware/nodo-agua/include/secrets.h` escrito (`raspberry/README.md`, apartado 5). Si el EUI del wAP no se puso
+al instalar, se añade en `GATEWAY_EUI` del `.env` y se lanza `sudo docker compose run --rm provisionar`. Después solo queda el
+punto 6. Lo de abajo es lo que hace por dentro (o cómo hacerlo a mano):
+
 1. Entrar a ChirpStack (por Tailscale o túnel SSH, `raspberry/README.md` apartado 5) y cambiar la contraseña de `admin`.
 2. **Gateway**: con el EUI del wAP → al rato sale *online*.
 3. **Perfil de dispositivo**: región EU868, MAC LoRaWAN 1.1.0, revisión RP002-1.0.3 o la que ofrezca, OTAA,
@@ -228,7 +233,7 @@ Diseño y balance de energía en `06-maqueta.md`; colocación de cada sonda en `
    3. Conectar el panel al MPPT (conectores MC4).
    4. Conectar la salida de CARGA (con su fusible de 3 A) a la caja 1.
    Para desmontar, al revés: carga, panel y por último batería.
-6. **Gateway**: el wAP en la fachada o en una ventana con visión directa a la maqueta.
+6. **Gateway**: el wAP en el mástil de la azotea, siguiendo `docs/02-arquitectura-red.md` (apartado "Gateway en el mástil de la azotea").
 
 **Comprobación**: se repite la tabla del paso 7 con el nodo ya en su sitio y alimentado solo por el sol.
 En ChirpStack mirar RSSI y SNR de los uplinks: con SNR positiva y RSSI mejor que −110 dBm hay margen de sobra.

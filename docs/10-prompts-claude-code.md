@@ -121,8 +121,9 @@ PASOS
    (tiene todas las contraseñas). No lo ejecutes sin que te diga la carpeta.
 8. Resumen final para mí: qué ha quedado funcionando, qué ha fallado y lo que queda a mano, que NO debes hacer tú:
    - configurar el wAP LR8 (raspberry/README.md, apartado 4),
-   - entrar en ChirpStack por Tailscale o con túnel ssh -L 8080:127.0.0.1:8080 <<USUARIO_RASPBERRY>>@172.16.50.3,
-     cambiar admin/admin y dar de alta gateway, perfil con codec/decoder.js y dispositivo (apartado 5),
+   - si GATEWAY_EUI quedó vacío en el .env: ponerlo y lanzar sudo docker compose run --rm provisionar (apartado 5;
+     el resto del alta en ChirpStack ya lo hizo instalar.sh),
+   - copiar firmware/nodo-agua/include/secrets.h de la Raspberry a mi PC (propónme el scp, no lo ejecutes),
    - pedir al coordinador TIC que 172.16.50.2 y 172.16.50.3 queden fuera del DHCP de la VLAN 500 y permiso para
      Tailscale (docs/09-acceso-internet.md); no hay que abrir puertos,
    - desactivar "key expiry" de rpi-lora en la consola de Tailscale y probar la web desde un móvil con datos.
@@ -167,7 +168,9 @@ PASOS
    Administrador de dispositivos o la serigrafía y qué driver oficial me falta; no instales drivers tú.
 2. Opcional, si hay g++ y node: sh pruebas/payload/probar.sh → tiene que acabar en
    "TODO OK (3 payloads, 10 campos del ingestor comprobados)".
-3. Claves: copia firmware/nodo-agua/include/secrets.example.h a secrets.h (solo si no existe). Si te he dado
+3. Claves: si te he pasado el secrets.h que generó la Raspberry (contenedor provisionar), cópialo a
+   firmware/nodo-agua/include/secrets.h y no toques nada más de este punto. Si no, copia
+   firmware/nodo-agua/include/secrets.example.h a secrets.h (solo si no existe). Si te he dado
    claves, ponlas como dice docs/08-guia-instalacion.md apartado 6: MSB primero, tal cual se leen en ChirpStack,
    DevEUI como 0x...ULL y las claves de 2 en 2 cifras {0x..,0x..,...} (16 bytes cada una; comprueba que son 32
    cifras hex). Si es "AUN NO", deja los ceros. No me repitas las claves en el chat.

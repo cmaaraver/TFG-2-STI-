@@ -55,5 +55,6 @@ Está fuera del edificio; la telemetría entra al centro por LoRaWAN hasta el ga
 - **Evaporación**: el nivel bajará solo; es un buen dato para el panel (y para la alarma de rellenar).
 - **Vandalismo y robo**: caja con candado o tornillos de seguridad, dentro de una zona vallada del centro.
 - **Lluvia y rayos**: prensaestopas hacia abajo (goteo), caja con membrana de ventilación, estructura y panel a tierra si es posible.
-- **Radio**: el wAP LR8 es IP54; mejor en la fachada o una ventana con visión directa a la maqueta
-  y cable de red (PoE) hacia dentro. Medir RSSI/SNR antes de fijar nada.
+- **Radio**: el wAP LR8 va en el mástil de la azotea del instituto (decisión de 2026-10-26), lo más alto
+  posible y con visión directa a la maqueta. Detalles del montaje en `docs/02-arquitectura-red.md`.
+  Medir RSSI/SNR antes de apretar las abrazaderas.

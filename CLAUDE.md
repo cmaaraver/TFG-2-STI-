@@ -92,7 +92,8 @@ docs/
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
   herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
-pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor
+pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor;
+                                servidor/: wAP y nodo simulados (join OTAA 1.1 + uplink) contra el servidor
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
   instalar.sh                 ← instalación completa de la Raspberry con un solo script
   docker-compose.yml          ← ChirpStack, Mosquitto, TimescaleDB, ingestor, web, Caddy
@@ -102,6 +103,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
   mosquitto/mosquitto.conf    ← broker interno con cola persistente
   db/                         ← creación de las bases de datos, tablas y usuarios
   ingestor/                   ← MQTT → TimescaleDB
+  provisionar/                ← alta automática en ChirpStack (gateway, perfil con decoder.js, nodo) y secrets.h
   web/                        ← API (FastAPI) + página en tiempo real con gráficas (ECharts)
   caddy/                      ← proxy de la web en el puerto 80 (el HTTPS lo pone Tailscale Funnel)
   red/                        ← red.env (IPs de la VLAN 500), NetworkManager, chrony y firewall
@@ -111,7 +113,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 ## 5. Datos pendientes (preguntar antes de cerrar la tarea afectada)
 
 - [ ] Modelo exacto de la LILYGO (T3 V1.6.1 con SX1276, T3-S3 con SX1262, T-Beam...). Afecta a `firmware/nodo-agua/include/config.h`.
-- [x] Ubicación: maqueta FUERA del edificio con alimentación solar; gateway dentro del centro (o en fachada).
+- [x] Ubicación: maqueta FUERA del edificio con alimentación solar; gateway en el mástil de la azotea del instituto (decisión de 2026-10-26, `docs/02`).
 - [x] Agua de red (dulce): salinidad del SEN0681 a 0 ‰ (es un ajuste del sensor de oxígeno, no un sensor).
 - [x] Sin sonda de conductividad; sondas dentro del depósito, sin cámara de medida.
 - [x] Conductividad quitada del firmware (`config.h`, `sensores.cpp`). El formato del payload **no cambia**:
@@ -150,7 +152,8 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
       Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web y Caddy.
 - [ ] wAP LR8: IP estática 172.16.50.2/24, puerta de enlace 172.16.50.1, NTP → 172.16.50.3, servidor LoRa → 172.16.50.3:1700.
 - [ ] Alta en ChirpStack: gateway (EUI del wAP), perfil de dispositivo EU868 / LoRaWAN 1.1 / OTAA / clase A,
-      codec `decoder.js`, dispositivo con DevEUI y claves.
+      codec `decoder.js`, dispositivo con DevEUI y claves. Lo hace solo el contenedor `provisionar` (lo lanza
+      `instalar.sh`) y deja `secrets.h` escrito.
 - [ ] Firewall con `raspberry/red/firewall.sh`.
 - **Hecho cuando**: el nodo hace join, los uplinks salen decodificados en ChirpStack y aparecen en la web al momento.
 
@@ -172,7 +175,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [ ] Montar la maqueta: base, depósito opaco, bomba, tubería, caudalímetro y soporte de sondas dentro del depósito (`docs/06-maqueta.md`).
 - [ ] Medir consumo real (nodo activo, deep sleep, bomba, DFR1120) y revisar el balance de `docs/06-maqueta.md`.
 - [ ] Montaje en caja estanca según `docs/03-conexionado-nodo.md`.
-- [ ] Ubicar el gateway (idealmente en fachada, con visión directa a la maqueta) y medir RSSI/SNR.
+- [ ] Montar el gateway en el mástil de la azotea (`docs/02-arquitectura-red.md`, apartado del mástil) y medir RSSI/SNR.
 - [ ] Pruebas de campo: RSSI/SNR, autonomía, estabilidad de lecturas durante 1 semana.
 - **Hecho cuando**: una semana sin pérdidas significativas de paquetes y batería estable.
 

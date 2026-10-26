@@ -35,7 +35,7 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
   DC-DC 5 V ──[conmutador 5V, GPIO EN_5V]──► placa pH ──► aislador ──► ADS1115 A0
                                           ├► convertidor 4-20 mA ────► ADS1115 A2
                                           ├► adaptador RS485 (lado aislado lo alimenta él)
-                                          ├► SEN0204 (presencia de agua) ──► GPIO AGUA
+                                          ├► SEN0204 (presencia de agua) ──[divisor 10k/20k]──► GPIO AGUA
                                           └► Caudalímetro ──[divisor 10k/20k]──► GPIO CAUDAL
 ```
 
@@ -51,7 +51,7 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
 | RS485 RX | GPIO 14 | Adaptador RS485 TX(D) | |
 | EN_12V | GPIO 4 | Base del NPN del conmutador 12 V | HIGH = sensores 12 V encendidos |
 | EN_5V | GPIO 25 | Puerta/driver del conmutador 5 V | HIGH = sensores 5 V encendidos (el LED de la placa también parpadea) |
-| AGUA | GPIO 39 | Salida SEN0204 | Solo entrada; poner pull-up externa 10 kΩ a 3,3 V. Comprobar nivel de salida (≤3,3 V) |
+| AGUA | GPIO 39 | Salida SEN0204 por divisor 10k/20k | Solo entrada. La salida del SEN0204 en alto vale lo mismo que su alimentación (5 V, wiki DFRobot SEN0204), así que lleva el mismo divisor que el caudalímetro: 10 kΩ en serie y 20 kΩ de GPIO 39 a GND (≈3,3 V). Sin pull-up |
 | MODO_CAL | GPIO 36 | Puente a GND | Solo entrada; pull-up externa 10 kΩ. Puente puesto al arrancar = modo calibración |
 | BOMBA | GPIO 12 | Puerta del N-MOSFET (IRLZ44N) de la bomba | Pull-down 100 kΩ obligatoria: GPIO12 es pin de arranque y tiene que estar a 0 al encender (si no, el ESP32 no arranca y la bomba podría encenderse sola) |
 | CAUDAL | GPIO 34 | Salida del caudalímetro por divisor 10k/20k | Solo entrada; el caudalímetro va a 5 V y sus pulsos llegan a ~3,3 V |

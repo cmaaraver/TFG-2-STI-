@@ -21,7 +21,7 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 | Oxígeno disuelto + temperatura | DFRobot SEN0681 (RS485, 10-30 V, 0,2 W) | Sensor principal; su temperatura compensa el pH |
 | pH | DFRobot SEN0169-V2 (sonda industrial) | Inmersión continua dentro del depósito |
 | Nivel de agua | DFRobot KIT0139 (4-20 mA) | Nivel del depósito (evaporación, alarma de rellenar) |
-| Presencia de agua | DFRobot SEN0204 o SEN0509 (se usa uno) | Alarma de nivel mínimo (sonda de pH a punto de quedar al aire) |
+| Presencia de agua | DFRobot SEN0204 (sin contacto, pegado por fuera del depósito) | Alarma de nivel mínimo (sonda de pH a punto de quedar al aire). El SEN0509 queda de repuesto (decisión de 2026-10-26) |
 | Actuador (fase 7) | DFRobot DFR1120-868 | Relé controlado por downlink (baliza/alarma) |
 
 ## B. Material en reserva (no se usa)
@@ -112,7 +112,7 @@ hace falta adaptador USB-Ethernet ni switch propio.
 
 | Cant. | Material | Motivo |
 |---|---|---|
-| 2 | Latiguillos Cat6 (+ 1 cable Cat6 exterior si el wAP va en fachada) | Raspberry → switch del instituto e inyector PoE del wAP → switch (los dos en la VLAN 500) |
+| 2 | Latiguillos Cat6 (+ 1 cable Cat6 FTP de exterior hasta el mástil de la azotea, donde va el wAP) | Raspberry → switch del instituto e inyector PoE del wAP → switch (los dos en la VLAN 500) |
 | 1 | Batería RTC oficial Raspberry Pi 5 | Mantener la hora sin corriente ni Internet |
 | 1 | Fuente oficial Raspberry Pi 27 W USB-C + Active Cooler | Estabilidad |
 | 1 | SAI pequeño (opcional) | Evitar corrupción por cortes |

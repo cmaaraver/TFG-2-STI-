@@ -47,6 +47,41 @@ Supuestos que hay que confirmar con el coordinador TIC (**TODO VERIFICAR**):
 Configuración: los datos están en un único fichero, `raspberry/red/red.env`, que leen
 `raspberry/red/configurar-red.sh` (NetworkManager), `raspberry/red/firewall.sh` e `instalar.sh`.
 
+## Gateway en el mástil de la azotea
+
+Decisión de 2026-10-26: el wAP LR8 va en el **mástil de la azotea** del instituto. Desde arriba ve la maqueta
+sin paredes en medio y LoRa llega mucho mejor que desde dentro del edificio. La IP y la configuración no cambian.
+
+Datos del wAP LR8 kit (ficha de MikroTik, https://mikrotik.com/product/wap_lr8_kit): caja de exterior IP54,
+de −40 a +60 °C, antena interna de 2 dBi (admite antena externa), alimentación por PoE pasivo de 9 a 30 V
+(el kit trae fuente de 24 V e inyector) y 7 W como máximo.
+
+```
+  mástil (azotea)                            dentro del edificio
+  ┌────────────┐
+  │  wAP LR8   │  conector hacia ABAJO
+  └─────┬──────┘
+        │ cable Cat6 FTP de exterior (con bucle de goteo)          fuente 24 V
+        └──────── bajante protegida (tubo o canaleta) ──────► [inyector PoE] ──► switch (VLAN 500)
+```
+
+Cómo se monta:
+1. **Antes de subir**: configurar y probar el wAP abajo, en la mesa (`raspberry/README.md`, apartado 4). En la
+   azotea solo se fija y se conecta.
+2. **Posición**: en lo alto del mástil, vertical (como viene, la antena interna es vertical) y por encima del
+   pretil para que nada tape la vista hacia la maqueta. Con el **conector Ethernet hacia abajo**.
+3. **Sujeción**: el kit trae herrajes de pared; en el mástil se fija con abrazaderas o bridas de acero inoxidable
+   (**TODO VERIFICAR** si el kit trae soporte de mástil).
+4. **Cable**: Cat6 **FTP de exterior** (resistente al sol), con un bucle de goteo antes del conector para que
+   el agua no entre por el cable. Bajante por tubo o canaleta. El tramo entero, del switch al wAP pasando por el
+   inyector, **no puede pasar de 100 m** (límite de Ethernet).
+5. **El inyector PoE y la fuente de 24 V van dentro**, junto al switch: no son de exterior.
+6. **Tierra**: el mástil tiene que estar unido a la tierra o al pararrayos del edificio. Si se puede, poner un
+   protector de sobretensiones para Ethernet entre el cable de la azotea y el inyector. Antes de subir, pedir
+   permiso al coordinador TIC y al centro para acceder a la azotea y usar el mástil.
+7. **Prueba**: con el nodo encendido en la maqueta, mirar en ChirpStack el RSSI y la SNR de varios uplinks.
+   Con SNR positiva y RSSI mejor que −110 dBm hay margen de sobra.
+
 Con la VLAN ya no hace falta cable directo de la Raspberry al wAP: cada uno va a un puerto del switch
 (el wAP a través de su inyector PoE, que viene en el kit). Si el switch del instituto diera un PoE
 compatible con el wAP se podría quitar el inyector, pero eso hay que mirarlo en la ficha de MikroTik
