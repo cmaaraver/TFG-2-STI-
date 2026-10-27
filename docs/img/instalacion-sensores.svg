@@ -93,6 +93,7 @@
 <circle cx="880" cy="830" r="3.5" fill="#64748b"/>
 <text x="986" y="856" font-size="13.5" font-weight="700" fill="#0f172a" text-anchor="start">Bomba 12 V sumergida + rejilla</text>
 <text x="986" y="874" font-size="12.5" font-weight="400" fill="#334155" text-anchor="start">en el fondo, lado opuesto a las sondas</text>
+<text x="986" y="916" font-size="12.5" font-weight="700" fill="#b45309" text-anchor="start">bomba aparte: alimentación propia, sin cable al nodo</text>
 <polyline points="850,800 850,340 980,340 980,230 1060,230" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
 <rect x="1060" y="208" width="80" height="44" rx="6" fill="#fde68a" stroke="#111" stroke-width="2"/>
 <text x="1100" y="234" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">caudal.</text>

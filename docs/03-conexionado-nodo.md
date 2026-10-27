@@ -17,7 +17,9 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
 - Alimentación, RS485 y cables largos entran por **bornas de tornillo**.
 - Los sensores exteriores entran por **conectores de aviación GX12/GX16** en la pared de la caja
   y la sonda de pH por **pasamuros BNC**. Así se desmonta un sensor sin abrir la caja.
-- Lo único que se suelda es la placa base (pines, bornas, MOSFET, resistencias, puentes).
+- Lo único que se suelda es la placa base (pines, bornas, MOSFET de los conmutadores, resistencias, puentes).
+- **La bomba va aparte**, con su propia alimentación (decisión de 2026-10-26): no se conecta al nodo.
+  La LILYGO solo mide el caudal que da.
 
 ## 2. Esquema de bloques
 
@@ -27,7 +29,6 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
                   [F 3A]
                     ├──────────────► DC-DC 12→5 V ──► LILYGO 5V/VBUS  (siempre)
                     │                                   └─ 3V3 ──► ADS1115 (siempre, 3,3 V)
-                    ├──[N-MOSFET, GPIO BOMBA]──────────► Bomba 12 V (con diodo en paralelo)
                     ├──[conmutador 12V, GPIO EN_12V]──► SEN0681 (oxígeno) 10-30 V
                     │                                  └► KIT0139 (nivel 4-20 mA)
                     └──[divisor 100k/22k]──────────────► ADS1115 A3 (batería)
@@ -37,6 +38,8 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
                                           ├► adaptador RS485 (lado aislado lo alimenta él)
                                           ├► SEN0204 (presencia de agua) ──[divisor 10k/20k]──► GPIO AGUA
                                           └► Caudalímetro ──[divisor 10k/20k]──► GPIO CAUDAL
+
+  Bomba 12 V: alimentación propia, sin conexión con el nodo (GPIO 12 libre)
 ```
 
 ## 3. Tabla de conexiones (LILYGO T3 V1.6.1)
@@ -53,14 +56,14 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
 | EN_5V | GPIO 25 | Puerta/driver del conmutador 5 V | HIGH = sensores 5 V encendidos (el LED de la placa también parpadea) |
 | AGUA | GPIO 39 | Salida SEN0204 por divisor 10k/20k | Solo entrada. La salida del SEN0204 en alto vale lo mismo que su alimentación (5 V, wiki DFRobot SEN0204), así que lleva el mismo divisor que el caudalímetro: 10 kΩ en serie y 20 kΩ de GPIO 39 a GND (≈3,3 V). Sin pull-up |
 | MODO_CAL | GPIO 36 | Puente a GND | Solo entrada; pull-up externa 10 kΩ. Puente puesto al arrancar = modo calibración |
-| BOMBA | GPIO 12 | Puerta del N-MOSFET (IRLZ44N) de la bomba | Pull-down 100 kΩ obligatoria: GPIO12 es pin de arranque y tiene que estar a 0 al encender (si no, el ESP32 no arranca y la bomba podría encenderse sola) |
+| (libre) | GPIO 12 | Nada | La bomba va aparte y ya no se controla desde el nodo. GPIO 12 es pin de arranque y tiene que estar a 0 al encender: se deja sin conectar |
 | CAUDAL | GPIO 34 | Salida del caudalímetro por divisor 10k/20k | Solo entrada; el caudalímetro va a 5 V y sus pulsos llegan a ~3,3 V |
 | Radio LoRa | 5,18,19,23,26,27,33 | Internos | No usar |
 | Antena | Conector u.FL/SMA | Pigtail a pasamuros SMA | **Nunca encender sin antena** |
 | OLED | Interna (I2C 21/22, 0x3C) | — | Ya viene en la placa. Muestra el logo de Los Viveros, la fase del ciclo y el temporizador del envío LoRa |
 
 **No poner tarjeta microSD en la LILYGO.** En la T3 V1.6.1 el lector de tarjetas usa los GPIO 2, 13, 14 y 15
-(`utilities.h` de LilyGO) y nosotros usamos el 13 y el 14 para el RS485. Por eso la bomba tampoco va en el GPIO 2.
+(`utilities.h` de LilyGO) y nosotros usamos el 13 y el 14 para el RS485.
 
 ### ADS1115 (dirección 0x48, ADDR a GND)
 | Canal | Señal | Rango esperado |
@@ -95,16 +98,12 @@ GPIO en HIGH → NPN conduce → puerta a masa → MOSFET conduce. Añadir 100 k
 para que al arrancar el ESP32 los sensores queden apagados. El de 5 V es igual con un P-MOSFET
 de nivel lógico (AO3401).
 
-## 5. Bomba (lado bajo, N-MOSFET)
-```
- +12V (tras fusible) ───────── Bomba (+)
-                         ┌──── Bomba (−) ────┐
-               diodo 1N5819 (cátodo a +12V)  D
-                                             N-MOSFET IRLZ44N
- GPIO BOMBA ──[220 Ω]──────────────────────── G
-                   └──[100 kΩ]── GND         S ── GND
-```
-El diodo protege el MOSFET del pico que da el motor al apagarse.
+## 5. Bomba
+
+La bomba va **aparte, con su propia alimentación**, y está fuera del sistema del nodo (decisión de 2026-10-26).
+No hay MOSFET, ni diodo, ni pull-down en la placa base, y el GPIO 12 queda libre. El nodo solo mide el caudal
+con el caudalímetro: si al medir no hay caudal (bomba apagada, atascada o sin agua) se marca el aviso
+"bomba sin caudal" del payload (`docs/04-formato-payload.md`).
 
 ## 6. Buenas prácticas del montaje
 - Masa en estrella: todas las masas llegan a un punto; la sonda de pH lejos del DC-DC.
@@ -124,7 +123,7 @@ El diodo protege el MOSFET del pico que da el motor al apagarse.
 | pH SEN0169-V2 | Colgado del soporte de la tapa, a media altura, lado contrario a la bomba | Prensaestopas o abrazadera en el soporte; la punta siempre por debajo del nivel mínimo | Nunca dejarlo en seco. Cable BNC sin tensión |
 | Oxígeno SEN0681 | Colgado junto al pH, membrana hacia abajo | Igual que el pH | Lejos del retorno y de la bomba (las burbujas falsean el O2) |
 | Nivel KIT0139 | Apoyado en el fondo | Colgado de su propio cable hasta tocar fondo | El cable lleva un tubo de aire dentro: no aplastarlo ni doblarlo fuerte; el extremo del cable, dentro de la caja seca |
-| Bomba 12 V | En el fondo, lado contrario a las sondas | Con su rejilla de aspiración | Que no aspire lodo: un par de cm por encima del fondo si tiene patas |
+| Bomba 12 V (alimentación aparte) | En el fondo, lado contrario a las sondas | Con su rejilla de aspiración | Que no aspire lodo: un par de cm por encima del fondo si tiene patas. Su cable no entra en la caja del nodo |
 | Presencia de agua SEN0204 | Pegado por fuera de la pared del depósito, a la altura del nivel mínimo | Cinta de doble cara o adhesivo | Detecta a través de una pared de hasta 13 mm (wiki DFRobot SEN0204: "thickness of induction 0 ~ 13 mm"); sin metal cerca |
 | Caudalímetro YF-S201 | En la tubería de salida, horizontal, antes de la válvula | Racores de espiga 1/2" | La flecha del cuerpo en el sentido del agua |
 

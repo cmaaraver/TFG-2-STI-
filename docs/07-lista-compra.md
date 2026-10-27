@@ -1,5 +1,9 @@
 # Lista de compra con enlaces
 
+> **Estado a 2026-10-26: ya tenemos todo el material.** Esta lista se guarda para el presupuesto de la memoria.
+> Desde esa fecha la bomba va aparte, con su propia alimentación, así que el MOSFET IRLZ44N, el diodo 1N5819
+> y el conector GX16 de 2 pines de la bomba ya no se usan en el nodo.
+
 Solo lo que hay que comprar (el material que ya tenemos está en `01-lista-material.md`, apartado A).
 Enlaces comprobados el 29 y 30/09/2026: todos abrían la ficha del producto con stock, salvo los marcados **SIN VERIFICAR**.
 La misma lista en hoja de cálculo, para pasarla al centro: [`07-lista-compra.xlsx`](07-lista-compra.xlsx).

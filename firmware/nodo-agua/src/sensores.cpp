@@ -102,8 +102,6 @@ void sensoresIniciar() {
   pinMode(PIN_EN_5V, OUTPUT);
   sensoresApagar();
   pinMode(PIN_AGUA, INPUT);
-  pinMode(PIN_BOMBA, OUTPUT);
-  bombaApagar();
   pinMode(PIN_CAUDAL, INPUT);
   if (RS485_DE >= 0) { pinMode(RS485_DE, OUTPUT); digitalWrite(RS485_DE, LOW); }
 
@@ -129,9 +127,6 @@ void sensoresApagar() {
   digitalWrite(PIN_EN_12V, LOW);
   digitalWrite(PIN_EN_5V, LOW);
 }
-
-void bombaEncender() { digitalWrite(PIN_BOMBA, HIGH); }
-void bombaApagar()   { digitalWrite(PIN_BOMBA, LOW); }
 
 float medirCaudal(uint32_t duracionMs) {
   pulsosCaudal = 0;
@@ -186,7 +181,7 @@ static void imprimir(const Medida& m) {
 
 void modoCalibracion() {
   Serial.println("\n=== MODO CALIBRACION ===");
-  Serial.println("Comandos: leer | bomba | ph7 | ph4 | ver | reset | salir");
+  Serial.println("Comandos: leer | caudal | ph7 | ph4 | ver | reset | salir");
   sensoresEncender();
   Serial.println("Esperando calentamiento de sensores (60 s)...");
   delay(T_CALENTAMIENTO_MS);
@@ -199,10 +194,8 @@ void modoCalibracion() {
 
     if (c == "leer") {
       imprimir(m);
-    } else if (c == "bomba") {
-      bombaEncender(); delay(5000);
+    } else if (c == "caudal") {                  // con la bomba (que va aparte) encendida
       Serial.printf("Caudal: %.2f L/min\n", medirCaudal(T_MEDIDA_CAUDAL_MS));
-      bombaApagar();
     } else if (c == "ph7") {
       cal.ph7_mv = leerMv(CANAL_PH); guardarCalibracion();
       Serial.printf("pH7 guardado: %.1f mV\n", cal.ph7_mv);
@@ -214,7 +207,7 @@ void modoCalibracion() {
     } else if (c == "reset") {
       cal = Calibracion(); guardarCalibracion(); Serial.println("Calibracion por defecto");
     } else if (c == "salir") {
-      bombaApagar(); sensoresApagar(); Serial.println("Quitar el puente MODO_CAL y reiniciar"); return;
+      sensoresApagar(); Serial.println("Quitar el puente MODO_CAL y reiniciar"); return;
     } else {
       Serial.println("Comando no valido");
     }

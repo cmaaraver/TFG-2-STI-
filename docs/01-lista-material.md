@@ -1,5 +1,11 @@
 # Lista de material
 
+**Estado a 2026-10-26: ya tenemos todo el material, no hay que comprar nada.** Cambios de esa fecha:
+- **La bomba va aparte**, con su propia alimentación, y no se conecta al nodo. Ya no se usan el N-MOSFET
+  IRLZ44N, el diodo 1N5819, el conector GX16 de 2 pines ni la manguera de la bomba hasta la caja del nodo.
+  El nodo solo mide el caudal con el caudalímetro.
+- Presencia de agua: **SEN0204** (el SEN0509 queda de repuesto). Nivel: el KIT0139 (0-5 m) se queda.
+
 Versión 2 (2026-09-29). Cambios respecto a la versión anterior:
 - **Se quita la medida de conductividad (sensor de sales)**: fuera la sonda K=1, su placa, un aislador,
   un pasamuros BNC y la solución de 1413 µS/cm. La DFR0300-H (K=10) tampoco se usa.
@@ -14,7 +20,7 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 
 | Equipo | Modelo | Uso en el proyecto |
 |---|---|---|
-| Nodo | LILYGO ESP32 con LoRa (modelo por confirmar) | Lee sensores, controla la bomba y envía por LoRaWAN |
+| Nodo | LILYGO T3 V1.6.1 (ESP32 + SX1276, serigrafía `T3_V1.6.1 20210104`) | Lee sensores, mide el caudal de la bomba y envía por LoRaWAN |
 | Gateway | MikroTik wAP LR8 kit (con fuente 24 V e inyector PoE) | Recibe LoRaWAN y reenvía a la Raspberry |
 | Servidor completo | Raspberry Pi 5 4 GB | ChirpStack, MQTT, base de datos, web, Tailscale, NTP |
 | Almacenamiento de la Raspberry | microSD 64 GB | Sistema y datos (sin SSD NVMe, decisión de 2026-09-29) |
@@ -46,10 +52,10 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 | 1 | Convertidor DC-DC 12 V → 5 V, 1-2 A, bajo consumo en reposo (< 1 mA) | Alimentar la LILYGO y los módulos de 5 V |
 | 1 | P-MOSFET IRF9540N o AOD417 + NPN BC547 + resistencias 10k, 1k, 100k | Conmutador 12 V de sensores (`docs/03`, apartado 4) |
 | 1 | P-MOSFET AO3401 + NPN BC547 + resistencias 10k, 1k, 100k | Conmutador 5 V de sensores |
-| 1 | N-MOSFET de nivel lógico IRLZ44N + diodo 1N5819 + resistencias 220 Ω y 100 kΩ | Encender la bomba desde la LILYGO |
+| ~~1~~ | ~~N-MOSFET de nivel lógico IRLZ44N + diodo 1N5819 + resistencias 220 Ω y 100 kΩ~~ | Ya no se usa: la bomba va aparte (2026-10-26) |
 | 1 | Resistencias 1 %: 100 kΩ y 22 kΩ (batería), 10 kΩ y 20 kΩ (caudalímetro), 2 × 10 kΩ (pull-ups) | Divisores y entradas |
 | 1 | Placa de topos doble cara 9×15 cm + tiras de pines hembra y macho | Placa base (la LILYGO va pinchada, no soldada) |
-| 1 | Bornas de tornillo 5,08 mm (2 y 3 polos, ~10 uds) | Entradas de alimentación, bomba, RS485 |
+| 1 | Bornas de tornillo 5,08 mm (2 y 3 polos, ~10 uds) | Entradas de alimentación y RS485 |
 | 1 | Kit de cables Gravity PH2.0 3 pines | Conectar módulos Gravity a la placa base |
 | 1 | Antena 868 MHz exterior + pigtail u.FL/SMA a pasamuros SMA hembra | Radio del nodo (nunca encender sin antena) |
 | 1 | Cable USB-C / micro-USB de datos (según la LILYGO) | Programar y monitor serie |
@@ -60,12 +66,12 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 | 1 | Caja estanca IP66/IP67 ~250×200×100 mm | Electrónica del nodo |
 | 1 | Caja estanca IP66 ~300×250×150 mm (o caja de batería ventilada) | Batería LiFePO4, regulador MPPT y fusibles (la batería no cabe con la electrónica) |
 | 2 | Membrana de ventilación IP67 (tapón transpirable M12) | Evitar condensación en las dos cajas |
-| 5 | Conectores de aviación GX16 estancos macho+hembra: 4 pines (SEN0681), 2 pines (bomba), 3 pines (caudalímetro, presencia de agua, nivel) | Desmontar sensores sin abrir la caja |
+| 5 | Conectores de aviación GX16 estancos macho+hembra: 4 pines (SEN0681), 2 pines (de repuesto: la bomba ya no entra en la caja), 3 pines (caudalímetro, presencia de agua, nivel) | Desmontar sensores sin abrir la caja |
 | 1 | Pasamuros BNC hembra-hembra | Sonda de pH |
 | 6 | Prensaestopas PG9/PG11 (cables entre cajas y del panel) | Entradas de cable, siempre hacia abajo |
 | 5 m | Manguera apantallada 4 × 0,5 mm² | Alargar SEN0681 (RS485 + 12 V) si su cable no llega |
 | 5 m | Manguera 3 × 0,5 mm² exterior | Caudalímetro, presencia de agua, nivel |
-| 3 m | Manguera 2 × 1 mm² exterior | Bomba |
+| 3 m | Manguera 2 × 1 mm² exterior | Alimentación propia de la bomba (va aparte del nodo) |
 | 1 | Bolsitas de gel de sílice + barniz protector (conformal coating) | Humedad en la placa |
 | 1 | Candado o tornillos de seguridad para las cajas | Vandalismo |
 
@@ -92,7 +98,7 @@ retorno por la tapa al mismo depósito. Como no hay cámara que vaciar, **no hac
 | 1 | Base de madera tratada o perfil de aluminio + tornillería inox | Estructura |
 | 1 | Toldo o sombra para depósito y caja de batería | El SEN0681 trabaja hasta 40 °C y la LiFePO4 no debe calentarse |
 
-### C4. Energía autónoma (dimensionado en `docs/06-maqueta.md`, ≈ 35 Wh/día con la bomba)
+### C4. Energía autónoma (dimensionado en `docs/06-maqueta.md`, ≈ 15 Wh/día; la bomba va aparte)
 | Cant. | Material | Motivo |
 |---|---|---|
 | 1 | Panel solar 12 V 50 W monocristalino | Carga diaria con margen en diciembre |

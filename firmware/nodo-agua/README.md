@@ -13,8 +13,9 @@ Antes de compilar: copiar `include/secrets.example.h` a `include/secrets.h` y po
 (`secrets.h` no se sube a git).
 
 ## Qué hace cada ciclo (cada 15 min)
-Despierta → enciende sensores y bomba → join o sesión guardada → 45 s de bombeo (los últimos 10 s mide el caudal)
-→ para la bomba y espera 5 s → lee sensores → envía 16 bytes por LoRaWAN → enseña el resultado 5 s → deep sleep.
+Despierta → enciende sensores → join o sesión guardada → espera 60 s a que se calienten los sensores (los últimos
+10 s mide el caudal) → lee sensores → envía 16 bytes por LoRaWAN → enseña el resultado 5 s → deep sleep.
+La bomba va aparte, con su propia alimentación: el nodo no la controla (GPIO 12 libre), solo mide su caudal.
 
 ![Pantalla OLED](../../docs/img/pantalla-oled.png)
 
@@ -26,10 +27,11 @@ Despierta → enciende sensores y bomba → join o sesión guardada → 45 s de 
 | `include/secrets.example.h` | Plantilla de las claves LoRaWAN |
 | `include/payload.h` | Formato del mensaje (`docs/04-formato-payload.md`) |
 | `src/main.cpp` | Ciclo completo, LoRaWAN (RadioLib) y deep sleep |
-| `src/sensores.cpp` | pH, nivel y batería (ADS1115), oxígeno y temperatura (SEN0681 por RS485), caudal, bomba y modo calibración |
+| `src/sensores.cpp` | pH, nivel y batería (ADS1115), oxígeno y temperatura (SEN0681 por RS485), caudal y modo calibración |
 | `src/pantalla.cpp` | OLED: logo, fase del ciclo y temporizador del envío (tarea de FreeRTOS) |
 | `src/i2c_compartido.cpp` | Mutex para que la OLED y el ADS1115 no usen el bus I2C a la vez |
 | `include/logo.h` | Logo de Los Viveros en XBM, generado con `herramientas/logo_a_xbm.py` |
 
 Lo que queda por confirmar está marcado con `TODO VERIFICAR` en `config.h` (registros Modbus del SEN0681,
-factor del caudalímetro, rango del KIT0139).
+sacados de la wiki del SEN0680 y pendientes de probar con el sensor real, salinidad de fábrica y factor del caudalímetro).
+El rango del KIT0139 (0-5 m) ya está confirmado.

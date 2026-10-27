@@ -13,10 +13,12 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
   una base de datos y la muestra en un panel accesible desde fuera del instituto.
 - Referencia: proyecto de innovación colaborativo "Sistema de telemetría para la monitorización de la
   calidad del agua" (cartel del centro). Nuestra versión sustituye WiFi por LoRaWAN privado y añade
-  oxígeno y control remoto de la bomba. **No se mide conductividad** (decisión de 2026-09-29).
+  oxígeno. **No se mide conductividad** (decisión de 2026-09-29).
 - Las sondas van **colgadas directamente dentro del depósito** (no hay cámara de medida aparte);
   en la tubería solo va el caudalímetro y, si acaso, el sensor de presencia de agua.
-- Todo lo de la maqueta (LILYGO, sensores y bomba) es **autónomo**: panel solar + batería LiFePO4,
+- **La bomba va aparte** (decisión de 2026-10-26): tiene su propia alimentación y no se conecta al nodo
+  (sin MOSFET, GPIO 12 libre). El nodo solo mide su caudal y avisa si no hay ("bomba sin caudal").
+- El nodo y los sensores de la maqueta son **autónomos**: panel solar + batería LiFePO4,
   sin cables de 230 V ni de red.
 
 ## 2. Arquitectura (resumen)
@@ -38,8 +40,8 @@ Los datos de red están solo en `raspberry/red/red.env`.
 
 | Equipo | Función | Software |
 |---|---|---|
-| LILYGO (nodo, maqueta exterior) | Remueve el agua del depósito con la bomba, mide caudal y sensores, envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
-| DFR1120-868 (maqueta, fase 7) | Relé controlado por downlink (llenado, alarma o anulación de la bomba) | Configuración propia de DFRobot |
+| LILYGO (nodo, maqueta exterior) | Mide los sensores y el caudal de la bomba (que va aparte), envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
+| DFR1120-868 (maqueta, fase 7) | Relé controlado por downlink (llenado o alarma) | Configuración propia de DFRobot |
 | wAP LR8 | Gateway LoRaWAN, reenvía por UDP 1700 | RouterOS (packet forwarder nativo) |
 | Raspberry Pi 5 | **Todo el servidor**: firewall, NTP para el wAP, servidor LoRaWAN, MQTT, base de datos, web pública con Tailscale Funnel | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy |
 
@@ -112,16 +114,19 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 
 ## 5. Datos pendientes (preguntar antes de cerrar la tarea afectada)
 
-- [ ] Modelo exacto de la LILYGO (T3 V1.6.1 con SX1276, T3-S3 con SX1262, T-Beam...). Afecta a `firmware/nodo-agua/include/config.h`.
+- [x] Modelo de la LILYGO: **T3 V1.6.1** con SX1276 (serigrafía `T3_V1.6.1 20210104`, 2026-10-26). Es el entorno `lilygo_t3_v1_6_1`.
+- [x] Material: ya está todo, no hay que comprar nada (2026-10-26). Presencia de agua SEN0204 (SEN0509 de repuesto); KIT0139 de 0-5 m.
 - [x] Ubicación: maqueta FUERA del edificio con alimentación solar; gateway en el mástil de la azotea del instituto (decisión de 2026-10-26, `docs/02`).
 - [x] Agua de red (dulce): salinidad del SEN0681 a 0 ‰ (es un ajuste del sensor de oxígeno, no un sensor).
 - [x] Sin sonda de conductividad; sondas dentro del depósito, sin cámara de medida.
 - [x] Conductividad quitada del firmware (`config.h`, `sensores.cpp`). El formato del payload **no cambia**:
       los bytes 8-9 van siempre a 0xFFFF ("sin dato"), `decoder.js` da `null` y la BD guarda NULL (`docs/04`).
       Si algún día se quiere quitar también de `decoder.js`/`10-init.sql`/ingestor, sería payload v3: preguntar antes.
-- [ ] Modelo concreto de bomba (12 V, ≤ 1 A) y de caudalímetro (factor de pulsos por L/min).
+- [x] Bomba aparte, con su propia alimentación y sin conexión al nodo (2026-10-26).
+- [ ] Modelo concreto de caudalímetro (factor de pulsos por L/min).
 - [ ] Consumo real del DFR1120 en reposo (si es clase C escucha siempre y gasta más).
-- [ ] Registros Modbus del SEN0681 (copiar de la wiki oficial de DFRobot).
+- [x] Registros Modbus del SEN0681 puestos en `config.h` (wiki del SEN0680: dirección 1, 4800 baudios, O2 en 0x0002, T en 0x0004).
+      Falta comprobarlos con el sensor real y ver la salinidad de fábrica.
 - [ ] Permiso del coordinador TIC del centro para conectar la Raspberry y el wAP a la VLAN 500 y usar Tailscale.
 - [x] Red: VLAN 500, puerta de enlace 172.16.50.1, wAP 172.16.50.2 y Raspberry 172.16.50.3 con IP fija (2026-10-23).
 - [ ] Confirmar con el TIC: máscara /24, DNS (se supone 172.16.50.1), tomas del switch en VLAN 500 sin etiquetar
@@ -131,13 +136,13 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 ## 6. Fases, tareas y criterios de aceptación
 
 ### Fase 1 — Organización
-- [ ] Lista de compra entregada al centro (`docs/01-lista-material.md`).
+- [x] Material conseguido (`docs/01-lista-material.md`); ya no hay que comprar nada.
 - [ ] Cronograma y reparto de tareas en `docs/memoria/planificacion.md`.
 - **Hecho cuando**: el tutor ha validado la lista y el plan.
 
 ### Fase 2 — Banco de pruebas del nodo (en el aula, con alimentación USB)
-- [ ] Confirmar placa y pines; ajustar `config.h`.
-- [ ] Compilar el firmware (`pio run`) sin errores.
+- [x] Placa confirmada: T3 V1.6.1 (pines de `config.h`).
+- [x] Compilar el firmware (`pio run`) sin errores (sin hardware, 2026-10-26).
 - [ ] Leer ADS1115 (pH, nivel, batería) por el monitor serie en modo calibración.
 - [ ] Leer SEN0681 por RS485 (oxígeno + temperatura) y poner salinidad a 0 si el agua es dulce.
 - [ ] Calibrar pH (tampones 7 y 4) y guardar en NVS.
@@ -173,7 +178,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 
 ### Fase 6 — Maqueta, energía e instalación exterior
 - [ ] Montar la maqueta: base, depósito opaco, bomba, tubería, caudalímetro y soporte de sondas dentro del depósito (`docs/06-maqueta.md`).
-- [ ] Medir consumo real (nodo activo, deep sleep, bomba, DFR1120) y revisar el balance de `docs/06-maqueta.md`.
+- [ ] Medir consumo real (nodo activo, deep sleep, DFR1120) y revisar el balance de `docs/06-maqueta.md`.
 - [ ] Montaje en caja estanca según `docs/03-conexionado-nodo.md`.
 - [ ] Montar el gateway en el mástil de la azotea (`docs/02-arquitectura-red.md`, apartado del mástil) y medir RSSI/SNR.
 - [ ] Pruebas de campo: RSSI/SNR, autonomía, estabilidad de lecturas durante 1 semana.

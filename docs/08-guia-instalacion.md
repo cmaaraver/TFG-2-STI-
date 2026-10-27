@@ -65,8 +65,8 @@ Tiene que terminar con `TODO OK (3 payloads, 10 campos del ingestor comprobados)
   luego salga `Fallo de join` y la pantalla ponga *Join fallido / Reintento en 5 min*. Lo importante aquí es
   que la placa arranca, la pantalla funciona y la radio no da `Error de radio`.
 
-> Qué enseña la pantalla en cada ciclo: la fase (*Bomba y sensores ON*, *Conectando LoRaWAN*, *Bombeando agua*,
-> *Midiendo caudal*, *Agua en reposo*, *Leyendo sensores*) con los segundos desde que despertó; después
+> Qué enseña la pantalla en cada ciclo: la fase (*Sensores ON*, *Conectando LoRaWAN*, *Esperando sensores*,
+> *Midiendo caudal*, *Leyendo sensores*) con los segundos desde que despertó; después
 > *Enviando por LoRa...* con un **temporizador en directo** (se refresca cada 0,1 s desde una tarea aparte,
 > así avanza aunque el envío tenga ocupado el programa principal); y al final el resultado:
 > *Enviado OK SF7*, el tiempo total del envío en grande y debajo el tiempo en el aire y cuándo es el próximo.
@@ -83,8 +83,9 @@ Esquema completo en `03-conexionado-nodo.md`:
 
 Orden de montaje recomendado (siempre **sin la LILYGO puesta** hasta el último punto):
 
-1. Soldar en la placa de topos: tiras hembra para la LILYGO, bornas, conmutadores de 12 V y 5 V, driver de la
-   bomba (con la **pull-down de 100 kΩ en GPIO 12**, obligatoria), divisores de batería, caudalímetro y SEN0204 (10k/20k) y la pull-up del modo calibración.
+1. Soldar en la placa de topos: tiras hembra para la LILYGO, bornas, conmutadores de 12 V y 5 V, divisores de
+   batería, caudalímetro y SEN0204 (10k/20k) y la pull-up del modo calibración. La bomba va aparte, con su propia
+   alimentación: no lleva driver en la placa y el **GPIO 12 se deja sin conectar**.
 2. Conectar la alimentación de 12 V (de una fuente de laboratorio limitada a 1 A, todavía no la batería).
 3. Medir con el multímetro:
 
@@ -96,12 +97,12 @@ Orden de montaje recomendado (siempre **sin la LILYGO puesta** hasta el último 
    | Salida de los conmutadores con EN a 3,3 V (puente provisional) | 12 V y 5 V |
    | Divisor de batería con 12,8 V | ≈ 2,3 V |
    | Entrada GPIO 34 (caudalímetro) con la salida del caudalímetro a 5 V | ≈ 3,3 V, nunca más de 3,6 V |
-   | GPIO 12 respecto a GND | 0 V (pull-down) |
+   | GPIO 12 respecto a GND (sin conectar) | 0 V |
 
 4. Pinchar la LILYGO, conectar ADS1115, placa de pH (tras el aislador), convertidor 4-20 mA, adaptador RS485 y sensores.
 
 **Comprobación**: el nodo arranca igual que en el paso 1 (si con la placa base no arranca o se reinicia en bucle,
-lo primero es mirar que GPIO 12 esté a 0 V al encender).
+lo primero es mirar que no haya nada conectado al GPIO 12, que es pin de arranque y tiene que estar a 0 V al encender).
 
 ---
 
@@ -114,7 +115,7 @@ lo primero es mirar que GPIO 12 esté a 0 V al encender).
    | Comando | Qué hace |
    |---|---|
    | `leer` | Mide todo una vez: `T=... C  O2=... mg/L  pH=...  nivel=... mm  bat=... mV  agua=...  rs485_err=...` |
-   | `bomba` | Enciende la bomba unos 15 s (5 s de arranque + 10 s midiendo) y enseña el caudal en L/min |
+   | `caudal` | Cuenta los pulsos del caudalímetro 10 s y enseña el caudal en L/min (con la bomba, que va aparte, encendida) |
    | `ph7` | Con la sonda en tampón pH 7,00: guarda ese punto en la memoria (NVS) |
    | `ph4` | Con la sonda en tampón pH 4,00 (tras enjuagarla con agua destilada): guarda el segundo punto |
    | `ver` | Enseña la calibración guardada |
@@ -122,7 +123,9 @@ lo primero es mirar que GPIO 12 esté a 0 V al encender).
    | `salir` | Apaga todo; quitar el puente y reiniciar |
 
 4. **SEN0681 (oxígeno)**: antes hay que rellenar los registros Modbus en `config.h` con los de la wiki oficial de
-   DFRobot (están marcados `TODO VERIFICAR`) y poner `MODBUS_REGISTROS_OK 1`. Con agua de red, salinidad a 0 ‰.
+   DFRobot. Ya están puestos (wiki del SEN0680, la versión de agua dulce del mismo sensor: dirección 1,
+   **4800 baudios**, oxígeno en 0x0002 y temperatura en 0x0004) y `MODBUS_REGISTROS_OK` vale 1, pero llevan
+   `TODO VERIFICAR` hasta comprobarlos con el sensor real usando `leer`. Con agua de red, salinidad a 0 ‰.
 5. **Caudalímetro**: `CAUDAL_HZ_POR_LMIN` en `config.h` según el modelo comprado (YF-S201: 7,5).
    Se comprueba llenando un recipiente de volumen conocido durante 1 minuto.
 
@@ -197,7 +200,7 @@ el problema está entre ese tramo y el anterior.
 
 | # | Dónde mirar | Qué tiene que salir |
 |---|---|---|
-| 1 | Pantalla OLED | *Conectando LoRaWAN* → *Bombeando agua* → ... → *Enviando por LoRa...* con el temporizador corriendo → *Enviado OK SF7* |
+| 1 | Pantalla OLED | *Conectando LoRaWAN* → *Esperando sensores* → ... → *Enviando por LoRa...* con el temporizador corriendo → *Enviado OK SF7* |
 | 2 | Monitor serie | `Join OK (sesion nueva)` (primera vez) o `Sesion restaurada`, la línea `T=... O2=... pH=...` y `Uplink enviado: fcnt=N SFx, X ms en el aire, Y ms en total` |
 | 3 | ChirpStack → gateway → *LoRaWAN frames* | Un `JoinRequest`/`JoinAccept` la primera vez y luego un `UnconfirmedDataUp` por ciclo |
 | 4 | ChirpStack → dispositivo → *Events* | Evento `up` con el objeto decodificado: `temperatura_c`, `oxigeno_mgl`, `ph`, `nivel_mm`, `bateria_v`, `caudal_lmin`... y `conductividad_uscm: null` (ya no se mide, es normal) |
@@ -220,9 +223,9 @@ Diseño y balance de energía en `06-maqueta.md`; colocación de cada sonda en `
 ![Instalación de las sondas](img/instalacion-sensores.png)
 
 1. **Depósito**: opaco, tapado, a la sombra y sobre una base firme y nivelada. Llenar con agua de red.
-2. **Circuito de agua**: bomba con rejilla en el fondo → manguera → caudalímetro (horizontal, flecha en el
+2. **Circuito de agua**: bomba (va aparte, con su propia alimentación) con rejilla en el fondo → manguera → caudalímetro (horizontal, flecha en el
    sentido del agua) → válvula de bola → retorno al mismo depósito por debajo del nivel del agua y lejos de las sondas.
-   Abrazaderas en todas las espigas. Probar fugas con la bomba a mano (comando `bomba` del modo calibración).
+   Abrazaderas en todas las espigas. Probar fugas con la bomba encendida y ver el caudal con el comando `caudal` del modo calibración.
 3. **Sondas**: pH y SEN0681 colgadas del soporte de la tapa a media altura; KIT0139 en el fondo; SEN0204 por fuera
    de la pared a la altura del nivel mínimo. La punta del pH siempre mojada.
 4. **Caja 1** (nodo) en el poste, con los prensaestopas y conectores **hacia abajo**, membrana de ventilación y gel
@@ -255,7 +258,7 @@ En ChirpStack mirar RSSI y SNR de los uplinks: con SNR positiva y RSSI mejor que
 
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
-| El ESP32 no arranca o se reinicia en bucle con la placa base puesta | GPIO 12 a nivel alto al encender | Revisar la pull-down de 100 kΩ del driver de la bomba |
+| El ESP32 no arranca o se reinicia en bucle con la placa base puesta | GPIO 12 a nivel alto al encender | GPIO 12 tiene que quedar sin conectar (la bomba va aparte) |
 | Pantalla negra | `PANTALLA_ACTIVA 0`, o el bus I2C tiene un corto | `config.h`; quitar el ADS1115 y probar solo la placa |
 | `Error de radio` | Placa mal elegida en `platformio.ini` / `config.h` | Confirmar modelo exacto de la LILYGO |
 | `Fallo de join` siempre | Claves mal copiadas, perfil no 1.1.0, gateway offline o fuera de alcance | Revisar `secrets.h` (orden MSB), perfil y que el gateway esté *online* |
@@ -263,5 +266,5 @@ En ChirpStack mirar RSSI y SNR de los uplinks: con SNR positiva y RSSI mejor que
 | Uplinks en ChirpStack pero sin objeto decodificado | Codec no puesto en el perfil | Pegar `decoder.js` en el perfil |
 | En ChirpStack sí, en la web no | Ingestor parado o sin acceso a la BD | `docker compose logs ingestor` |
 | `rs485_err=1` | A/B cruzados, sin 12 V en el SEN0681 o registros sin rellenar | Cambiar A por B, medir 12 V, revisar `MODBUS_REGISTROS_OK` |
-| Aviso "bomba sin caudal" | Bomba atascada, rejilla sucia, válvula cerrada o depósito bajo | Revisar el circuito de agua |
+| Aviso "bomba sin caudal" | Bomba apagada (va aparte), atascada, rejilla sucia, válvula cerrada o depósito bajo | Revisar el circuito de agua |
 | pH que baila mucho | Masas mezcladas o sonda seca | Comprobar el aislador y que la sonda esté sumergida |

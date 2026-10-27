@@ -1,6 +1,7 @@
 // Nodo de calidad del agua — LoRaWAN 1.1 (OTAA, EU868, clase A) con RadioLib.
-// Ciclo: despertar → encender sensores y bomba → join/restaurar sesión → medir caudal →
-//        parar bomba → agua quieta → medir → enviar → dormir.
+// Ciclo: despertar → encender sensores → join/restaurar sesión → esperar a que se calienten los
+//        sensores → medir caudal → medir → enviar → dormir.
+// La bomba va aparte, con su propia alimentación: el nodo no la controla, solo mide el caudal.
 // La pantalla OLED enseña el logo de Los Viveros, la fase del ciclo y un temporizador
 // con lo que tarda el envío por LoRa.
 // Persistencia de sesión basada en el ejemplo "LoRaWAN_ESP32" / persistencia de RadioLib.
@@ -29,7 +30,6 @@ RTC_DATA_ATTR uint16_t intervaloMin = INTERVALO_ENVIO_MIN_DEF;
 RTC_DATA_ATTR uint32_t ciclo        = 0;
 
 static void dormir(uint32_t segundos) {
-  bombaApagar();
   sensoresApagar();
   pantallaDormir();
   radio.sleep();
@@ -91,8 +91,7 @@ void setup() {
   }
 
   sensoresEncender();                            // empiezan a calentar mientras se hace el join
-  bombaEncender();                               // mover el agua para que las sondas no vean agua estancada
-  pantallaFase("Bomba y sensores ON");
+  pantallaFase("Sensores ON");
 
   SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
   int16_t st = radio.begin();
@@ -109,18 +108,12 @@ void setup() {
     delay(T_PANTALLA_RESULTADO_MS);
     dormir(T_REINTENTO_JOIN_S);
   }
-  pantallaFase("Bombeando agua");
+  pantallaFase("Esperando sensores");
 
-  // Medir caudal en los últimos segundos de bomba y pararla
-  while (millis() - t0 < T_BOMBA_MS - T_MEDIDA_CAUDAL_MS) delay(100);
+  // Sensores calientes antes de medir; el caudal se mide en los últimos segundos de la espera
+  while (millis() - t0 < T_CALENTAMIENTO_MS - T_MEDIDA_CAUDAL_MS) delay(100);
   pantallaFase("Midiendo caudal");
   float caudal = medirCaudal(T_MEDIDA_CAUDAL_MS);
-  bombaApagar();
-
-  // Agua quieta y sensores calientes antes de leer (el motor mete ruido en el pH)
-  pantallaFase("Agua en reposo");
-  delay(T_REPOSO_AGUA_MS);
-  while (millis() - t0 < T_CALENTAMIENTO_MS) delay(100);
 
   pantallaFase("Leyendo sensores");
   Medida m = sensoresMedir();
