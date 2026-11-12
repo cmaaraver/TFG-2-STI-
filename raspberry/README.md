@@ -152,6 +152,23 @@ se repiten los pasos 1-3 y se restauran las dos copias.
 Probar la restauración una vez:
 `docker compose exec -T db pg_restore -U agua_admin -d calidad_agua --clean < backups/agua_XXXX.dump`
 
+## 9. Actualizar la Raspberry desde el instituto
+En la Raspberry `~/TFG` es una copia de los ficheros, no un repositorio git, así que `git pull` no sirve.
+Además la red del centro corta (comprobado el 2026-11-12) `codeload.github.com` (descarga en .tar.gz), a ratos
+`raw.githubusercontent.com` y Docker Hub, así que `docker compose up -d --build` puede quedarse colgado.
+Lo que funciona:
+1. Bajar los ficheros nuevos de GitHub en el PC (ahí sí hay acceso) y pasarlos por scp desde PowerShell:
+   `scp .\raspberry\web\static\* charlie@172.16.50.3:~/TFG/raspberry/web/static/`
+2. Si se puede reconstruir (`docker compose up -d --build web`), mejor. Si se cuelga bajando la imagen base,
+   meter los ficheros en el contenedor en marcha y guardar el resultado en su propia imagen:
+   ```bash
+   docker cp web/static/. calidad-agua-web-1:/app/static/
+   docker commit calidad-agua-web-1 calidad-agua-web
+   ```
+   Así un reinicio o un `docker compose up -d` sin `--build` siguen usando la web nueva.
+3. Para cambios de configuración (por ejemplo `configuracion/chirpstack/region_eu868.toml`) basta con copiar el
+   fichero y `docker compose restart chirpstack`.
+
 ## Prueba de robustez (para la memoria)
 1. `docker compose stop ingestor`
 2. Esperar a que el nodo envíe 2 mensajes.
