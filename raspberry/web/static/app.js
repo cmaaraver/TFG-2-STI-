@@ -293,13 +293,35 @@ function prepararControles() {
     clearTimeout(espera);
     espera = setTimeout(() => { Object.values(estado.graficas).forEach(g => g.resize()); moverIndicador(); }, 120);
   });
-  // Si el sistema cambia entre tema claro y oscuro, se vuelven a pintar las gráficas con sus colores
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-    crearGraficas(); cargarHistorico().catch(mostrarError);
+  // Botón de tema: cambia entre claro y oscuro y se guarda en este navegador
+  $("#tema").addEventListener("click", () => {
+    const nuevo = document.documentElement.dataset.tema === "oscuro" ? "claro" : "oscuro";
+    try { localStorage.setItem("tema", nuevo); } catch (e) { /* modo privado: solo para esta visita */ }
+    ponerTema(nuevo);
   });
+  // Si no se ha elegido nada con el botón, la web sigue al sistema aunque cambie con la página abierta
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+    let elegido = null;
+    try { elegido = localStorage.getItem("tema"); } catch (err) {}
+    if (!elegido) ponerTema(e.matches ? "oscuro" : "claro");
+  });
+  ponerTema(document.documentElement.dataset.tema);
   setInterval(actualizarRecepcion, 30000);
   moverIndicador();
   document.fonts?.ready.then(moverIndicador);
+}
+
+// Aplica el tema (data-tema en <html>) y vuelve a pintar las gráficas con los colores nuevos
+function ponerTema(tema) {
+  const raiz = document.documentElement;
+  const cambia = raiz.dataset.tema !== tema;
+  raiz.classList.add("cambiando-tema");
+  raiz.dataset.tema = tema;
+  document.querySelector('meta[name="theme-color"]').content = tema === "oscuro" ? "#06121c" : "#e8f3f7";
+  const b = $("#tema"), texto = tema === "oscuro" ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+  b.title = texto; b.setAttribute("aria-label", texto);
+  setTimeout(() => raiz.classList.remove("cambiando-tema"), 500);
+  if (cambia) { crearGraficas(); cargarHistorico().catch(mostrarError); }
 }
 
 function mostrarError(e) {
