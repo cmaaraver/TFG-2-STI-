@@ -13,8 +13,8 @@ de entrada desde Internet. No hay que tocar el router del centro ni pedir ningú
 ```
 
 - La dirección es `https://rpi-lora.<red>.ts.net`: `rpi-lora` es el nombre de la Raspberry y `<red>` el nombre
-  del tailnet. **La nuestra es https://rpi-lora.taile056a6.ts.net** (tailnet `taile056a6.ts.net`), y ChirpStack,
-  solo para el equipo, en https://rpi-lora.taile056a6.ts.net:8443. Se puede cambiar una vez por un nombre más bonito en la consola de
+  del tailnet. **La nuestra es https://rpi-lora.tailc40e5c.ts.net** (tailnet `tailc40e5c.ts.net`), y ChirpStack,
+  solo para el equipo, en https://rpi-lora.tailc40e5c.ts.net:8443. Se puede cambiar una vez por un nombre más bonito en la consola de
   Tailscale → **DNS** → *Rename tailnet*.
 - El certificado HTTPS lo saca Tailscale solo. No hace falta token ni dominio propio.
 - Desde dentro del instituto también se puede entrar por `http://172.16.50.3`.
