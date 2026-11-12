@@ -8,7 +8,7 @@
 #include "i2c_compartido.h"
 
 #ifndef AGUA_ACTIVO_ALTO
-// SEN0204: salida en alto = VCC y en bajo = 0 V (wiki DFRobot SEN0204); llega a GPIO 39 por un divisor 10k/20k.
+// SEN0204: salida en alto = VCC y en bajo = 0 V (wiki DFRobot SEN0204); llega a PIN_AGUA por un divisor 10k/20k.
 // La wiki no dice qué nivel significa "hay agua". TODO VERIFICAR: acercar agua a la pared con el monitor
 // serie abierto (agua=1 tiene que ser "hay agua"); si sale al revés, poner esto a 0.
 #define AGUA_ACTIVO_ALTO 1
@@ -67,6 +67,21 @@ static float mediana(float* v, int n) {
   return (n % 2) ? v[n / 2] : (v[n / 2 - 1] + v[n / 2]) / 2.0f;
 }
 
+#ifdef SIN_ADS1115
+// Montaje simple: tensión en mV leída con el ADC del ESP32 (mediana de N_MUESTRAS).
+// analogReadMilliVolts usa la calibración de fábrica del chip (eFuse). Atenuación de 11 dB (por defecto):
+// rango útil hasta unos 3,1 V. La calibración del pH con los tampones corrige el error que quede.
+static float leerMv(uint8_t canal) {
+  int pin = (canal == CANAL_PH) ? PIN_PH : (canal == CANAL_NIVEL) ? PIN_NIVEL : -1;
+  if (pin < 0) return NAN;                // la batería no se mide en este montaje
+  float v[N_MUESTRAS];
+  for (int i = 0; i < N_MUESTRAS; i++) {
+    v[i] = analogReadMilliVolts(pin);
+    delay(20);
+  }
+  return mediana(v, N_MUESTRAS);
+}
+#else
 // Tensión en mV de un canal del ADS1115 (mediana de N_MUESTRAS)
 static float leerMv(uint8_t canal) {
   if (!adsOk) return NAN;
@@ -79,6 +94,7 @@ static float leerMv(uint8_t canal) {
   }
   return mediana(v, N_MUESTRAS);
 }
+#endif
 
 // ---------- Conversiones ----------
 // pH por dos puntos (tampones 7 y 4) con corrección de la pendiente de Nernst por temperatura
@@ -107,8 +123,15 @@ void sensoresIniciar() {
 
   i2cIniciarMutex();
   Wire.begin(I2C_SDA, I2C_SCL);
+#ifdef SIN_ADS1115
+  adsOk = true;                                                // no hay ADS1115: se usa el ADC del ESP32
+  analogReadResolution(12);
+  analogSetPinAttenuation(PIN_PH, ADC_11db);
+  analogSetPinAttenuation(PIN_NIVEL, ADC_11db);
+#else
   adsOk = ads.begin(ADS_DIRECCION, &Wire);
   if (adsOk) ads.setGain(GAIN_ONE);                            // ±4,096 V
+#endif
 
   Serial2.begin(MODBUS_BAUDIOS, SERIAL_8N1, RS485_RX, RS485_TX);
   mb.begin(MODBUS_DIRECCION, Serial2);

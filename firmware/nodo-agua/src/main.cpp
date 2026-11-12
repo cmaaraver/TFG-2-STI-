@@ -53,6 +53,11 @@ static bool activarLoRaWAN() {
     node.setBufferNonces(buf);
   }
   if (haySesion) node.setBufferSession(sesionLW);
+#ifdef LORAWAN_DR_JOIN
+  // Join a un data rate fijo (DR0 = SF12 en EU868) para tener más margen con mala cobertura.
+  // setDatarate antes de activateOTAA crea la sesión con ese DR (RadioLib 7.8.1, LoRaWAN.cpp).
+  else node.setDatarate(LORAWAN_DR_JOIN);
+#endif
 
   int16_t st = node.activateOTAA();
   // Guardar siempre los nonces: cada intento de join gasta un DevNonce
@@ -84,7 +89,7 @@ void setup() {
   pantallaIniciar(ciclo);
 
 #ifndef SIN_PIN_MODO_CAL                         // en el banco (entorno lilygo_t3_banco) GPIO36 va al aire y no se mira
-  pinMode(PIN_MODO_CAL, INPUT);
+  pinMode(PIN_MODO_CAL, PIN_MODO_CAL_PULLUP ? INPUT_PULLUP : INPUT);
   if (digitalRead(PIN_MODO_CAL) == LOW) {
     pantallaMensaje("MODO CALIBRACION", "Monitor serie 115200");
     modoCalibracion();
