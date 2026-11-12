@@ -165,7 +165,7 @@ main { max-width: 1280px; margin: 0 auto; padding: 18px 16px 8px; }
 .autor b { display: block; font-size: 14px; line-height: 1.2; }
 .autor small { color: var(--tenue); font-size: 12px; }
 .avatar {
-  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; flex: none;
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; flex: none;
   font-size: 13px; font-weight: 750; color: #fff; letter-spacing: .02em;
   background: linear-gradient(135deg, var(--verde-viveros), #0a8f6b);
 }
@@ -381,3 +381,8 @@ a.autor:hover .in { opacity: 1; }
 .pie-caja a { color: inherit; text-decoration-color: color-mix(in srgb, var(--acento) 50%, transparent); text-underline-offset: 3px; }
 .pie-caja a:hover { color: var(--acento); }
 .selector[hidden] { display: none; }
+/* Foto de perfil encima de las iniciales; si el fichero no existe se borra la <img> y quedan las iniciales */
+.avatar { position: relative; overflow: hidden; }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .7); }
+.avatar:has(img) { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3.5px var(--acento); }
