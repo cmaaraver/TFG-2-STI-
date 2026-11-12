@@ -2,32 +2,72 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calidad del agua · Maqueta LoRaWAN</title>
-  <meta name="description" content="Monitorización en tiempo real de la calidad del agua con LoRaWAN. TFG STI, CPIFP Los Viveros.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Calidad del agua · TFG 2º STI · CPIFP Los Viveros</title>
+  <meta name="description" content="Monitorización en tiempo real de la calidad del agua con LoRaWAN. TFG de 2º STI de Carlos Maraver Román y Rubén Trillo García, CPIFP Los Viveros (Sevilla).">
+  <meta name="theme-color" content="#e8f3f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#06121c" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3C16 3 6 14.5 6 20a10 10 0 0 0 20 0C26 14.5 16 3 16 3z' fill='%230ea5c6'/></svg>">
   <link rel="stylesheet" href="/static/estilo.css">
 </head>
 <body>
-  <header class="cabecera">
-    <div class="marca">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C16 3 6 14.5 6 20a10 10 0 0 0 20 0C26 14.5 16 3 16 3z"/></svg>
-      <div>
-        <h1>Calidad del agua</h1>
-        <p>Maqueta solar · LoRaWAN EU868 · CPIFP Los Viveros</p>
-      </div>
-    </div>
+  <!-- Fondo: manchas de color difuminadas que se mueven despacio (solo transform, va fluido en la Raspberry y en el móvil) -->
+  <div class="fondo" aria-hidden="true">
+    <span class="mancha m1"></span><span class="mancha m2"></span><span class="mancha m3"></span>
+  </div>
+
+  <header class="cabecera cristal">
+    <a class="marca" href="https://cpifplosviveros.es" target="_blank" rel="noopener" title="CPIFP Los Viveros">
+      <picture>
+        <source srcset="/static/logo-viveros-claro.png" media="(prefers-color-scheme: dark)">
+        <img src="/static/logo-viveros.png" alt="CPIFP Los Viveros" width="237" height="42">
+      </picture>
+    </a>
     <div class="estado-nodo">
-      <select id="nodo" aria-label="Nodo"></select>
-      <span id="estado" class="pastilla">Conectando…</span>
+      <label class="selector cristal-suave">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+        <select id="nodo" aria-label="Nodo"></select>
+      </label>
+      <span id="estado" class="pastilla cristal-suave">Conectando…</span>
     </div>
   </header>
 
   <main>
+    <!-- Portada: qué es la web y de quién es el TFG -->
+    <section class="portada cristal aparece">
+      <div class="portada-texto">
+        <p class="etiqueta"><span class="punto"></span>Trabajo de Fin de Grado · 2º STI</p>
+        <h1>Calidad del agua <span class="degradado">en tiempo real</span></h1>
+        <p class="entradilla">Maqueta exterior con energía solar que mide oxígeno disuelto, pH, temperatura, nivel y caudal,
+          y lo envía por <strong>LoRaWAN</strong> a un servidor propio en una Raspberry Pi 5.</p>
+        <div class="autores">
+          <div class="autor"><span class="avatar">CM</span><div><b>Carlos Maraver Román</b><small>Alumno de 2º STI</small></div></div>
+          <div class="autor"><span class="avatar a2">RT</span><div><b>Rubén Trillo García</b><small>Alumno de 2º STI</small></div></div>
+        </div>
+        <p class="centro">Sistemas de Telecomunicaciones e Informáticos · CPIFP Los Viveros (Sevilla)</p>
+      </div>
+      <div class="portada-datos">
+        <div class="ola" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><defs><clipPath id="gota"><path d="M60 8C60 8 22 52 22 76a38 38 0 0 0 76 0C98 52 60 8 60 8z"/></clipPath></defs>
+            <path class="gota-borde" d="M60 8C60 8 22 52 22 76a38 38 0 0 0 76 0C98 52 60 8 60 8z"/>
+            <g clip-path="url(#gota)">
+              <path class="agua a1" d="M0 70 Q15 62 30 70 T60 70 T90 70 T120 70 T150 70 T180 70 T210 70 T240 70 V130 H0z"/>
+              <path class="agua a2" d="M0 76 Q15 70 30 76 T60 76 T90 76 T120 76 T150 76 T180 76 T210 76 T240 76 V130 H0z"/>
+            </g>
+          </svg>
+        </div>
+        <dl class="fichas">
+          <div><dt>Último dato</dt><dd id="ultima-recepcion">—</dd></div>
+          <div><dt>Envío cada</dt><dd>15 min</dd></div>
+          <div><dt>Radio</dt><dd id="radio">EU868</dd></div>
+        </dl>
+      </div>
+    </section>
+
     <section class="bloque">
       <div class="titulo-bloque">
         <h2>Ahora mismo</h2>
-        <span id="ultima-recepcion" class="tenue">—</span>
+        <span class="tenue">Verde correcto · naranja vigilar · rojo fuera de rango</span>
       </div>
       <div id="tarjetas" class="tarjetas"></div>
       <div id="avisos" class="avisos"></div>
@@ -37,20 +77,23 @@
       <div class="titulo-bloque">
         <h2>Histórico</h2>
         <div class="controles">
-          <div class="rangos" role="group" aria-label="Rango de tiempo">
-            <button data-horas="6">6 h</button>
+          <div class="rangos cristal-suave" role="group" aria-label="Rango de tiempo">
+            <span class="indicador" aria-hidden="true"></span>
+            <button data-horas="1">1 h</button>
+            <button data-horas="5">5 h</button>
             <button data-horas="24" class="activo">24 h</button>
-            <button data-horas="168">7 días</button>
+            <button data-horas="168">1 semana</button>
             <button data-horas="720">30 días</button>
             <button data-horas="0">Personalizado</button>
           </div>
-          <div id="personalizado" class="personalizado" hidden>
-            <label>Desde <input type="datetime-local" id="desde"></label>
-            <label>Hasta <input type="datetime-local" id="hasta"></label>
-            <button id="aplicar">Ver</button>
-          </div>
-          <a id="csv" class="boton-sec" href="#" download>Descargar CSV</a>
+          <a id="csv" class="boton cristal-suave" href="#" download>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0-4-4m4 4 4-4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>CSV</a>
         </div>
+      </div>
+      <div id="personalizado" class="personalizado cristal-suave" hidden>
+        <label>Desde <input type="datetime-local" id="desde"></label>
+        <label>Hasta <input type="datetime-local" id="hasta"></label>
+        <button id="aplicar" class="boton primario">Ver</button>
       </div>
       <p id="info-historico" class="tenue"></p>
       <div id="graficas" class="graficas"></div>
@@ -58,7 +101,16 @@
   </main>
 
   <footer class="pie">
-    TFG 2º STI · Carlos Maraver Román y Rubén Trillo García · Horas en hora de Madrid
+    <div class="pie-caja cristal">
+      <picture>
+        <source srcset="/static/logo-viveros-claro.png" media="(prefers-color-scheme: dark)">
+        <img src="/static/logo-viveros.png" alt="CPIFP Los Viveros" width="237" height="42" loading="lazy">
+      </picture>
+      <p><b>TFG de 2º de Sistemas de Telecomunicaciones e Informáticos</b><br>
+        Carlos Maraver Román y Rubén Trillo García · CPIFP Los Viveros, Sevilla</p>
+      <p class="tenue">LILYGO ESP32 · LoRaWAN EU868 · MikroTik wAP LR8 · ChirpStack · TimescaleDB · Raspberry Pi 5<br>
+        Horas en hora de Madrid</p>
+    </div>
   </footer>
 
   <script src="/static/echarts.min.js"></script>
