@@ -372,3 +372,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--acento); outlin
 /* Al cambiar de tema, los colores pasan suavemente */
 html.cambiando-tema body, html.cambiando-tema .tarjeta, html.cambiando-tema .grafica, html.cambiando-tema .cristal,
 html.cambiando-tema .cristal-suave { transition: background-color .4s, color .4s, border-color .4s !important; }
+
+/* ---------- Autores con enlace a LinkedIn ---------- */
+a.autor { color: inherit; text-decoration: none; }
+.autor .in { width: 18px; height: 18px; fill: #0a66c2; flex: none; margin-left: 4px; opacity: .85; transition: opacity .3s; }
+:root[data-tema="oscuro"] .autor .in { fill: #70b5f9; }
+a.autor:hover .in { opacity: 1; }
+.pie-caja a { color: inherit; text-decoration-color: color-mix(in srgb, var(--acento) 50%, transparent); text-underline-offset: 3px; }
+.pie-caja a:hover { color: var(--acento); }
+.selector[hidden] { display: none; }

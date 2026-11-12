@@ -187,8 +187,9 @@ Borrar después los datos de prueba: `DELETE FROM medidas WHERE dev_eui='0000000
 (Captura con **datos simulados** de 30 días (vista de 1 semana), no son medidas reales. En el móvil: `docs/img/web-movil-datos-simulados.png`; tema oscuro: `docs/img/web-oscuro-datos-simulados.png`.)
 
 Qué tiene la página:
-- **Cabecera** fija con el logo del CPIFP Los Viveros, el nodo elegido y si llegan datos en directo.
-- **Portada** del TFG (2º STI, Carlos Maraver Román y Rubén Trillo García) con la hora del último dato y la radio (SF y RSSI).
+- **Cabecera** fija con el logo del CPIFP Los Viveros, si llegan datos en directo y el botón de modo claro/oscuro.
+  El selector de nodo solo aparece si hay más de un nodo dado de alta (ahora solo está la maqueta).
+- **Portada** del TFG (2º STI, Carlos Maraver Román y Rubén Trillo García, con enlace a sus LinkedIn) con la hora del último dato y la radio (SF y RSSI).
 - **Ahora mismo**: una tarjeta por variable con icono, valor animado, barrita y estado (correcto, vigilar o fuera de rango).
   Cuando llega un uplink la tarjeta da un destello y el número cuenta hasta el valor nuevo.
 - **Histórico**: rangos de 1 h, 5 h, 24 h, 1 semana y 30 días, más fechas a elegir y descarga en CSV.
