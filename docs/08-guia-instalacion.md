@@ -45,10 +45,13 @@ Tiene que terminar con `TODO OK (3 payloads, 10 campos del ingestor comprobados)
 
 1. Conectar la **antena** a la LILYGO. *Nunca* encenderla sin antena: el chip de radio se puede estropear al emitir.
 2. **Sin tarjeta microSD** en la placa (comparte pines con el RS485, ver `03-conexionado-nodo.md`).
-3. Abrir `firmware/nodo-agua` en VS Code. PlatformIO descarga solo las librerías (versiones fijas en `platformio.ini`).
-4. Crear las claves: copiar `include/secrets.example.h` a `include/secrets.h`. De momento se dejan los ceros;
+3. **Puente de GPIO 36 a 3V3** con un cable dupont (o una resistencia de 10 kΩ). El GPIO 36 decide el modo
+   (a GND = calibración) y no tiene pull-up interna: la pull-up va en la placa base. Con la LILYGO suelta y el pin
+   al aire lee LOW y arranca en *MODO CALIBRACION* (visto el 2026-10-30). Con el puente hace el ciclo normal.
+4. Abrir `firmware/nodo-agua` en VS Code. PlatformIO descarga solo las librerías (versiones fijas en `platformio.ini`).
+5. Crear las claves: copiar `include/secrets.example.h` a `include/secrets.h`. De momento se dejan los ceros;
    las claves de verdad se ponen en el paso 6. `secrets.h` **no se sube a git** (está en `.gitignore`).
-5. Compilar y grabar:
+6. Compilar y grabar:
    ```
    pio run -e lilygo_t3_v1_6_1                 # compilar
    pio run -e lilygo_t3_v1_6_1 -t upload       # grabar
@@ -159,7 +162,7 @@ Se hace con un solo script. Detalle en `raspberry/README.md` ("Instalación auto
 
 ## 5. Gateway MikroTik wAP LR8
 
-Configuración en `raspberry/README.md` (apartado 4): IP fija 172.16.50.2/24, puerta de enlace y DNS 172.16.50.1,
+Configuración en `raspberry/README.md` (apartado 4): IP fija 172.16.50.2/24, puerta de enlace 172.16.50.1, DNS 1.1.1.1 y 192.168.2.1,
 NTP 172.16.50.3 y servidor LoRa 172.16.50.3:1700. Conectarlo con su inyector PoE a una toma del switch en la VLAN 500.
 
 **Comprobación**: `ping 172.16.50.2` desde la Raspberry, y `docker compose logs gateway-bridge` enseña
@@ -268,3 +271,8 @@ En ChirpStack mirar RSSI y SNR de los uplinks: con SNR positiva y RSSI mejor que
 | `rs485_err=1` | A/B cruzados, sin 12 V en el SEN0681 o registros sin rellenar | Cambiar A por B, medir 12 V, revisar `MODBUS_REGISTROS_OK` |
 | Aviso "bomba sin caudal" | Bomba apagada (va aparte), atascada, rejilla sucia, válvula cerrada o depósito bajo | Revisar el circuito de agua |
 | pH que baila mucho | Masas mezcladas o sonda seca | Comprobar el aislador y que la sonda esté sumergida |
+| `ssh` desde el PC da `connect … Permission denied` y el ping `fallo general` | VPN WireGuard del PC con *kill-switch* (bloquea la red local) | En WireGuard, Editar → desmarcar "Block untunneled traffic (kill-switch)" |
+| apt da `Unable to connect to deb.debian.org` unas veces sí y otras no | La red del instituto no deja llegar a algunas IPs de la CDN de Debian (y de otros mirrors) | Usar `http://ftp.de.debian.org/debian/` en `/etc/apt/sources.list.d/debian.sources` (seguridad: `security.debian.org`) |
+| `docker build` falla con `lookup … on 172.16.50.1:53: connection refused` | 172.16.50.1 no es servidor DNS | `DNS=1.1.1.1,192.168.2.1` en `red/red.env` y `sudo nmcli con modify red-vlan500 ipv4.dns "1.1.1.1,192.168.2.1"` + `sudo nmcli device reapply eth0` |
+| `instalar.sh` se para con `Could not get lock /var/lib/dpkg/lock-frontend` | Otro apt en marcha a la vez (por ejemplo uno lanzado a mano) | Esperar a que termine y volver a ejecutar `./instalar.sh` (se salta lo hecho) |
+| `tailscale serve` dice `Serve is not enabled on your tailnet` | Falta activarlo en la cuenta | Abrir el enlace que da, aceptar; el comando sigue solo |

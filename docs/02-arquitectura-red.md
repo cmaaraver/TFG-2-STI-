@@ -28,9 +28,9 @@ directamente: la Raspberry ya no hace de router ni de NAT y **no hace falta adap
 
 | Equipo | Interfaz | IP | Notas |
 |---|---|---|---|
-| Router del instituto | VLAN 500 | 172.16.50.1 | Puerta de enlace y (en principio) DNS |
+| Router del instituto | VLAN 500 | 172.16.50.1 | Puerta de enlace (no hace de DNS, comprobado el 2026-10-29) |
 | MikroTik wAP LR8 | ether1 (PoE) | 172.16.50.2/24 fija | Puerta de enlace 172.16.50.1, NTP 172.16.50.3, servidor LoRa 172.16.50.3:1700 |
-| Raspberry Pi 5 | eth0 (integrada) | 172.16.50.3/24 fija | Puerta de enlace 172.16.50.1, DNS 172.16.50.1 |
+| Raspberry Pi 5 | eth0 (integrada) | 172.16.50.3/24 fija | Puerta de enlace 172.16.50.1, DNS 1.1.1.1 y 192.168.2.1 |
 | Raspberry Pi 5 | tailscale0 | 100.x.y.z | Acceso del equipo a SSH y ChirpStack |
 
 Supuestos que hay que confirmar con el coordinador TIC (**TODO VERIFICAR**):
@@ -39,8 +39,11 @@ Supuestos que hay que confirmar con el coordinador TIC (**TODO VERIFICAR**):
   **sin etiquetar** (modo acceso). Así ni la Raspberry ni el wAP tienen que configurar VLANs.
   Si el puerto fuera troncal (VLAN etiquetada), habría que crear en la Raspberry un interfaz
   `eth0.500` con `nmcli con add type vlan dev eth0 id 500 ...` y en el wAP una interfaz VLAN 500.
-- El **DNS** es la propia puerta de enlace (172.16.50.1). Si el TIC da otro, se cambia en
-  `raspberry/red/red.env` (variable `DNS`).
+- El **DNS**: se suponía que era la puerta de enlace (172.16.50.1), pero al instalar (2026-10-29) se vio que
+  no contesta a consultas DNS. Se usan 1.1.1.1 y 192.168.2.1 (el que da el DHCP de la VLAN). Si el TIC da
+  otro, se cambia en `raspberry/red/red.env` (variable `DNS`).
+- La red del centro no deja llegar a todos los servidores de Internet: fallaban a ratos `deb.debian.org`,
+  varios mirrors de Debian y `ghcr.io`. En la Raspberry se usa el mirror `ftp.de.debian.org`.
 - Las IP **172.16.50.2 y 172.16.50.3 quedan fuera del rango del DHCP** de la VLAN 500, para que
   ningún otro equipo las coja.
 

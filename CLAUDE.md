@@ -127,10 +127,11 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [ ] Consumo real del DFR1120 en reposo (si es clase C escucha siempre y gasta más).
 - [x] Registros Modbus del SEN0681 puestos en `config.h` (wiki del SEN0680: dirección 1, 4800 baudios, O2 en 0x0002, T en 0x0004).
       Falta comprobarlos con el sensor real y ver la salinidad de fábrica.
-- [ ] Permiso del coordinador TIC del centro para conectar la Raspberry y el wAP a la VLAN 500 y usar Tailscale.
+- [x] Permiso del coordinador TIC del centro para conectar la Raspberry y el wAP a la VLAN 500 y usar Tailscale
+      (2026-10-29: "ya está"; el DNS se queda en 1.1.1.1 y 192.168.2.1).
 - [x] Red: VLAN 500, puerta de enlace 172.16.50.1, wAP 172.16.50.2 y Raspberry 172.16.50.3 con IP fija (2026-10-23).
-- [ ] Confirmar con el TIC: máscara /24, DNS (se supone 172.16.50.1), tomas del switch en VLAN 500 sin etiquetar
-      y que .2 y .3 quedan fuera del DHCP. Si cambia algo, se toca solo `raspberry/red/red.env`.
+- [x] Confirmado con el TIC (2026-10-29): .2 y .3 fuera del DHCP y el DNS se deja en 1.1.1.1 y 192.168.2.1
+      (172.16.50.1 no hace de DNS). Si cambia algo, se toca solo `raspberry/red/red.env`.
 - [x] El centro no puede abrir puertos (2026-10-26): web pública con Tailscale Funnel, sin DuckDNS (`docs/09`).
 
 ## 6. Fases, tareas y criterios de aceptación
@@ -149,31 +150,34 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - **Hecho cuando**: el monitor serie muestra valores coherentes con las soluciones patrón (±0,1 pH).
 
 ### Fase 3 — Red y servidor en la Raspberry Pi 5 (`raspberry/README.md`)
-- [ ] Raspberry Pi OS Lite 64 bits en la microSD de 64 GB (sin NVMe, decisión de 2026-09-29), SSH con clave, usuario propio, actualizaciones.
-- [ ] Red con `raspberry/red/configurar-red.sh`: eth0 = 172.16.50.3/24 fija en la VLAN 500, puerta de enlace
-      y DNS 172.16.50.1 (`raspberry/red/red.env`, `docs/02`).
-- [ ] chrony como servidor NTP para el wAP (172.16.50.2); batería RTC colocada; comprobar `timedatectl`.
-- [ ] `.env` rellenado y `docker compose up -d --build`: ChirpStack v4 (eu868, MQTT **QoS 1**),
-      Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web y Caddy.
-- [ ] wAP LR8: IP estática 172.16.50.2/24, puerta de enlace 172.16.50.1, NTP → 172.16.50.3, servidor LoRa → 172.16.50.3:1700.
+- [x] Raspberry Pi OS Lite 64 bits (Debian 13 trixie) en la microSD, usuario `charlie`, actualizada (2026-10-29).
+      Mirror de Debian cambiado a `ftp.de.debian.org` porque la red del centro corta `deb.debian.org`.
+- [x] Red con `raspberry/red/configurar-red.sh`: eth0 = 172.16.50.3/24 fija en la VLAN 500, puerta de enlace
+      172.16.50.1, DNS 1.1.1.1 y 192.168.2.1 (`raspberry/red/red.env`, `docs/02`) (2026-10-29).
+- [ ] chrony como servidor NTP para el wAP (172.16.50.2) ✔ y `timedatectl` sincronizado ✔; falta batería RTC.
+- [x] `.env` generado y `docker compose up -d --build`: ChirpStack v4 (eu868, MQTT **QoS 1**),
+      Gateway Bridge (UDP 1700), Mosquitto interno, TimescaleDB, ingestor, web y Caddy (2026-10-29).
+- [x] wAP LR8: IP estática 172.16.50.2/24 en bridgeLocal, puerta de enlace 172.16.50.1, NTP → 172.16.50.3, servidor LoRa → 172.16.50.3:1700
+      (2026-11-12, `raspberry/red/wap-lr8.rsc`; gateway-id 04F41CFFFFC15CEB).
 - [ ] Alta en ChirpStack: gateway (EUI del wAP), perfil de dispositivo EU868 / LoRaWAN 1.1 / OTAA / clase A,
       codec `decoder.js`, dispositivo con DevEUI y claves. Lo hace solo el contenedor `provisionar` (lo lanza
-      `instalar.sh`) y deja `secrets.h` escrito.
-- [ ] Firewall con `raspberry/red/firewall.sh`.
+      `instalar.sh`) y deja `secrets.h` escrito. Hecho todo menos el gateway (falta el EUI del wAP, 2026-10-29).
+- [x] Firewall con `raspberry/red/firewall.sh` (2026-10-29).
 - **Hecho cuando**: el nodo hace join, los uplinks salen decodificados en ChirpStack y aparecen en la web al momento.
 
 ### Fase 4 — Base de datos y web
-- [ ] Comprobar cola persistente: parar el ingestor, enviar 2 uplinks, arrancarlo → deben entrar en la BD.
+- [x] Comprobar cola persistente: parar el ingestor, enviar 2 uplinks, arrancarlo → deben entrar en la BD
+      (2026-10-29 con uplinks simulados por MQTT; repetir con el nodo real).
 - [ ] Web: tarjetas en tiempo real, gráficas del histórico (6 h, 24 h, 7 días, 30 días, personalizado), descarga CSV.
 - [ ] Ajustar los rangos de color de las tarjetas (`raspberry/web/static/app.js`) con datos reales.
-- [ ] Copia de seguridad diaria (`raspberry/backup.sh` en cron) y prueba de restauración.
+- [x] Copia de seguridad diaria (`raspberry/backup.sh` en cron) y prueba de restauración (2026-10-29).
 - **Hecho cuando**: hay 24 h de datos en la BD con hora correcta y se ven en la web.
 
 ### Fase 5 — Acceso remoto
-- [ ] Tailscale: cuenta del equipo, Raspberry dada de alta y *key expiry* desactivado para `rpi-lora`.
-- [ ] Coordinador TIC: 172.16.50.2 y .3 fuera del DHCP de la VLAN 500 y permiso para Tailscale (sin abrir puertos).
-- [ ] Web pública con `tailscale funnel` (`docs/09-acceso-internet.md`).
-- [ ] Tailscale en la Raspberry y en los equipos del grupo; ChirpStack solo por `tailscale serve`.
+- [x] Tailscale: cuenta del equipo, Raspberry dada de alta y *key expiry* desactivado para `rpi-lora` (2026-10-29).
+- [x] Coordinador TIC: 172.16.50.2 y .3 fuera del DHCP de la VLAN 500 y permiso para Tailscale (sin abrir puertos) (2026-10-29).
+- [x] Web pública con `tailscale funnel`: `https://rpi-lora.tailc40e5c.ts.net` (2026-10-29).
+- [ ] Tailscale en la Raspberry ✔ y en los equipos del grupo; ChirpStack solo por `tailscale serve` ✔ (puerto 8443).
 - **Hecho cuando**: se ve la web desde un móvil con datos móviles, fuera del instituto.
 
 ### Fase 6 — Maqueta, energía e instalación exterior

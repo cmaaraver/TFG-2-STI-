@@ -17,7 +17,7 @@
 #  Antes, leer docs/09-acceso-internet.md y tener a mano la cuenta de Tailscale del equipo.
 #
 #  La IP fija, la puerta de enlace y el DNS están en red/red.env. Se pueden cambiar ahí o al ejecutar:
-#    IF_RED=eth0 IP_RASPBERRY=172.16.50.3 DNS=172.16.50.1 ./instalar.sh
+#    IF_RED=eth0 IP_RASPBERRY=172.16.50.3 DNS=1.1.1.1,192.168.2.1 ./instalar.sh
 # =====================================================================
 set -euo pipefail
 
