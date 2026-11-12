@@ -164,7 +164,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 
 ### Fase 4 — Base de datos y web
 - [ ] Comprobar cola persistente: parar el ingestor, enviar 2 uplinks, arrancarlo → deben entrar en la BD.
-- [ ] Web: tarjetas en tiempo real, gráficas del histórico (6 h, 24 h, 7 días, 30 días, personalizado), descarga CSV.
+- [ ] Web: tarjetas en tiempo real, gráficas del histórico (1 h, 5 h, 24 h, 1 semana, 30 días, personalizado), descarga CSV.
 - [ ] Ajustar los rangos de color de las tarjetas (`raspberry/web/static/app.js`) con datos reales.
 - [ ] Copia de seguridad diaria (`raspberry/backup.sh` en cron) y prueba de restauración.
 - **Hecho cuando**: hay 24 h de datos en la BD con hora correcta y se ven en la web.
