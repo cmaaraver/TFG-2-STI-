@@ -7,7 +7,19 @@ Una maqueta exterior con energía solar mide el oxígeno disuelto, el pH, la tem
 y el caudal de la bomba. Envía los datos por LoRaWAN al gateway del edificio. La Raspberry Pi 5 lo hace todo:
 servidor LoRaWAN, base de datos y una web con los datos en tiempo real y gráficas del histórico,
 accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto):
-**https://rpi-lora.taile056a6.ts.net**. Dentro del instituto, también en `http://172.16.50.3`.
+**https://rpi-lora.tailc40e5c.ts.net**. Dentro del instituto, también en `http://172.16.50.3`.
+
+## Ver los datos de los sensores
+
+| Qué | Enlace | Quién puede entrar |
+|---|---|---|
+| **Web de los sensores** (tiempo real, gráficas e histórico en CSV) | **[https://rpi-lora.tailc40e5c.ts.net](https://rpi-lora.tailc40e5c.ts.net)** | Cualquiera, desde cualquier sitio (Tailscale Funnel, no hace falta instalar nada) |
+| Web dentro del instituto (VLAN 500) | `http://172.16.50.3` | Equipos conectados a la VLAN 500 |
+| ChirpStack (servidor LoRaWAN: gateway, nodos, uplinks) | [https://rpi-lora.tailc40e5c.ts.net:8443](https://rpi-lora.tailc40e5c.ts.net:8443) | Solo el equipo: hay que tener Tailscale instalado y la sesión iniciada en el tailnet `tailc40e5c.ts.net` |
+
+Para entrar a ChirpStack o por SSH a la Raspberry (`ssh charlie@rpi-lora`) desde fuera: instalar Tailscale
+([tailscale.com/download](https://tailscale.com/download)), iniciar sesión con la cuenta del equipo y abrir el enlace.
+Más detalle en [`docs/09-acceso-internet.md`](docs/09-acceso-internet.md).
 
 ![Esquema del sistema](docs/img/esquema-sistema.png)
 

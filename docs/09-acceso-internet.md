@@ -13,8 +13,8 @@ de entrada desde Internet. No hay que tocar el router del centro ni pedir ningú
 ```
 
 - La dirección es `https://rpi-lora.<red>.ts.net`: `rpi-lora` es el nombre de la Raspberry y `<red>` el nombre
-  del tailnet. **La nuestra es https://rpi-lora.taile056a6.ts.net** (tailnet `taile056a6.ts.net`), y ChirpStack,
-  solo para el equipo, en https://rpi-lora.taile056a6.ts.net:8443. Se puede cambiar una vez por un nombre más bonito en la consola de
+  del tailnet. **La nuestra es https://rpi-lora.tailc40e5c.ts.net** (tailnet `tailc40e5c.ts.net`), y ChirpStack,
+  solo para el equipo, en https://rpi-lora.tailc40e5c.ts.net:8443. Se puede cambiar una vez por un nombre más bonito en la consola de
   Tailscale → **DNS** → *Rename tailnet*.
 - El certificado HTTPS lo saca Tailscale solo. No hace falta token ni dominio propio.
 - Desde dentro del instituto también se puede entrar por `http://172.16.50.3`.
@@ -62,20 +62,28 @@ Ya **no hay que abrir ningún puerto**. Solo:
 1. **Permiso** para conectar la Raspberry y el wAP a la VLAN 500, con las dos tomas del switch en esa VLAN
    **sin etiquetar** (modo acceso).
 2. Que **172.16.50.2 y 172.16.50.3 queden fuera del rango del DHCP** de la VLAN 500.
-3. Confirmar la **máscara** (suponemos /24) y el **DNS** (suponemos 172.16.50.1).
+3. Confirmar la **máscara** (suponemos /24) y el **DNS**: 172.16.50.1 no contesta; ahora usamos 1.1.1.1 y 192.168.2.1.
 4. **Permiso para usar Tailscale** en la Raspberry. Solo necesita salir a Internet: UDP 41641 si está
    permitido y, si no, HTTPS (TCP 443) de salida, que casi siempre está abierto.
 
 Texto para mandárselo:
 
+> **Asunto:** TFG 2º STI – IPs fijas en la VLAN 500 para la Raspberry y el gateway LoRa
+>
 > Hola. Para el proyecto final de 2º de STI (monitorización de la calidad del agua con LoRaWAN) tenemos
-> una Raspberry Pi con IP fija `172.16.50.3` y un gateway LoRa MikroTik con IP fija `172.16.50.2`, los dos
-> en la VLAN 500 con puerta de enlace `172.16.50.1`. Necesitaríamos, si es posible:
-> 1. Que esas dos IP queden fuera del rango del DHCP de la VLAN 500, y que las tomas donde los conectemos
->    estén en la VLAN 500 sin etiquetar. ¿La máscara es /24 y el DNS 172.16.50.1?
-> 2. Permiso para usar Tailscale en la Raspberry. Con él publicamos una página web de consulta con HTTPS
+> una Raspberry Pi 5 con IP fija `172.16.50.3` (ya conectada en el aula para hacer pruebas) y vamos a
+> conectar un gateway LoRa MikroTik wAP LR8 con IP fija `172.16.50.2`, los dos en la VLAN 500 con puerta
+> de enlace `172.16.50.1`. Queríamos pedirte, si es posible:
+> 1. Que `172.16.50.2` y `172.16.50.3` queden fuera del rango del DHCP de la VLAN 500, para que no se las
+>    den a otro equipo, y que las tomas donde los conectemos estén en la VLAN 500 sin etiquetar.
+> 2. Confirmar la máscara (suponemos /24) y qué DNS debemos usar. El `172.16.50.1` no nos responde a
+>    consultas DNS y de momento usamos `1.1.1.1` y `192.168.2.1` (el que da el DHCP).
+> 3. Al instalar vimos que algunos servidores no se alcanzan o fallan a ratos (`deb.debian.org` y otros
+>    mirrors de Debian, `ghcr.io`). ¿Hay algún filtro o proxy que debamos tener en cuenta?
+> 4. Permiso para usar Tailscale en la Raspberry. Con él publicamos una página web de consulta con HTTPS
 >    sin abrir ningún puerto en el router del centro: solo hace conexiones de salida. No hay escritorio
->    remoto ni SSH abiertos a Internet, y la Raspberry tiene firewall.
+>    remoto ni SSH abiertos a Internet, y la Raspberry tiene firewall. El gateway LoRa solo habla con la
+>    Raspberry dentro de la VLAN.
 >
 > Gracias.
 > Carlos Maraver y Rubén Trillo

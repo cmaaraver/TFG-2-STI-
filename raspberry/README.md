@@ -84,15 +84,24 @@ El inyector PoE del wAP va a una toma del switch en la **VLAN 500** (sin etiquet
 /ip dhcp-client disable [find]
 /ip address add address=172.16.50.2/24 interface=ether1
 /ip route add dst-address=0.0.0.0/0 gateway=172.16.50.1
-/ip dns set servers=172.16.50.1
+/ip dns set servers=1.1.1.1,192.168.2.1
+# (172.16.50.1 no es servidor DNS: comprobado el 2026-10-29. Mismos DNS que red/red.env)
 /system ntp client set enabled=yes servers=172.16.50.3
 ```
 (Si la configuración de fábrica mete ether1 en un bridge, la IP se pone en el bridge en vez de en ether1:
 mirar `/interface bridge port print`. TODO VERIFICAR con el wAP delante.)
-- Actualizar RouterOS e instalar el paquete `iot`/`lora` si falta.
-- Servidor LoRa: `/iot lora servers add name=chirpstack address=172.16.50.3 up-port=1700 down-port=1700`
-  y asignarlo al dispositivo LoRa, red "Public", y activarlo (TODO VERIFICAR comandos en la versión de RouterOS instalada).
-- Anotar el Gateway EUI (`/iot lora print`) para darlo de alta en ChirpStack.
+- Actualizar RouterOS e instalar el paquete `iot` si falta (`/system package print`).
+- **Configuración completa lista para pegar en la terminal: [`red/wap-lr8.rsc`](red/wap-lr8.rsc)** (red, NTP y
+  servidor LoRa), con los comandos sacados de la guía oficial de MikroTik para ChirpStack:
+  ```
+  /iot lora disable [find]
+  /iot lora servers add name=chirpstack address=172.16.50.3 protocol=UDP up-port=1700 down-port=1700
+  /iot lora set [find] servers=chirpstack channel-plan=eu-868 network=public
+  /iot lora enable [find]
+  ```
+- Anotar el Gateway EUI (`/iot lora print detail`, o en WinBox *IoT → LoRa → Devices → Gateway ID*) y ponerlo en
+  `GATEWAY_EUI` del `.env`; después `sudo docker compose run --rm provisionar`.
+- En el log del wAP (`/log print where topics~"lora"`) tiene que salir `forwarder is ready`.
 - Desactivar la WiFi si no se usa y poner contraseña al usuario `admin` (está en una VLAN compartida).
 - Comprobar desde la Raspberry: `ping -c3 172.16.50.2`.
 

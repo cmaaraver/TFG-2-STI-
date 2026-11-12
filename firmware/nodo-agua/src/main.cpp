@@ -83,12 +83,14 @@ void setup() {
   sensoresIniciar();
   pantallaIniciar(ciclo);
 
+#ifndef SIN_PIN_MODO_CAL                         // en el banco (entorno lilygo_t3_banco) GPIO36 va al aire y no se mira
   pinMode(PIN_MODO_CAL, INPUT);
   if (digitalRead(PIN_MODO_CAL) == LOW) {
     pantallaMensaje("MODO CALIBRACION", "Monitor serie 115200");
     modoCalibracion();
     while (true) delay(1000);
   }
+#endif
 
   sensoresEncender();                            // empiezan a calentar mientras se hace el join
   pantallaFase("Sensores ON");
