@@ -184,7 +184,20 @@ Borrar después los datos de prueba: `DELETE FROM medidas WHERE dev_eui='0000000
 
 ![Web con datos simulados](../docs/img/web-datos-simulados.png)
 
-(Captura con **datos simulados** de 7 días, no son medidas reales. En el móvil: `docs/img/web-movil-datos-simulados.png`.)
+(Captura con **datos simulados** de 30 días (vista de 1 semana), no son medidas reales. En el móvil: `docs/img/web-movil-datos-simulados.png`; tema oscuro: `docs/img/web-oscuro-datos-simulados.png`.)
+
+Qué tiene la página:
+- **Cabecera** fija con el logo del CPIFP Los Viveros, el nodo elegido y si llegan datos en directo.
+- **Portada** del TFG (2º STI, Carlos Maraver Román y Rubén Trillo García) con la hora del último dato y la radio (SF y RSSI).
+- **Ahora mismo**: una tarjeta por variable con icono, valor animado, barrita y estado (correcto, vigilar o fuera de rango).
+  Cuando llega un uplink la tarjeta da un destello y el número cuenta hasta el valor nuevo.
+- **Histórico**: rangos de 1 h, 5 h, 24 h, 1 semana y 30 días, más fechas a elegir y descarga en CSV.
+  Con pocos puntos (1 h o 5 h, un dato cada 15 min) se dibuja también cada medida.
+- Efecto de cristal translúcido (`backdrop-filter`) solo en la cabecera, la portada, el selector de rango y el pie,
+  para que vaya fluida en el móvil. Tema claro u oscuro según el sistema y sin animaciones si el sistema lo pide
+  (`prefers-reduced-motion`).
+- El logo es el de la web del centro (`web/static/logo-viveros.png`, el mismo del que sale el de la OLED);
+  `logo-viveros-claro.png` es el mismo con las letras en blanco para el tema oscuro.
 
 - `web/app.py`: API (FastAPI). `/api/historico` agrupa en medias automáticamente si hay más de 1500 puntos.
 - `web/static/`: la página (HTML + CSS + JavaScript con ECharts, sin depender de Internet).
