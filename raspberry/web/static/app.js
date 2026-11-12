@@ -45,7 +45,7 @@ const fmtNum = (v, dec) => v == null ? "—" : Number(v).toLocaleString("es-ES",
 
 function hace(t) {
   const min = Math.round((Date.now() - new Date(t)) / 60000);
-  if (min < 1) return "hace menos de 1 min";
+  if (min < 1) return "ahora mismo";
   if (min < 60) return `hace ${min} min`;
   const h = Math.floor(min / 60);
   return h < 48 ? `hace ${h} h ${min % 60} min` : `hace ${Math.floor(h / 24)} días`;
@@ -59,6 +59,20 @@ async function pedir(url) {
 
 const fmtHora = t => new Date(t).toLocaleTimeString("es-ES", { timeZone: ZONA, hour: "2-digit", minute: "2-digit" });
 const sinMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Desfase de Madrid respecto a UTC ahora mismo: "UTC+1" en invierno y "UTC+2" en verano
+function zonaMadrid(fecha = new Date()) {
+  const p = new Intl.DateTimeFormat("en-GB", { timeZone: ZONA, timeZoneName: "shortOffset" })
+    .formatToParts(fecha).find(x => x.type === "timeZoneName");
+  return p ? p.value.replace("GMT", "UTC") : "UTC";
+}
+
+// Reloj de la cabecera con la hora de Madrid
+function actualizarReloj() {
+  const ahora = new Date();
+  $("#reloj-hora").textContent = fmtHora(ahora);
+  $("#reloj-zona").textContent = `Madrid ${zonaMadrid(ahora)}`;
+}
 
 // ---------- Tarjetas "Ahora mismo" ----------
 // Las tarjetas se crean una vez y luego solo se cambian sus números (así no se repite la animación de entrada)
@@ -107,7 +121,8 @@ function pintarTarjetas(m, destacar) {
     t.querySelector(".etq-estado").textContent = val == null ? "Sin dato" : (TEXTO_ESTADO[clase] || "Informativo");
   }
   // Datos de radio de la portada
-  $("#radio").textContent = m && m.spreading_factor ? `SF${m.spreading_factor} · ${m.rssi_dbm ?? "?"} dBm` : "EU868";
+  // SF arriba y RSSI debajo: en una sola línea no cabía en el móvil
+  $("#radio").innerHTML = m && m.spreading_factor ? `SF${m.spreading_factor}<small>${m.rssi_dbm ?? "?"} dBm</small>` : "EU868";
   document.querySelector("#t-rssi_dbm .extra").textContent = m ? `fcnt ${m.fcnt ?? "?"}` : "";
 
   const avisos = [];
@@ -129,6 +144,7 @@ function actualizarRecepcion() {
   const min = (Date.now() - new Date(m.tiempo)) / 60000;
   $("#ultima-recepcion").innerHTML = `${fmtHora(m.tiempo)}<small>${hace(m.tiempo)}</small>`;
   $("#ultima-recepcion").title = fmtFecha(m.tiempo);
+  p.title = min > MIN_SIN_DATOS ? "Nodo sin transmitir" : "Llegan datos en directo";
   if (min > MIN_SIN_DATOS) { p.textContent = "Nodo sin transmitir"; p.className = "pastilla cristal-suave caido"; }
   else if (conectadoTiempoReal) { p.textContent = "En directo"; p.className = "pastilla cristal-suave vivo"; }
 }
@@ -217,7 +233,7 @@ async function cargarHistorico() {
     ? "No hay medidas en este intervalo."
     : `${h.medidas_totales.toLocaleString("es-ES")} medidas` + (h.agrupado_cada_s
         ? ` (se muestran medias cada ${Math.round(h.agrupado_cada_s / 60)} min para que la gráfica vaya fluida)` : "")
-      + ". Arrastra o usa la rueda para hacer zoom.";
+      + `. Horas de Madrid (${zonaMadrid()}). Arrastra o usa la rueda para hacer zoom.`;
 }
 
 function anadirPuntoEnVivo(m) {
@@ -307,6 +323,8 @@ function prepararControles() {
   });
   ponerTema(document.documentElement.dataset.tema);
   setInterval(actualizarRecepcion, 30000);
+  actualizarReloj();
+  setInterval(actualizarReloj, 10000);
   moverIndicador();
   document.fonts?.ready.then(moverIndicador);
 }

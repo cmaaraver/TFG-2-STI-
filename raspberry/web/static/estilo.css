@@ -127,6 +127,7 @@ b, strong { font-weight: 650; }
   box-shadow: 0 0 0 0 var(--bien); animation: pulso 2s infinite;
 }
 .pastilla.caido { color: var(--mal); }
+.pastilla.caido::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--mal); }
 @keyframes pulso {
   0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--bien) 60%, transparent); }
   80%, 100% { box-shadow: 0 0 0 8px transparent; }
@@ -182,8 +183,9 @@ main { max-width: 1280px; margin: 0 auto; padding: 18px 16px 8px; }
 .fichas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; width: 100%; }
 .fichas div { background: var(--panel); border: 1px solid var(--borde); border-radius: 16px; padding: 10px 12px; min-width: 0; }
 .fichas dt { font-size: 11px; color: var(--tenue); text-transform: uppercase; letter-spacing: .05em; }
-.fichas dd { margin: 2px 0 0; font-weight: 650; font-size: 15px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.fichas dd small { display: block; font-size: 12px; font-weight: 500; color: var(--tenue); }
+.fichas dd { margin: 2px 0 0; font-weight: 650; font-size: 15px; font-variant-numeric: tabular-nums; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; }
+.fichas dd small { display: block; font-size: 12px; font-weight: 500; color: var(--tenue); white-space: normal; }
 
 /* ---------- Bloques ---------- */
 .bloque { margin-bottom: 30px; }
@@ -208,10 +210,9 @@ main { max-width: 1280px; margin: 0 auto; padding: 18px 16px 8px; }
 .tarjeta.bien { --estado: var(--bien); }
 .tarjeta.aviso { --estado: var(--aviso); }
 .tarjeta.mal { --estado: var(--mal); }
-.tarjeta::after { /* halo del color de la variable */
-  content: ""; position: absolute; width: 140px; height: 140px; right: -50px; top: -60px; border-radius: 50%;
-  background: var(--color); opacity: .14; filter: blur(10px); pointer-events: none;
-}
+/* Halo del color de la variable en la esquina: degradado de fondo (sin pseudo-elemento ni blur,
+   que en Safari/iOS se salía del borde redondeado y hacía un pico) */
+.tarjeta { background-image: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--color) 16%, transparent), transparent 55%); }
 .tarjeta.nuevo { animation: destello 1.4s var(--curva); }
 @keyframes destello {
   0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color) 55%, transparent), var(--sombra); }
@@ -386,3 +387,22 @@ a.autor:hover .in { opacity: 1; }
 .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .7); }
 .avatar:has(img) { box-shadow: 0 0 0 2px var(--panel), 0 0 0 3.5px var(--acento); }
+
+/* ---------- Reloj de la cabecera (hora de Madrid) ---------- */
+.reloj {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+  font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.reloj svg { width: 15px; height: 15px; fill: none; stroke: var(--acento); stroke-width: 2; stroke-linecap: round; }
+.reloj b { font-weight: 700; }
+.reloj small { color: var(--tenue); font-size: 11px; }
+@media (max-width: 560px) {
+  .reloj { padding: 6px 9px; font-size: 12px; gap: 4px; }
+  .reloj svg, .reloj small { display: none; }
+}
+/* Móviles estrechos (iPhone SE): el estado se queda solo con el punto de color */
+@media (max-width: 380px) {
+  .marca img { height: 17px; }
+  .pastilla.vivo, .pastilla.caido { font-size: 0; gap: 0; padding: 10px; }
+  .boton-tema { width: 32px; height: 32px; }
+}
