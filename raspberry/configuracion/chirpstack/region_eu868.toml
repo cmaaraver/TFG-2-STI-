@@ -201,7 +201,9 @@
     #
     # When the link-budget is better for RX2 than for RX1, the Network Server will first
     # try to schedule the downlink in RX2, failing that it will try RX1.
-    rx2_prefer_on_link_budget=false
+    # Activado (2026-11-12): desde el aula el join-accept por RX1 no llegaba a la LILYGO (RSSI -130 dBm,
+    # SNR -12 dB). Por RX2 (869,525 MHz, SF12, más potencia) sí entra.
+    rx2_prefer_on_link_budget=true
 
     # Downlink TX Power (dBm)
     #

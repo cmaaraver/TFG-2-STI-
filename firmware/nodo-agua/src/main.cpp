@@ -15,6 +15,9 @@
 #include "sensores.h"
 #include "payload.h"
 #include "pantalla.h"
+#ifdef SIMULAR_SENSORES
+#include "simulacion.h"           // entorno lilygo_t3_simulado: datos inventados
+#endif
 
 #if defined(RADIO_SX1276)
 SX1276 radio = new Module(LORA_CS, LORA_DIO0, LORA_RST, LORA_DIO1);
@@ -26,7 +29,11 @@ LoRaWANNode node(&radio, &EU868);
 // Variables que sobreviven al deep sleep (memoria RTC)
 RTC_DATA_ATTR uint8_t  sesionLW[RADIOLIB_LORAWAN_SESSION_BUF_SIZE];
 RTC_DATA_ATTR bool     haySesion    = false;
+#ifdef SIMULAR_SENSORES
+RTC_DATA_ATTR uint16_t intervaloMin = INTERVALO_SIMULADO_MIN;
+#else
 RTC_DATA_ATTR uint16_t intervaloMin = INTERVALO_ENVIO_MIN_DEF;
+#endif
 RTC_DATA_ATTR uint32_t ciclo        = 0;
 
 static void dormir(uint32_t segundos) {
@@ -100,6 +107,16 @@ void setup() {
   sensoresEncender();                            // empiezan a calentar mientras se hace el join
   pantallaFase("Sensores ON");
 
+#ifdef SIMULAR_SENSORES
+  // Simulación: se mide antes del join para que el monitor serie enseñe los datos
+  // aunque el servidor no conteste. No hace falta esperar a que se calienten sensores.
+  Medida m = simularMedida(ciclo, intervaloMin);
+  pantallaFase("Datos SIMULADOS");
+  Serial.printf("[SIMULADO] T=%.2f O2=%.2f pH=%.2f nivel=%.0f bat=%.0f caudal=%.2f agua=%d sin_caudal=%d\n",
+                m.temperatura_c, m.oxigeno_mgl, m.ph, m.nivel_mm, m.bateria_mv,
+                m.caudal_lmin, m.agua_presente, m.bomba_sin_caudal);
+#endif
+
   SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
   int16_t st = radio.begin();
   if (st != RADIOLIB_ERR_NONE) {
@@ -115,6 +132,7 @@ void setup() {
     delay(T_PANTALLA_RESULTADO_MS);
     dormir(T_REINTENTO_JOIN_S);
   }
+#ifndef SIMULAR_SENSORES
   pantallaFase("Esperando sensores");
 
   // Sensores calientes antes de medir; el caudal se mide en los últimos segundos de la espera
@@ -130,6 +148,7 @@ void setup() {
   Serial.printf("T=%.2f O2=%.2f pH=%.2f nivel=%.0f bat=%.0f caudal=%.2f agua=%d\n",
                 m.temperatura_c, m.oxigeno_mgl, m.ph, m.nivel_mm, m.bateria_mv,
                 m.caudal_lmin, m.agua_presente);
+#endif
 
   uint8_t payload[PAYLOAD_LEN];
   construirPayload(m, payload);

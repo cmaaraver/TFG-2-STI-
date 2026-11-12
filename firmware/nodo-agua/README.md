@@ -21,6 +21,15 @@ Los tres hacen el join en SF12 (`LORAWAN_DR_JOIN=0`), porque desde el aula la co
 Antes de compilar: copiar `include/secrets.example.h` a `include/secrets.h` y poner las claves de ChirpStack
 (`secrets.h` no se sube a git).
 
+## Datos simulados (probar la web sin sensores)
+El entorno `lilygo_t3_simulado` inventa valores realistas de todos los sensores (`src/simulacion.cpp`) y los envía
+cada 2 min con el mismo payload v2. En el monitor serie salen como `[SIMULADO] T=... O2=...`. Uno de cada 12 envíos
+lleva el caudal a 0 para probar el aviso "bomba sin caudal". Para volver a lo real basta con grabar otro entorno:
+```
+pio run -e lilygo_t3_simulado -t upload     # simulación
+pio run -e lilygo_t3_banco -t upload        # vuelta a los sensores reales (banco de pruebas)
+```
+
 ## Qué hace cada ciclo (cada 15 min)
 Despierta → enciende sensores → join o sesión guardada → espera 60 s a que se calienten los sensores (los últimos
 10 s mide el caudal) → lee sensores → envía 16 bytes por LoRaWAN → enseña el resultado 5 s → deep sleep.
