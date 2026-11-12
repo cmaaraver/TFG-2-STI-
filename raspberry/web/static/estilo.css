@@ -26,31 +26,32 @@
   --radio: 22px;
   --curva: cubic-bezier(.2, .8, .2, 1);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fondo: #06121c;
-    --fondo-2: #0a1d2b;
-    --texto: #e6f0f6;
-    --tenue: #8ba3b5;
-    --borde: rgba(255, 255, 255, .08);
-    --rejilla: rgba(255, 255, 255, .07);
-    --panel: rgba(16, 32, 46, .72);
-    --cristal: linear-gradient(135deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .04));
-    --cristal-borde: rgba(255, 255, 255, .16);
-    --brillo: rgba(255, 255, 255, .28);
-    --acento: #38bdf8;
-    --acento-2: #34d399;
-    --acento-suave: rgba(56, 189, 248, .14);
-    --bien: #4ade80;
-    --aviso: #fbbf24;
-    --mal: #f87171;
-    --sombra: 0 10px 30px -12px rgba(0, 0, 0, .6);
-    --m1: #0369a1; --m2: #0f766e; --m3: #1e3a8a;
-  }
+/* Tema oscuro: lo pone el script del <head> (sistema o botón de la cabecera) */
+:root[data-tema="oscuro"] {
+  --fondo: #06121c;
+  --fondo-2: #0a1d2b;
+  --texto: #e6f0f6;
+  --tenue: #8ba3b5;
+  --borde: rgba(255, 255, 255, .08);
+  --rejilla: rgba(255, 255, 255, .07);
+  --panel: rgba(16, 32, 46, .72);
+  --cristal: linear-gradient(135deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .04));
+  --cristal-borde: rgba(255, 255, 255, .16);
+  --brillo: rgba(255, 255, 255, .28);
+  --acento: #38bdf8;
+  --acento-2: #34d399;
+  --acento-suave: rgba(56, 189, 248, .14);
+  --bien: #4ade80;
+  --aviso: #fbbf24;
+  --mal: #f87171;
+  --sombra: 0 10px 30px -12px rgba(0, 0, 0, .6);
+  --m1: #0369a1; --m2: #0f766e; --m3: #1e3a8a;
 }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+html { color-scheme: light; }
+:root[data-tema="oscuro"] { color-scheme: dark; }
 body {
   margin: 0; min-height: 100vh;
   background: linear-gradient(180deg, var(--fondo), var(--fondo-2));
@@ -349,3 +350,25 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--acento); outlin
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .cristal, .cristal-suave { background: var(--panel); }
 }
+
+/* ---------- Botón de tema claro / oscuro ---------- */
+.logo-tema-oscuro { display: none !important; }
+:root[data-tema="oscuro"] .logo-tema-claro { display: none !important; }
+:root[data-tema="oscuro"] .logo-tema-oscuro { display: block !important; }
+.pie-caja .logo-tema-oscuro { margin: 0 auto; }
+.boton-tema {
+  position: relative; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; flex: none;
+  border-radius: 50%; color: var(--texto); cursor: pointer; overflow: hidden;
+}
+.boton-tema svg {
+  position: absolute; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round;
+  transition: transform .5s var(--curva), opacity .3s;
+}
+.boton-tema .sol { color: #f59e0b; }
+.boton-tema .luna { transform: translateY(24px) rotate(-60deg); opacity: 0; }
+:root[data-tema="oscuro"] .boton-tema .sol { transform: translateY(-24px) rotate(90deg); opacity: 0; }
+:root[data-tema="oscuro"] .boton-tema .luna { transform: none; opacity: 1; color: #fde68a; }
+.boton-tema:active { transform: scale(.92); }
+/* Al cambiar de tema, los colores pasan suavemente */
+html.cambiando-tema body, html.cambiando-tema .tarjeta, html.cambiando-tema .grafica, html.cambiando-tema .cristal,
+html.cambiando-tema .cristal-suave { transition: background-color .4s, color .4s, border-color .4s !important; }

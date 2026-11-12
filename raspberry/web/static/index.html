@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Calidad del agua · TFG 2º STI · CPIFP Los Viveros</title>
   <meta name="description" content="Monitorización en tiempo real de la calidad del agua con LoRaWAN. TFG de 2º STI de Carlos Maraver Román y Rubén Trillo García, CPIFP Los Viveros (Sevilla).">
-  <meta name="theme-color" content="#e8f3f7" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#06121c" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#e8f3f7">
+  <script>
+    // Tema antes de pintar nada (así no parpadea): el que se eligió con el botón o, si no, el del sistema
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("tema"); } catch (e) {}
+      if (t !== "claro" && t !== "oscuro") t = matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro";
+      document.documentElement.dataset.tema = t;
+    })();
+  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3C16 3 6 14.5 6 20a10 10 0 0 0 20 0C26 14.5 16 3 16 3z' fill='%230ea5c6'/></svg>">
   <link rel="stylesheet" href="/static/estilo.css">
 </head>
@@ -18,10 +26,8 @@
 
   <header class="cabecera cristal">
     <a class="marca" href="https://cpifplosviveros.es" target="_blank" rel="noopener" title="CPIFP Los Viveros">
-      <picture>
-        <source srcset="/static/logo-viveros-claro.png" media="(prefers-color-scheme: dark)">
-        <img src="/static/logo-viveros.png" alt="CPIFP Los Viveros" width="237" height="42">
-      </picture>
+      <img class="logo-tema-claro" src="/static/logo-viveros.png" alt="CPIFP Los Viveros" width="237" height="42">
+      <img class="logo-tema-oscuro" src="/static/logo-viveros-claro.png" alt="CPIFP Los Viveros" width="237" height="42">
     </a>
     <div class="estado-nodo">
       <label class="selector cristal-suave">
@@ -29,6 +35,10 @@
         <select id="nodo" aria-label="Nodo"></select>
       </label>
       <span id="estado" class="pastilla cristal-suave">Conectando…</span>
+      <button id="tema" class="boton-tema cristal-suave" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar a modo oscuro">
+        <svg class="sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+        <svg class="luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+      </button>
     </div>
   </header>
 
@@ -102,10 +112,8 @@
 
   <footer class="pie">
     <div class="pie-caja cristal">
-      <picture>
-        <source srcset="/static/logo-viveros-claro.png" media="(prefers-color-scheme: dark)">
-        <img src="/static/logo-viveros.png" alt="CPIFP Los Viveros" width="237" height="42" loading="lazy">
-      </picture>
+      <img class="logo-tema-claro" src="/static/logo-viveros.png" alt="CPIFP Los Viveros" width="237" height="42" loading="lazy">
+      <img class="logo-tema-oscuro" src="/static/logo-viveros-claro.png" alt="CPIFP Los Viveros" width="237" height="42" loading="lazy">
       <p><b>TFG de 2º de Sistemas de Telecomunicaciones e Informáticos</b><br>
         Carlos Maraver Román y Rubén Trillo García · CPIFP Los Viveros, Sevilla</p>
       <p class="tenue">LILYGO ESP32 · LoRaWAN EU868 · MikroTik wAP LR8 · ChirpStack · TimescaleDB · Raspberry Pi 5<br>

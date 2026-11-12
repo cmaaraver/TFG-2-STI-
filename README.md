@@ -83,7 +83,7 @@ Logo de Los Viveros, fase del ciclo y temporizador del envío por LoRa.
 
 ### Web en tiempo real (captura con datos simulados)
 Portada con el logo de Los Viveros y los autores del TFG, tarjetas en directo y gráficas del histórico
-(1 h, 5 h, 24 h, 1 semana, 30 días o fechas a elegir). Toques de cristal translúcido y tema claro u oscuro según el sistema.
+(1 h, 5 h, 24 h, 1 semana, 30 días o fechas a elegir). Toques de cristal translúcido y modo claro u oscuro con el botón de la cabecera (sigue al sistema si no se toca).
 
 ![Web en el ordenador](docs/img/web-datos-simulados.png)
 

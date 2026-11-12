@@ -194,8 +194,9 @@ Qué tiene la página:
 - **Histórico**: rangos de 1 h, 5 h, 24 h, 1 semana y 30 días, más fechas a elegir y descarga en CSV.
   Con pocos puntos (1 h o 5 h, un dato cada 15 min) se dibuja también cada medida.
 - Efecto de cristal translúcido (`backdrop-filter`) solo en la cabecera, la portada, el selector de rango y el pie,
-  para que vaya fluida en el móvil. Tema claro u oscuro según el sistema y sin animaciones si el sistema lo pide
-  (`prefers-reduced-motion`).
+  para que vaya fluida en el móvil. Sin animaciones si el sistema lo pide (`prefers-reduced-motion`).
+- **Modo claro / oscuro**: botón del sol y la luna a la derecha de la cabecera. La elección se guarda en ese
+  navegador (`localStorage`); si nunca se ha pulsado, la web sigue el tema del sistema.
 - El logo es el de la web del centro (`web/static/logo-viveros.png`, el mismo del que sale el de la OLED);
   `logo-viveros-claro.png` es el mismo con las letras en blanco para el tema oscuro.
 
