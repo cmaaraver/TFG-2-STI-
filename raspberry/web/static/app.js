@@ -344,6 +344,8 @@ async function iniciar() {
     pintarTarjetas(null, false);
     $("#info-historico").textContent = "Todavía no ha llegado ningún mensaje del nodo.";
   } else {
+    // El selector de nodo solo se enseña si hay más de uno (ahora solo está la maqueta)
+    $("#selector-nodo").hidden = nodos.length < 2;
     $("#nodo").innerHTML = nodos.map(n =>
       `<option value="${n.dev_eui}">${n.nombre || n.dev_eui}</option>`).join("");
     estado.nodo = nodos[0].dev_eui;
