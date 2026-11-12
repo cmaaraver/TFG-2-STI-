@@ -30,6 +30,27 @@
   // Es pin de arranque y tiene que estar a 0 al encender, así que no se le conecta nada.
                             // No se usa GPIO2 porque es la línea MISO del lector microSD de la placa.
   #define PIN_CAUDAL 34     // solo entrada; pulsos del caudalímetro a través de divisor 5 V → 3,3 V
+  #define PIN_MODO_CAL_PULLUP 0  // 0 = pull-up externa de 10k (GPIO36 no tiene pull-up interna)
+
+  #ifdef SIN_ADS1115
+  // Montaje simple (2026-11-12): sin ADS1115, sin aislador DFR0504 y sin medir la batería, porque el nodo
+  // se alimenta de 230 V (inversor de las placas solares, con su propia batería de respaldo).
+  // El pH y el nivel se leen con el ADC1 del ESP32, que funciona aunque esté la radio LoRa.
+  // GPIO36 y GPIO39 son ADC1_CH0 y ADC1_CH3 (hoja de datos del ESP32, tabla "ADC"), solo entrada.
+  // Por eso la presencia de agua pasa a GPIO4 y el puente de calibración a GPIO15.
+    #undef  PIN_AGUA
+    #undef  PIN_MODO_CAL
+    #undef  PIN_MODO_CAL_PULLUP
+    #define PIN_PH        36   // salida de la placa del pH (0-3,0 V, wiki DFRobot SEN0169-V2)
+    #define PIN_NIVEL     39   // Signal del conversor 4-20 mA del KIT0139 (0,48-2,40 V con 120 Ω)
+    #define PIN_AGUA      4    // SEN0204 por divisor 10k/20k. GPIO4 es DAT1 del lector microSD (sin tarjeta, libre)
+    #define PIN_MODO_CAL  15   // puente a GND al arrancar = calibración. GPIO15 es pin de arranque: a 0 solo
+                               // calla los mensajes de arranque del ESP32, así que el puente no estorba
+    #define PIN_MODO_CAL_PULLUP 1  // pull-up interna: no hace falta resistencia
+    #undef  RS485_DE
+    #define RS485_DE      25   // DE+RE de un módulo MAX485. Con un módulo de dirección automática este pin
+                               // se queda sin conectar y no molesta (solo parpadea el LED de la placa al enviar)
+  #endif
 #elif defined(PLACA_LILYGO_T3S3_SX1262)
   // LILYGO T3-S3 (ESP32-S3 + SX1262) — TODO VERIFICAR todos los pines con el pinout oficial
   #define RADIO_SX1262

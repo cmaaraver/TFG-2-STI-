@@ -9,6 +9,15 @@ pio run -e lilygo_t3_v1_6_1 -t upload       # grabar
 pio device monitor                          # monitor serie a 115200
 ```
 
+### Entornos
+| Entorno | Para qué |
+|---|---|
+| `lilygo_t3_simple` | **Montaje real (2026-11-12)**: nodo alimentado desde 230 V (inversor de las placas solares), sin ADS1115 ni aislador. pH en GPIO36, nivel en GPIO39, presencia de agua en GPIO4, puente de calibración en GPIO15 y DE del RS485 en GPIO25. Esquema: `docs/img/conexionado-simple.png` |
+| `lilygo_t3_v1_6_1` | Diseño de `docs/03` (ADS1115, aislador, conmutadores y batería LiFePO4) |
+| `lilygo_t3_banco` | LILYGO suelta en la mesa: no mira el pin del puente de calibración |
+
+Los tres hacen el join en SF12 (`LORAWAN_DR_JOIN=0`), porque desde el aula la cobertura va al límite.
+
 Antes de compilar: copiar `include/secrets.example.h` a `include/secrets.h` y poner las claves de ChirpStack
 (`secrets.h` no se sube a git).
 
