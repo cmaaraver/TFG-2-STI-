@@ -10,19 +10,19 @@
 .warn{fill:#a01d1d;font-size:13px;font-weight:600}
 </style>
 <rect width="1400" height="1040" fill="#f7f9f8"/>
-<text x="30" y="40" class="h" font-size="24">Nodo de agua · montaje simple con inversor (12-11-2026)</text>
-<text x="30" y="64" class="m">LILYGO T3 V1.6.1 · firmware: entorno lilygo_t3_simple · sin ADS1115, sin aislador, sin conmutadores · la bomba va aparte</text>
+<text x="30" y="40" class="h" font-size="24">Nodo de agua · montaje simple, todo leído por la LILYGO (13-11-2026)</text>
+<text x="30" y="64" class="m">LILYGO T3 V1.6.1 · firmware: entorno lilygo_t3_simple · sin ADS1115, sin aislador, sin conmutadores · solo resistencias y un diodo · la bomba va aparte</text>
 
 <!-- ALIMENTACION -->
 <rect x="30" y="85" width="1340" height="150" rx="10" fill="#fffaf2" stroke="#e8c79a"/>
 <text x="48" y="110" class="h">Alimentación</text>
 <rect x="48" y="125" width="230" height="64" rx="8" class="pwr"/><text x="62" y="150" class="t" font-weight="600">Placas solares + batería</text><text x="62" y="172" class="m">→ inversor → 230 V AC</text>
 <rect x="320" y="125" width="170" height="64" rx="8" class="pwr"/><text x="334" y="150" class="t" font-weight="600">Regleta 230 V</text><text x="334" y="172" class="m">solo cosas enchufables</text>
-<rect x="540" y="105" width="260" height="56" rx="8" class="pwr"/><text x="554" y="128" class="t" font-weight="600">Cargador USB 5 V (≥ 1 A)</text><text x="554" y="149" class="m">cable USB de datos → LILYGO</text>
-<rect x="540" y="170" width="260" height="56" rx="8" class="pwr"/><text x="554" y="193" class="t" font-weight="600">Fuente 12 V DC (≥ 1 A)</text><text x="554" y="214" class="m">rango válido 12-24 V</text>
+<rect x="540" y="105" width="260" height="56" rx="8" class="pwr"/><text x="554" y="128" class="t" font-weight="600">Cargador USB 5 V con respaldo</text><text x="554" y="149" class="m">cable USB de datos → LILYGO</text>
+<rect x="540" y="170" width="260" height="56" rx="8" class="pwr"/><text x="554" y="193" class="t" font-weight="600">Fuente 12 V de PC adaptada</text><text x="554" y="214" class="m">≥ 1 A · medir 12-13 V antes</text>
 <path d="M278 157 H320" class="w g"/><path d="M490 157 H515 V133 H540 M515 157 V198 H540" class="w g"/>
 <rect x="850" y="105" width="240" height="56" rx="8" class="box"/><text x="864" y="128" class="t" font-weight="600">→ USB de la LILYGO</text><text x="864" y="149" class="m">5V y 3V3 salen de sus pines</text>
-<rect x="850" y="170" width="240" height="56" rx="8" class="box"/><text x="864" y="193" class="t" font-weight="600">Bornas +12 V y GND</text><text x="864" y="214" class="m">SEN0681 y KIT0139</text>
+<rect x="850" y="170" width="240" height="56" rx="8" class="box"/><text x="864" y="193" class="t" font-weight="600">Bornas +12 V y GND</text><text x="864" y="214" class="m">SEN0681, KIT0139, SEN0204, caudal</text>
 <path d="M800 133 H850" class="w r5"/><path d="M800 198 H850" class="w r12"/>
 <text x="1110" y="128" class="m">GND de la fuente de 12 V</text><text x="1110" y="146" class="m">unido al GND de la LILYGO</text><text x="1110" y="164" class="m">(una sola masa común).</text>
 <text x="1110" y="190" class="warn">Nada de 230 V dentro de la caja:</text><text x="1110" y="208" class="warn">solo fuente y cargador enchufados.</text>
@@ -41,12 +41,12 @@
 <g class="pin" text-anchor="end">
 <text x="862" y="532">GPIO13 TX</text><text x="862" y="572">GPIO14 RX</text><text x="862" y="612">GPIO25 DE</text><text x="862" y="742">GPIO34 caudal</text>
 </g>
-<text x="700" y="860" text-anchor="middle" fill="#b9c4c9" font-size="13">GPIO12 libre · sin microSD · sin LiPo en el JST</text>
+<text x="700" y="860" text-anchor="middle" fill="#b9c4c9" font-size="13">GPIO12 libre · sin microSD · pin 5V sin usar</text>
 <g fill="#ffd54a"><rect x="512" y="364" width="12" height="12"/><rect x="512" y="404" width="12" height="12"/><rect x="512" y="444" width="12" height="12"/><rect x="512" y="524" width="12" height="12"/><rect x="512" y="604" width="12" height="12"/><rect x="512" y="694" width="12" height="12"/><rect x="512" y="804" width="12" height="12"/>
 <rect x="876" y="524" width="12" height="12"/><rect x="876" y="564" width="12" height="12"/><rect x="876" y="604" width="12" height="12"/><rect x="876" y="734" width="12" height="12"/></g>
 
 <!-- power rails left -->
-<path d="M512 370 H470" class="w r5"/><text x="400" y="366" class="lab" fill="#e07a10">+5V →</text>
+<path d="M512 370 H470" class="w r5" stroke-dasharray="4 5"/><text x="300" y="366" class="lab" fill="#e07a10">5V: sin conectar</text>
 <path d="M512 410 H470" class="w r33"/><text x="400" y="406" class="lab" fill="#b8930a">3V3 →</text>
 <path d="M512 450 H470" class="w g"/><text x="400" y="446" class="lab" fill="#222">GND →</text>
 <text x="30" y="470" class="m">El 3V3 es una salida (máx. ~500 mA,</text><text x="30" y="487" class="m">compartida con la radio).</text>
@@ -66,9 +66,9 @@
 <!-- SEN0204 -->
 <rect x="30" y="690" width="330" height="80" rx="8" class="box"/>
 <text x="44" y="713" class="t" font-weight="600">Presencia de agua SEN0204</text>
-<text x="44" y="733" class="m">marrón → 5V · azul → GND · negro sin conectar</text><text x="44" y="753" class="m">amarillo → 10 kΩ → GPIO4 · 20 kΩ a GND</text>
-<path d="M360 700 H400" class="w s"/><rect x="400" y="690" width="44" height="20" class="res"/><text x="404" y="682" class="lab" fill="#1e56c8">10k</text>
-<path d="M444 700 H512" class="w s"/><circle cx="478" cy="700" r="4" fill="#1e56c8"/><path d="M478 700 V722" class="w s"/><rect x="468" y="722" width="20" height="40" class="res"/><path d="M478 762 V776" class="w g"/><text x="492" y="752" class="lab" fill="#1e56c8">20k</text><text x="460" y="792" class="lab" fill="#222">GND</text>
+<text x="44" y="733" class="m">marrón → +12 V · azul → GND · negro (ADJ) suelto</text><text x="44" y="753" class="m">amarillo → 27 kΩ → GPIO4 · 10 kΩ a GND (≈3,2 V)</text>
+<path d="M360 700 H400" class="w s"/><rect x="400" y="690" width="44" height="20" class="res"/><text x="404" y="682" class="lab" fill="#1e56c8">27k</text>
+<path d="M444 700 H512" class="w s"/><circle cx="478" cy="700" r="4" fill="#1e56c8"/><path d="M478 700 V722" class="w s"/><rect x="468" y="722" width="20" height="40" class="res"/><path d="M478 762 V776" class="w g"/><text x="492" y="752" class="lab" fill="#1e56c8">10k</text><text x="460" y="792" class="lab" fill="#222">GND</text>
 
 <!-- modo cal -->
 <rect x="30" y="790" width="330" height="70" rx="8" class="box"/>
@@ -78,22 +78,22 @@
 
 <!-- RS485 -->
 <rect x="940" y="495" width="200" height="140" rx="8" class="box" stroke="#7b3fd1"/>
-<text x="954" y="518" class="t" font-weight="600">Módulo RS485</text>
+<text x="954" y="518" class="t" font-weight="600">RS485 (por conseguir)</text>
 <text x="954" y="540" class="lab" fill="#7b3fd1">DI ← GPIO13</text><text x="954" y="560" class="lab" fill="#7b3fd1">RO → GPIO14</text><text x="954" y="580" class="lab" fill="#7b3fd1">DE+RE ← GPIO25</text>
-<text x="954" y="602" class="m">VCC → 3V3 · GND</text><text x="954" y="622" class="m">bornas A, B</text>
+<text x="954" y="602" class="m">VCC → 3V3 (mejor MAX3485)</text><text x="954" y="622" class="m">bornas A, B</text>
 <path d="M888 530 H940" class="w b"/><path d="M888 570 H940" class="w b"/><path d="M888 610 H940" class="w b"/>
 <rect x="1180" y="495" width="190" height="140" rx="8" class="box"/>
 <text x="1194" y="518" class="t" font-weight="600">O2 + T SEN0681</text>
 <text x="1194" y="540" class="m">marrón → +12 V</text><text x="1194" y="560" class="m">negro → GND</text><text x="1194" y="580" class="m">amarillo → A</text><text x="1194" y="600" class="m">azul → B</text><text x="1194" y="620" class="m">4800 8N1, dir. 1</text>
 <path d="M1140 575 H1180" class="w b"/><path d="M1140 595 H1180" class="w b" stroke-dasharray="6 4"/>
-<text x="940" y="655" class="m">Con módulo de dirección automática (TXD/RXD):</text><text x="940" y="673" class="m">TXD ← GPIO13, RXD → GPIO14, GPIO25 sin usar.</text>
+<text x="940" y="655" class="m">Módulo de dirección automática: GPIO25 sin usar; GPIO13 a su</text><text x="940" y="673" class="m">entrada (T/DI) y GPIO14 a su salida (R/RO). Si no lee, cruzar 13/14.</text>
 
 <!-- caudal -->
 <rect x="1000" y="700" width="370" height="95" rx="8" class="box"/>
 <text x="1014" y="723" class="t" font-weight="600">Caudalímetro (en la tubería)</text>
-<text x="1014" y="743" class="m">rojo → 5V · negro → GND</text><text x="1014" y="763" class="m">amarillo → 10 kΩ → GPIO34 · 20 kΩ a GND</text><text x="1014" y="783" class="m">pulsos de 5 V → 3,3 V</text>
-<path d="M888 740 H920" class="w s"/><circle cx="920" cy="740" r="4" fill="#1e56c8"/><path d="M920 740 V760" class="w s"/><rect x="910" y="760" width="20" height="40" class="res"/><path d="M920 800 V812" class="w g"/><text x="936" y="790" class="lab" fill="#1e56c8">20k</text>
-<path d="M920 740 H945"  class="w s"/><rect x="945" y="730" width="44" height="20" class="res"/><text x="949" y="722" class="lab" fill="#1e56c8">10k</text><path d="M989 740 H1000" class="w s"/>
+<text x="1014" y="743" class="m">rojo → +12 V · negro → GND</text><text x="1014" y="763" class="m">amarillo → diodo 1N4148 (raya al sensor) → GPIO34</text><text x="1014" y="783" class="m">+ 10 kΩ de GPIO34 a 3V3 (pulsos de 0 a 3,3 V)</text>
+<path d="M888 740 H920" class="w s"/><circle cx="920" cy="740" r="4" fill="#1e56c8"/><path d="M920 740 V760" class="w s"/><rect x="910" y="760" width="20" height="40" class="res"/><path d="M920 800 V812" class="w r33"/><text x="936" y="790" class="lab" fill="#1e56c8">10k</text><text x="905" y="826" class="lab" fill="#b8930a">3V3</text>
+<path d="M920 740 H948" class="w s"/><polygon points="950,740 970,730 970,750" fill="#fff" stroke="#1e56c8" stroke-width="2"/><line x1="950" y1="729" x2="950" y2="751" stroke="#1e56c8" stroke-width="3"/><text x="938" y="722" class="lab" fill="#1e56c8">1N4148</text><path d="M970 740 H1000" class="w s"/>
 
 <!-- bomba -->
 <rect x="940" y="830" width="430" height="50" rx="8" fill="#f1f3f2" stroke="#c5ceca"/>
@@ -102,8 +102,8 @@
 <!-- notas -->
 <rect x="30" y="900" width="1340" height="120" rx="10" fill="#fff" stroke="#d6ddda"/>
 <text x="48" y="925" class="h">Antes de enchufar</text>
-<text x="48" y="950" class="m">1. Fuente de 12 V sola: 12-13 V en las bornas.   2. Con todo conectado y la LILYGO fuera: ningún cable de GPIO por encima de 3,3 V.</text>
-<text x="48" y="972" class="m">3. Sin tarjeta microSD ni batería LiPo en la LILYGO.   4. GPIO12 sin conectar (pin de arranque).   5. Sonda de pH siempre mojada.</text>
+<text x="48" y="950" class="m">1. Fuente de PC sola: 12-13 V en las bornas (cable amarillo +12 V, negro GND).   2. Con todo conectado y la LILYGO fuera: ningún cable de GPIO por encima de 3,3 V.</text>
+<text x="48" y="972" class="m">3. LILYGO solo por USB (nunca 5 V por el pin 5V) y sin microSD.   4. GPIO12 sin conectar (pin de arranque).   5. Sonda de pH siempre mojada.</text>
 <text x="48" y="994" class="m">Sin aislador, el pH comparte masa con el SEN0681, el KIT0139 y la bomba, que están en la misma agua: si el pH baila, mirar si cambia al desenchufar la bomba.</text>
 <text x="48" y="1012" class="m">Leyenda: rojo +12 V · naranja +5 V · amarillo 3V3 · negro GND · azul señal digital · turquesa analógica · morado RS485/UART</text>
 </svg>

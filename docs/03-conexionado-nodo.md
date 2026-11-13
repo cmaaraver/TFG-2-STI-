@@ -1,5 +1,38 @@
 # Conexionado y montaje del nodo
 
+## 0. Montaje que se usa de verdad: todo leído por la LILYGO (13-11-2026)
+
+![Conexionado simple](img/conexionado-simple.png)
+
+(Editable: `img/conexionado-simple.svg`. Firmware: entorno `lilygo_t3_simple`.)
+
+Material que hace falta además de los sensores, la LILYGO, la Raspberry y la gateway: una fuente de 12 V de PC
+adaptada (≥ 1 A), un cargador USB de 5 V con batería de respaldo, resistencias (27k, 2 × 10k), un diodo 1N4148
+y un módulo RS485 a TTL de 3,3 V (MAX3485 o parecido), que está **por conseguir**. Sin el módulo RS485 no se puede
+leer el SEN0681: el firmware lo marca como fallo de RS485 y usa 25 °C para compensar el pH.
+
+| Señal | Pin LILYGO | Va a | Notas |
+|---|---|---|---|
+| Alimentación | USB | Cargador de 5 V con respaldo | **El pin 5V no se usa.** Por el pin 5V la batería del JST recibiría 5 V (MOSFET Si2307 del esquema T3_V1.6) |
+| 3V3 | 3V3 | Placa del pH, conversor 4-20 mA, módulo RS485 | Es una salida (ME6211 de 500 mA, el mismo que la radio) |
+| GND | GND | Masa común con el negro de la fuente de 12 V | |
+| pH | GPIO36 | Salida de la placa del pH (0-3,0 V) | Placa a 3V3 (admite 3,3-5,5 V, wiki SEN0169-V2). ADC1 del ESP32 |
+| Nivel | GPIO39 | Signal del conversor del KIT0139 | 120 Ω: 4 mA = 0,48 V, 20 mA = 2,40 V. KIT0139 a +12 V |
+| Presencia de agua | GPIO4 | SEN0204 por 27 kΩ en serie y 10 kΩ a GND | SEN0204 a +12 V: 12 V → 3,2 V. Negro (ADJ) sin conectar |
+| Caudal | GPIO34 | YF-S201 por diodo 1N4148 (raya hacia el sensor) + 10 kΩ de GPIO34 a 3V3 | YF-S201 a +12 V. Vale tenga la salida que tenga |
+| Calibración | GPIO15 | Puente a GND | Pull-up interna, sin resistencia |
+| RS485 | GPIO13 / GPIO14 / GPIO25 | DI / RO / DE+RE del módulo | Con módulo de dirección automática, GPIO25 sin usar. Si no lee, cruzar 13 y 14 (no se rompe nada) |
+
+Por qué así (comprobado en el esquema oficial `T3_V1.6.1.pdf` de LilyGO y en las wikis de DFRobot):
+- El SEN0204 pide 5-24 V y por USB el pin 5V da ~4,7 V (diodo BAT20J), por eso va a 12 V.
+- El YF-S201 no dice en su ficha qué salida tiene: con un divisor podría no llegar a los 2,48 V que el ESP32 lee como "1".
+  Con el diodo y la pull-up a 3,3 V funciona siempre.
+- Sin aislador, el pH comparte masa con el resto de sensores del depósito: si baila, probar desenchufando la bomba.
+
+El resto de este documento es el diseño completo para la instalación final (ADS1115, aislador, conmutadores y solar).
+
+## Diseño completo (instalación final)
+
 > Pines de la LILYGO según `firmware/nodo-agua/include/config.h`, sacados del `utilities.h` oficial de LilyGO
 > (https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series). **Verificar con la placa exacta antes de soldar nada.**
 > Los de abajo son para la T3 V1.6.1 (SX1276).

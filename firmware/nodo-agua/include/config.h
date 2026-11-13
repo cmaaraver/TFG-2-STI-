@@ -33,8 +33,9 @@
   #define PIN_MODO_CAL_PULLUP 0  // 0 = pull-up externa de 10k (GPIO36 no tiene pull-up interna)
 
   #ifdef SIN_ADS1115
-  // Montaje simple (2026-11-12): sin ADS1115, sin aislador DFR0504 y sin medir la batería, porque el nodo
-  // se alimenta de 230 V (inversor de las placas solares, con su propia batería de respaldo).
+  // Montaje simple (2026-11-12, revisado 2026-11-13): todo se lee directamente con la LILYGO, sin ADS1115, sin
+  // aislador DFR0504 y sin medir la batería. LILYGO por USB (cargador de 5 V con respaldo) y sensores con una fuente
+  // de 12 V de PC. Esquema: docs/img/conexionado-simple.png
   // El pH y el nivel se leen con el ADC1 del ESP32, que funciona aunque esté la radio LoRa.
   // GPIO36 y GPIO39 son ADC1_CH0 y ADC1_CH3 (hoja de datos del ESP32, tabla "ADC"), solo entrada.
   // Por eso la presencia de agua pasa a GPIO4 y el puente de calibración a GPIO15.
@@ -43,7 +44,14 @@
     #undef  PIN_MODO_CAL_PULLUP
     #define PIN_PH        36   // salida de la placa del pH (0-3,0 V, wiki DFRobot SEN0169-V2)
     #define PIN_NIVEL     39   // Signal del conversor 4-20 mA del KIT0139 (0,48-2,40 V con 120 Ω)
-    #define PIN_AGUA      4    // SEN0204 por divisor 10k/20k. GPIO4 es DAT1 del lector microSD (sin tarjeta, libre)
+    #define PIN_AGUA      4    // SEN0204 alimentado a 12 V (admite 5-24 V, wiki DFRobot SEN0204; su salida alta = VCC):
+                               // divisor 27k en serie / 10k a GND → 12 V × 10/37 ≈ 3,2 V. No se alimenta del pin 5V
+                               // de la LILYGO porque por USB da ~4,7 V (diodo BAT20J del esquema T3_V1.6) y pide 5 V mínimo.
+                               // GPIO4 es DAT1 del lector microSD (sin tarjeta queda libre; su pull-up no está montada)
+    #undef  PIN_CAUDAL
+    #define PIN_CAUDAL    34   // YF-S201 alimentado a 12 V (4,5-24 V según su ficha). La ficha no dice qué salida tiene,
+                               // así que va por un diodo 1N4148 (raya hacia el sensor) + pull-up de 10k a 3V3:
+                               // pulsos de ~0,6 V a 3,3 V valga lo que valga la salida. GPIO34 no tiene pull-up interna.
     #define PIN_MODO_CAL  15   // puente a GND al arrancar = calibración. GPIO15 es pin de arranque: a 0 solo
                                // calla los mensajes de arranque del ESP32, así que el puente no estorba
     #define PIN_MODO_CAL_PULLUP 1  // pull-up interna: no hace falta resistencia
