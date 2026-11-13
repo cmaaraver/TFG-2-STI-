@@ -71,7 +71,7 @@ que están en `.gitignore` (se suben solo sus plantillas `*.example`).
 ## Imágenes
 
 ### Conexionado del nodo
-![Conexionado del nodo](docs/img/conexionado-nodo.png)
+![Conexionado del nodo (montaje simple)](docs/img/conexionado-simple.png)
 
 ### Sondas dentro del depósito
 ![Instalación de las sondas en el depósito](docs/img/instalacion-sensores.png)

@@ -12,7 +12,7 @@ pio device monitor                          # monitor serie a 115200
 ### Entornos
 | Entorno | Para qué |
 |---|---|
-| `lilygo_t3_simple` | **Montaje real (2026-11-12)**: nodo alimentado desde 230 V (inversor de las placas solares), sin ADS1115 ni aislador. pH en GPIO36, nivel en GPIO39, presencia de agua en GPIO4, puente de calibración en GPIO15 y DE del RS485 en GPIO25. Esquema: `docs/img/conexionado-simple.png` |
+| `lilygo_t3_simple` | **Montaje real (2026-11-13)**: todo leído por la LILYGO, sin ADS1115 ni aislador. LILYGO por USB; sensores a 12 V. pH en GPIO36, nivel en GPIO39, presencia de agua en GPIO4 (divisor 27k/10k), caudal en GPIO34 (diodo + pull-up 10k a 3V3), puente de calibración en GPIO15 y DE del RS485 en GPIO25. Esquema: `docs/img/conexionado-simple.png` |
 | `lilygo_t3_v1_6_1` | Diseño de `docs/03` (ADS1115, aislador, conmutadores y batería LiFePO4) |
 | `lilygo_t3_banco` | LILYGO suelta en la mesa: no mira el pin del puente de calibración |
 

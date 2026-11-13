@@ -1,5 +1,10 @@
 # Lista de material
 
+**Montaje simple (2026-11-13):** lo que se monta de verdad son los sensores, la LILYGO, la Raspberry y la gateway, más
+una fuente de 12 V de PC adaptada, un cargador USB con batería de respaldo, resistencias, un diodo 1N4148 y un
+módulo RS485 a TTL de 3,3 V que está **por conseguir**. No hay ADS1115, aislador, reductor ni conmutadores.
+Detalle en `03-conexionado-nodo.md`, apartado 0. Lo de abajo es el material del diseño completo.
+
 **Estado a 2026-10-26: ya tenemos todo el material, no hay que comprar nada.** Cambios de esa fecha:
 - **La bomba va aparte**, con su propia alimentación, y no se conecta al nodo. Ya no se usan el N-MOSFET
   IRLZ44N, el diodo 1N5819, el conector GX16 de 2 pines ni la manguera de la bomba hasta la caja del nodo.
