@@ -70,6 +70,11 @@ que están en `.gitignore` (se suben solo sus plantillas `*.example`).
 
 ## Imágenes
 
+### Red y flujo de datos
+![Esquema de red](docs/img/esquema-red.png)
+
+![Flujo de datos](docs/img/flujo-datos.png)
+
 ### Conexionado del nodo
 ![Conexionado del nodo (montaje simple)](docs/img/conexionado-simple.png)
 
@@ -81,7 +86,7 @@ Logo de Los Viveros, fase del ciclo y temporizador del envío por LoRa.
 
 ![Pantalla OLED](docs/img/pantalla-oled.png)
 
-### Web en tiempo real (captura con datos simulados)
+### Web en tiempo real (captura del 13-11-2026 con datos simulados)
 Portada con el logo de Los Viveros y los autores del TFG, tarjetas en directo y gráficas del histórico
 (1 h, 5 h, 24 h, 1 semana, 30 días o fechas a elegir). Toques de cristal translúcido y modo claro u oscuro con el botón de la cabecera (sigue al sistema si no se toca).
 
