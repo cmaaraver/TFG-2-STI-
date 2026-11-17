@@ -33,8 +33,8 @@ const VARIABLES = [
     icono: "nivel", escala: [0, 100], conv: nivelPct,
     extra: mm => `≈ ${fmtNum(nivelLitros(mm), 1)} L de ${BIDON.litros} · ${fmtNum(mm, 0)} mm`,
     estado: v => v < 30 ? "mal" : v < 50 ? "aviso" : "bien" },
-  { id: "caudal_lmin", nombre: "Caudal de la bomba", unidad: "L/min", dec: 2, color: "#3b82f6", rangoMin: 2,
-    icono: "caudal", escala: [0, 10], estado: v => v < 0.3 ? "mal" : "bien" },
+  // Caudal de la bomba: quitado el 2026-11-17 porque no hay caudalímetro. El nodo manda "sin dato" y la BD
+  // guarda NULL. Si algún día se pone uno, volver a añadir aquí la tarjeta "caudal_lmin" (L/min, icono "caudal").
   { id: "bateria_v", nombre: "Batería", unidad: "V", dec: 2, color: "#22c55e", rangoMin: 1,
     icono: "bateria", escala: [11, 14.6], estado: v => v < 12.0 ? "mal" : v < 12.6 ? "aviso" : "bien" },
   { id: "rssi_dbm", nombre: "RSSI", unidad: "dBm", dec: 0, color: "#64748b",

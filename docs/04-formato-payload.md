@@ -8,6 +8,9 @@ el firmware manda siempre 0xFFFF ("sin dato"), `decoder.js` lo traduce a `conduc
 de datos guarda NULL. Así no hay que tocar ni el decodificador ni la tabla, y el hueco queda libre por si
 algún día se añade otro sensor (sería la versión 3).
 
+Con el caudal pasa lo mismo desde el 2026-11-17 (no tenemos caudalímetro): con `HAY_CAUDALIMETRO 0` en
+`config.h` los bytes 14-15 van siempre a 0xFFFF (`caudal_lmin: null`) y el bit 5 de los flags siempre a 0.
+
 | Byte | Campo | Tipo | Escala | Ejemplo |
 |---|---|---|---|---|
 | 0 | versión | uint8 | — | 2 |

@@ -8,16 +8,17 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
 - TFG de 2º de Grado Superior STI (Sistemas de Telecomunicaciones e Informáticos), CPIFP Los Viveros (Sevilla).
 - Equipo: Carlos Maraver Román (responsable técnico) y Rubén Trillo García.
 - Objetivo: maqueta exterior (depósito + bomba de recirculación + sensores) alimentada con energía solar,
-  que mide la calidad del agua (oxígeno disuelto, pH, temperatura, nivel y caudal),
+  que mide la calidad del agua (oxígeno disuelto, pH, temperatura y nivel; **sin caudal**, decisión de 2026-11-17),
   envía la telemetría por LoRaWAN al gateway situado en el edificio, la guarda con fecha y hora en
   una base de datos y la muestra en un panel accesible desde fuera del instituto.
 - Referencia: proyecto de innovación colaborativo "Sistema de telemetría para la monitorización de la
   calidad del agua" (cartel del centro). Nuestra versión sustituye WiFi por LoRaWAN privado y añade
   oxígeno. **No se mide conductividad** (decisión de 2026-09-29).
 - Las sondas van **colgadas directamente dentro del depósito** (no hay cámara de medida aparte);
-  en la tubería solo va el caudalímetro y, si acaso, el sensor de presencia de agua.
+  el depósito es un bidón de 25 L y **no hay caudalímetro** (2026-11-17: no lo tenemos).
 - **La bomba va aparte** (decisión de 2026-10-26): tiene su propia alimentación y no se conecta al nodo
-  (sin MOSFET, GPIO 12 libre). El nodo solo mide su caudal y avisa si no hay ("bomba sin caudal").
+  (sin MOSFET, GPIO 12 libre). Va fuera del bidón y mueve el agua con dos mangueras (aspiración y retorno);
+  el nodo no la vigila (sin caudalímetro).
 - El nodo y los sensores de la maqueta son **autónomos**: panel solar + batería LiFePO4,
   sin cables de 230 V ni de red.
 
@@ -40,7 +41,7 @@ Los datos de red están solo en `raspberry/red/red.env`.
 
 | Equipo | Función | Software |
 |---|---|---|
-| LILYGO (nodo, maqueta exterior) | Mide los sensores y el caudal de la bomba (que va aparte), envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
+| LILYGO (nodo, maqueta exterior) | Mide los sensores (la bomba va aparte y no se vigila), envía cada 15 min, duerme | Firmware PlatformIO + RadioLib (LoRaWAN 1.1, OTAA) |
 | DFR1120-868 (maqueta, fase 7) | Relé controlado por downlink (llenado o alarma) | Configuración propia de DFRobot |
 | wAP LR8 | Gateway LoRaWAN, reenvía por UDP 1700 | RouterOS (packet forwarder nativo) |
 | Raspberry Pi 5 | **Todo el servidor**: firewall, NTP para el wAP, servidor LoRaWAN, MQTT, base de datos, web pública con Tailscale Funnel | Raspberry Pi OS Lite 64 bits, NetworkManager, chrony, ufw, Tailscale, Docker (`raspberry/docker-compose.yml`): ChirpStack v4 + Gateway Bridge + Redis + Mosquitto + TimescaleDB + ingestor + web + Caddy |
@@ -82,7 +83,7 @@ docs/
   01-lista-material.md        ← material disponible y lista de compra
   02-arquitectura-red.md      ← VLAN 500 e IPs, NTP, acceso remoto, seguridad
   03-conexionado-nodo.md      ← cómo cablear y montar la LILYGO y los sensores
-  04-formato-payload.md       ← formato binario del mensaje LoRaWAN (v2, con caudal)
+  04-formato-payload.md       ← formato binario del mensaje LoRaWAN (v2; caudal y conductividad siempre "sin dato")
   05-indice-memoria.md        ← índice provisional de la memoria
   06-maqueta.md               ← maqueta exterior, ciclo de bombeo y balance de energía
   07-lista-compra.md          ← lo que hay que comprar, con enlaces y precios
@@ -129,7 +130,9 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [x] Montaje real (2026-11-13): todo se lee con la LILYGO, sin ADS1115 ni aislador (entorno `lilygo_t3_simple`,
       `docs/03` apartado 0, `docs/img/conexionado-simple.png`). LILYGO por USB con respaldo; sensores con fuente de 12 V de PC.
 - [ ] Módulo RS485 a TTL de 3,3 V: por conseguir (sin él no se lee el SEN0681).
-- [ ] Modelo concreto de caudalímetro (factor de pulsos por L/min).
+- [x] Sin caudalímetro (2026-11-17): `HAY_CAUDALIMETRO 0` en `config.h`, el caudal va como "sin dato" (0xFFFF) y la web
+      no lo enseña. El payload no cambia. Idea pendiente de que Carlos la quiera: SEN0509 (tubo de 6 mm) en el retorno
+      como "bomba en marcha sí/no" con el bit "bomba sin caudal".
 - [ ] Consumo real del DFR1120 en reposo (si es clase C escucha siempre y gasta más).
 - [x] Registros Modbus del SEN0681 puestos en `config.h` (wiki del SEN0680: dirección 1, 4800 baudios, O2 en 0x0002, T en 0x0004).
       Falta comprobarlos con el sensor real y ver la salinidad de fábrica.
@@ -187,7 +190,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - **Hecho cuando**: se ve la web desde un móvil con datos móviles, fuera del instituto.
 
 ### Fase 6 — Maqueta, energía e instalación exterior
-- [ ] Montar la maqueta: base, depósito opaco, bomba, tubería, caudalímetro y soporte de sondas dentro del depósito (`docs/06-maqueta.md`).
+- [ ] Montar la maqueta: bidón de 25 L con los agujeros de `docs/06`, bomba fuera con sus dos mangueras y sondas colgadas del tapón (`docs/06-maqueta.md`).
 - [ ] Medir consumo real (nodo activo, deep sleep, DFR1120) y revisar el balance de `docs/06-maqueta.md`.
 - [ ] Montaje en caja estanca según `docs/03-conexionado-nodo.md`.
 - [ ] Montar el gateway en el mástil de la azotea (`docs/02-arquitectura-red.md`, apartado del mástil) y medir RSSI/SNR.

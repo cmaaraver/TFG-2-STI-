@@ -118,7 +118,9 @@ void sensoresIniciar() {
   pinMode(PIN_EN_5V, OUTPUT);
   sensoresApagar();
   pinMode(PIN_AGUA, INPUT);
+#if HAY_CAUDALIMETRO
   pinMode(PIN_CAUDAL, INPUT);
+#endif
   if (RS485_DE >= 0) { pinMode(RS485_DE, OUTPUT); digitalWrite(RS485_DE, LOW); }
 
   i2cIniciarMutex();
@@ -209,7 +211,11 @@ static void imprimir(const Medida& m) {
 
 void modoCalibracion() {
   Serial.println("\n=== MODO CALIBRACION ===");
+#if HAY_CAUDALIMETRO
   Serial.println("Comandos: leer | caudal | ph7 | ph4 | ver | reset | salir");
+#else
+  Serial.println("Comandos: leer | ph7 | ph4 | ver | reset | salir");
+#endif
   sensoresEncender();
   Serial.println("Esperando calentamiento de sensores (60 s)...");
   delay(T_CALENTAMIENTO_MS);
@@ -222,8 +228,10 @@ void modoCalibracion() {
 
     if (c == "leer") {
       imprimir(m);
+#if HAY_CAUDALIMETRO
     } else if (c == "caudal") {                  // con la bomba (que va aparte) encendida
       Serial.printf("Caudal: %.2f L/min\n", medirCaudal(T_MEDIDA_CAUDAL_MS));
+#endif
     } else if (c == "ph7") {
       cal.ph7_mv = leerMv(CANAL_PH); guardarCalibracion();
       Serial.printf("pH7 guardado: %.1f mV\n", cal.ph7_mv);

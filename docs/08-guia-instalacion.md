@@ -69,7 +69,7 @@ Tiene que terminar con `TODO OK (3 payloads, 10 campos del ingestor comprobados)
   que la placa arranca, la pantalla funciona y la radio no da `Error de radio`.
 
 > Qué enseña la pantalla en cada ciclo: la fase (*Sensores ON*, *Conectando LoRaWAN*, *Esperando sensores*,
-> *Midiendo caudal*, *Leyendo sensores*) con los segundos desde que despertó; después
+> *Leyendo sensores*) con los segundos desde que despertó; después
 > *Enviando por LoRa...* con un **temporizador en directo** (se refresca cada 0,1 s desde una tarea aparte,
 > así avanza aunque el envío tenga ocupado el programa principal); y al final el resultado:
 > *Enviado OK SF7*, el tiempo total del envío en grande y debajo el tiempo en el aire y cuándo es el próximo.
@@ -118,7 +118,6 @@ lo primero es mirar que no haya nada conectado al GPIO 12, que es pin de arranqu
    | Comando | Qué hace |
    |---|---|
    | `leer` | Mide todo una vez: `T=... C  O2=... mg/L  pH=...  nivel=... mm  bat=... mV  agua=...  rs485_err=...` |
-   | `caudal` | Cuenta los pulsos del caudalímetro 10 s y enseña el caudal en L/min (con la bomba, que va aparte, encendida) |
    | `ph7` | Con la sonda en tampón pH 7,00: guarda ese punto en la memoria (NVS) |
    | `ph4` | Con la sonda en tampón pH 4,00 (tras enjuagarla con agua destilada): guarda el segundo punto |
    | `ver` | Enseña la calibración guardada |
@@ -129,7 +128,7 @@ lo primero es mirar que no haya nada conectado al GPIO 12, que es pin de arranqu
    DFRobot. Ya están puestos (wiki del SEN0680, la versión de agua dulce del mismo sensor: dirección 1,
    **4800 baudios**, oxígeno en 0x0002 y temperatura en 0x0004) y `MODBUS_REGISTROS_OK` vale 1, pero llevan
    `TODO VERIFICAR` hasta comprobarlos con el sensor real usando `leer`. Con agua de red, salinidad a 0 ‰.
-5. **Caudalímetro**: `CAUDAL_HZ_POR_LMIN` en `config.h` según el modelo comprado (YF-S201: 7,5).
+5. **Caudalímetro**: no hay (2026-11-17). `HAY_CAUDALIMETRO` se queda a 0 en `config.h`.
    Se comprueba llenando un recipiente de volumen conocido durante 1 minuto.
 
 **Comprobación** (criterio de la fase 2): tras calibrar, `leer` con la sonda en tampón 7 da 7,00 ± 0,1 y en tampón 4
@@ -206,7 +205,7 @@ el problema está entre ese tramo y el anterior.
 | 1 | Pantalla OLED | *Conectando LoRaWAN* → *Esperando sensores* → ... → *Enviando por LoRa...* con el temporizador corriendo → *Enviado OK SF7* |
 | 2 | Monitor serie | `Join OK (sesion nueva)` (primera vez) o `Sesion restaurada`, la línea `T=... O2=... pH=...` y `Uplink enviado: fcnt=N SFx, X ms en el aire, Y ms en total` |
 | 3 | ChirpStack → gateway → *LoRaWAN frames* | Un `JoinRequest`/`JoinAccept` la primera vez y luego un `UnconfirmedDataUp` por ciclo |
-| 4 | ChirpStack → dispositivo → *Events* | Evento `up` con el objeto decodificado: `temperatura_c`, `oxigeno_mgl`, `ph`, `nivel_mm`, `bateria_v`, `caudal_lmin`... y `conductividad_uscm: null` (ya no se mide, es normal) |
+| 4 | ChirpStack → dispositivo → *Events* | Evento `up` con el objeto decodificado: `temperatura_c`, `oxigeno_mgl`, `ph`, `nivel_mm`, `bateria_v`... y `conductividad_uscm: null` y `caudal_lmin: null` (no se miden, es normal) |
 | 5 | `docker compose logs -f ingestor` | `Guardado <deveui> fcnt=N` |
 | 6 | Base de datos | `docker compose exec db psql -U agua_admin -d calidad_agua -c "SELECT tiempo, ph, oxigeno_mgl, rssi_dbm FROM medidas ORDER BY tiempo DESC LIMIT 3;"` → la fila nueva, con la hora en UTC |
 | 7 | Web | La tarjeta se actualiza sola al momento, la hora sale en hora de Madrid y el punto aparece en las gráficas |
@@ -228,9 +227,10 @@ Diseño y balance de energía en `06-maqueta.md`; colocación de cada sonda en `
 1. **Depósito**: bidón de plástico de 25 L, a la sombra y sobre una base firme y nivelada. Lavarlo bien antes
    (ha podido llevar productos químicos) y hacerle los agujeros de `06-maqueta.md` (apartado 1.2), todos arriba.
    Llenar con agua de red hasta unos 30 cm (75 %).
-2. **Circuito de agua**: bomba (va aparte, con su propia alimentación) con rejilla en el fondo → manguera → caudalímetro (horizontal, flecha en el
-   sentido del agua) → válvula de bola → retorno al mismo depósito por debajo del nivel del agua y lejos de las sondas.
-   Abrazaderas en todas las espigas. Probar fugas con la bomba encendida y ver el caudal con el comando `caudal` del modo calibración.
+2. **Circuito de agua**: la bomba (va aparte, con su propia alimentación) está fuera del bidón. Una manguera
+   aspira por el agujero D hasta ~3 cm del fondo (con rejilla) y otra devuelve el agua por el E, por debajo del
+   nivel mínimo y lejos de las sondas. Abrazaderas en las espigas. Probar fugas con la bomba encendida. No hay
+   caudalímetro (2026-11-17).
 3. **Sondas**: pH y SEN0681 colgadas del tapón con la punta a 8-10 cm del fondo; KIT0139 en el fondo; SEN0204 por fuera
    de la pared a 12 cm del fondo (nivel mínimo). La punta del pH siempre mojada. Después, calibrar el nivel
    (`06-maqueta.md`, apartado 1.4).
@@ -272,7 +272,6 @@ En ChirpStack mirar RSSI y SNR de los uplinks: con SNR positiva y RSSI mejor que
 | Uplinks en ChirpStack pero sin objeto decodificado | Codec no puesto en el perfil | Pegar `decoder.js` en el perfil |
 | En ChirpStack sí, en la web no | Ingestor parado o sin acceso a la BD | `docker compose logs ingestor` |
 | `rs485_err=1` | A/B cruzados, sin 12 V en el SEN0681 o registros sin rellenar | Cambiar A por B, medir 12 V, revisar `MODBUS_REGISTROS_OK` |
-| Aviso "bomba sin caudal" | Bomba apagada (va aparte), atascada, rejilla sucia, válvula cerrada o depósito bajo | Revisar el circuito de agua |
 | pH que baila mucho | Masas mezcladas o sonda seca | Comprobar el aislador y que la sonda esté sumergida |
 | `ssh` desde el PC da `connect … Permission denied` y el ping `fallo general` | VPN WireGuard del PC con *kill-switch* (bloquea la red local) | En WireGuard, Editar → desmarcar "Block untunneled traffic (kill-switch)" |
 | apt da `Unable to connect to deb.debian.org` unas veces sí y otras no | La red del instituto no deja llegar a algunas IPs de la CDN de Debian (y de otros mirrors) | Usar `http://ftp.de.debian.org/debian/` en `/etc/apt/sources.list.d/debian.sources` (seguridad: `security.debian.org`) |

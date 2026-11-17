@@ -25,9 +25,14 @@ Medida simularMedida(uint32_t ciclo, uint16_t intervaloMin) {
   // Batería LiFePO4 de 12,8 V: sube de día con el panel y baja de noche
   m.bateria_mv = 13150.0f + 150.0f * dia + ruido(15.0f);
 
+#if HAY_CAUDALIMETRO
   // Caudal de la bomba ≈ 4 L/min; uno de cada 12 ciclos la bomba está "parada" para probar el aviso
   m.caudal_lmin = (ciclo % 12 == 0) ? 0.0f : 4.1f + ruido(0.25f);
   m.bomba_sin_caudal = m.caudal_lmin < CAUDAL_MINIMO_LMIN;
+#else
+  m.caudal_lmin = NAN;                                          // no hay caudalímetro: "sin dato"
+  m.bomba_sin_caudal = false;
+#endif
 
   m.agua_presente = m.nivel_mm > 100.0f;                        // con este nivel siempre hay agua
   m.fallo_rs485 = false;

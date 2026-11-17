@@ -1,14 +1,15 @@
 # Lista de material
 
 **Montaje simple (2026-11-13):** lo que se monta de verdad son los sensores, la LILYGO, la Raspberry y la gateway, más
-una fuente de 12 V de PC adaptada, un cargador USB con batería de respaldo, resistencias, un diodo 1N4148 y un
+una fuente de 12 V de PC adaptada, un cargador USB con batería de respaldo, resistencias (27k y 10k) y un
 módulo RS485 a TTL de 3,3 V que está **por conseguir**. No hay ADS1115, aislador, reductor ni conmutadores.
 Detalle en `03-conexionado-nodo.md`, apartado 0. Lo de abajo es el material del diseño completo.
 
 **Estado a 2026-10-26: ya tenemos todo el material, no hay que comprar nada.** Cambios de esa fecha:
 - **La bomba va aparte**, con su propia alimentación, y no se conecta al nodo. Ya no se usan el N-MOSFET
   IRLZ44N, el diodo 1N5819, el conector GX16 de 2 pines ni la manguera de la bomba hasta la caja del nodo.
-  El nodo solo mide el caudal con el caudalímetro.
+  ~~El nodo solo mide el caudal con el caudalímetro.~~ **2026-11-17: no tenemos caudalímetro**, así que no se mide
+  el caudal. La bomba va fuera del bidón y mueve el agua con dos mangueras.
 - Presencia de agua: **SEN0204** (el SEN0509 queda de repuesto). Nivel: el KIT0139 (0-5 m) se queda.
 
 Versión 2 (2026-09-29). Cambios respecto a la versión anterior:
@@ -26,7 +27,7 @@ Enlaces de compra y precios de todo esto: `07-lista-compra.md`. Lo que lleva `TO
 
 | Equipo | Modelo | Uso en el proyecto |
 |---|---|---|
-| Nodo | LILYGO T3 V1.6.1 (ESP32 + SX1276, serigrafía `T3_V1.6.1 20210104`) | Lee sensores, mide el caudal de la bomba y envía por LoRaWAN |
+| Nodo | LILYGO T3 V1.6.1 (ESP32 + SX1276, serigrafía `T3_V1.6.1 20210104`) | Lee sensores y envía por LoRaWAN |
 | Gateway | MikroTik wAP LR8 kit (con fuente 24 V e inyector PoE) | Recibe LoRaWAN y reenvía a la Raspberry |
 | Servidor completo | Raspberry Pi 5 4 GB | ChirpStack, MQTT, base de datos, web, Tailscale, NTP |
 | Almacenamiento de la Raspberry | microSD 64 GB | Sistema y datos (sin SSD NVMe, decisión de 2026-09-29) |
@@ -92,7 +93,7 @@ retorno por la tapa al mismo depósito. Como no hay cámara que vaciar, **no hac
 | 1 | Depósito opaco o blanco 50-100 L con tapa | Evitar algas y calentamiento; dentro van todas las sondas |
 | 1 | Bomba sumergible 12 V DC sin escobillas, ≤ 1 A, 3-8 L/min, altura ≥ 2 m, salida para tubo 1/2" (TODO VERIFICAR modelo; tipo DC40) | Mover el agua del depósito. Sin escobillas: dura años y apenas mete ruido eléctrico |
 | 1 | Rejilla/filtro de aspiración para la bomba (o malla inox atada) | Que no entren algas ni suciedad al caudalímetro |
-| 1 | Caudalímetro de efecto Hall YF-S201 (rosca macho G1/2", 1-30 L/min) | Medir L/min (comprueba que la bomba funciona) |
+| ~~1~~ | ~~Caudalímetro de efecto Hall YF-S201~~ | **No lo tenemos (2026-11-17)**: no se mide el caudal |
 | 1 | Válvula de bola PVC 1/2" | Regular el caudal |
 | 3 m | Tubo flexible PVC transparente reforzado (manguera cristal) Ø interior 13 mm | Bomba → caudalímetro → válvula → retorno. Opaco o pintado si hay algas |
 | 4 | Racor de espiga 1/2" para manguera 13 mm con rosca G1/2" | Unir la manguera al caudalímetro y a la válvula |

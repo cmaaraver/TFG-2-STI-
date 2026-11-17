@@ -7,7 +7,7 @@
 (Editable: `img/conexionado-simple.svg`. Firmware: entorno `lilygo_t3_simple`.)
 
 Material que hace falta además de los sensores, la LILYGO, la Raspberry y la gateway: una fuente de 12 V de PC
-adaptada (≥ 1 A), un cargador USB de 5 V con batería de respaldo, resistencias (27k, 2 × 10k), un diodo 1N4148
+adaptada (≥ 1 A), un cargador USB de 5 V con batería de respaldo, resistencias (27k y 10k, para el SEN0204)
 y un módulo RS485 a TTL de 3,3 V (MAX3485 o parecido), que está **por conseguir**. Sin el módulo RS485 no se puede
 leer el SEN0681: el firmware lo marca como fallo de RS485 y usa 25 °C para compensar el pH.
 
@@ -19,14 +19,12 @@ leer el SEN0681: el firmware lo marca como fallo de RS485 y usa 25 °C para comp
 | pH | GPIO36 | Salida de la placa del pH (0-3,0 V) | Placa a 3V3 (admite 3,3-5,5 V, wiki SEN0169-V2). ADC1 del ESP32 |
 | Nivel | GPIO39 | Signal del conversor del KIT0139 | 120 Ω: 4 mA = 0,48 V, 20 mA = 2,40 V. KIT0139 a +12 V |
 | Presencia de agua | GPIO4 | SEN0204 por 27 kΩ en serie y 10 kΩ a GND | SEN0204 a +12 V: 12 V → 3,2 V. Negro (ADJ) sin conectar |
-| Caudal | GPIO34 | YF-S201 por diodo 1N4148 (raya hacia el sensor) + 10 kΩ de GPIO34 a 3V3 | YF-S201 a +12 V. Vale tenga la salida que tenga |
+| Caudal | GPIO34 | **Libre** | No hay caudalímetro (2026-11-17). Si algún día se pone uno: diodo 1N4148 (raya hacia el sensor) + 10 kΩ de GPIO34 a 3V3, y `HAY_CAUDALIMETRO 1` en `config.h` |
 | Calibración | GPIO15 | Puente a GND | Pull-up interna, sin resistencia |
 | RS485 | GPIO13 / GPIO14 / GPIO25 | DI / RO / DE+RE del módulo | Con módulo de dirección automática, GPIO25 sin usar. Si no lee, cruzar 13 y 14 (no se rompe nada) |
 
 Por qué así (comprobado en el esquema oficial `T3_V1.6.1.pdf` de LilyGO y en las wikis de DFRobot):
 - El SEN0204 pide 5-24 V y por USB el pin 5V da ~4,7 V (diodo BAT20J), por eso va a 12 V.
-- El YF-S201 no dice en su ficha qué salida tiene: con un divisor podría no llegar a los 2,48 V que el ESP32 lee como "1".
-  Con el diodo y la pull-up a 3,3 V funciona siempre.
 - Sin aislador, el pH comparte masa con el resto de sensores del depósito: si baila, probar desenchufando la bomba.
 
 El resto de este documento es el diseño completo para la instalación final (ADS1115, aislador, conmutadores y solar).
@@ -52,7 +50,7 @@ Todo va sobre una **placa base de topos** dentro de la caja estanca:
   y la sonda de pH por **pasamuros BNC**. Así se desmonta un sensor sin abrir la caja.
 - Lo único que se suelda es la placa base (pines, bornas, MOSFET de los conmutadores, resistencias, puentes).
 - **La bomba va aparte**, con su propia alimentación (decisión de 2026-10-26): no se conecta al nodo.
-  La LILYGO solo mide el caudal que da.
+  Tampoco hay caudalímetro (2026-11-17), así que la LILYGO no sabe nada de la bomba.
 
 ## 2. Esquema de bloques
 
@@ -134,9 +132,9 @@ de nivel lógico (AO3401).
 ## 5. Bomba
 
 La bomba va **aparte, con su propia alimentación**, y está fuera del sistema del nodo (decisión de 2026-10-26).
-No hay MOSFET, ni diodo, ni pull-down en la placa base, y el GPIO 12 queda libre. El nodo solo mide el caudal
-con el caudalímetro: si al medir no hay caudal (bomba apagada, atascada o sin agua) se marca el aviso
-"bomba sin caudal" del payload (`docs/04-formato-payload.md`).
+No hay MOSFET, ni diodo, ni pull-down en la placa base, y el GPIO 12 queda libre. Al principio el nodo iba
+a medir el caudal con un caudalímetro para avisar de "bomba sin caudal", pero no lo tenemos (2026-11-17): el
+caudal va como "sin dato" y el aviso no salta nunca (`docs/04-formato-payload.md`).
 
 ## 6. Buenas prácticas del montaje
 - Masa en estrella: todas las masas llegan a un punto; la sonda de pH lejos del DC-DC.
@@ -161,7 +159,6 @@ El depósito es un bidón de plástico de 25 L (2026-11-17). Agujeros, medidas, 
 | Nivel KIT0139 | Apoyado en el fondo (agujero C) | Colgado de su propio cable hasta tocar fondo | El cable lleva un tubo de aire dentro: no aplastarlo ni doblarlo fuerte; el extremo del cable, dentro de la caja seca. El bidón necesita el respiradero F |
 | Bomba 12 V (alimentación aparte) | En el fondo, en la esquina contraria a la boca (agujero D) | Con su rejilla de aspiración | Que no aspire lodo: un par de cm por encima del fondo si tiene patas. Su cable no entra en la caja del nodo |
 | Presencia de agua SEN0204 | Pegado por fuera, en una cara lisa del bidón, a 12 cm del fondo (nivel mínimo, 30 %) | Cinta de doble cara o adhesivo | Detecta a través de una pared de hasta 13 mm (wiki DFRobot SEN0204: "thickness of induction 0 ~ 13 mm"); la del bidón tiene 2-3 mm. Sin metal cerca y lejos de los nervios del plástico |
-| Caudalímetro YF-S201 | En la tubería de salida, horizontal, antes de la válvula | Racores de espiga 1/2" | La flecha del cuerpo en el sentido del agua |
 
 Los cables salen de la caja 1 por los prensaestopas y conectores GX16, **siempre hacia abajo** para que el agua
 de lluvia gotee y no entre. Etiquetar cada conector con el nombre del sensor.
