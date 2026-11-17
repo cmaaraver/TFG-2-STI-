@@ -20,8 +20,8 @@ Medida simularMedida(uint32_t ciclo, uint16_t intervaloMin) {
   // El oxígeno disuelto baja cuando el agua se calienta (≈ 9,5 mg/L a 18 °C, ≈ 8,3 a 24 °C)
   m.oxigeno_mgl = 8.9f - 0.2f * (m.temperatura_c - 21.0f) + ruido(0.08f);
   m.ph = 7.5f + 0.15f * dia + ruido(0.03f);                     // 7,3-7,7
-  // Nivel: oscila despacio alrededor de 420 mm (evaporación y rellenos)
-  m.nivel_mm = 420.0f + 25.0f * sinf(2.0f * PI * horas / 30.0f) + ruido(2.0f);
+  // Nivel: bidón de 25 L (unos 400 mm llenos). Oscila despacio alrededor de 300 mm (≈ 75 %, unos 19 L)
+  m.nivel_mm = 300.0f + 25.0f * sinf(2.0f * PI * horas / 30.0f) + ruido(2.0f);
   // Batería LiFePO4 de 12,8 V: sube de día con el panel y baja de noche
   m.bateria_mv = 13150.0f + 150.0f * dia + ruido(15.0f);
 

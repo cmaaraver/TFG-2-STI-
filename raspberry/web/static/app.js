@@ -13,6 +13,13 @@ const ICONOS = {
   senal: '<path d="M4 20v-3M9 20v-7M14 20V9M19 20V4"/>',
   onda: '<path d="M2 12h3l3-7 4 14 3-9 2 2h5"/>',
 };
+// Depósito de la maqueta: bidón de plástico de 25 L (2026-11-17). El KIT0139 da el nivel en mm y aquí se pasa a
+// % y litros suponiendo que el bidón es un prisma (misma sección de abajo arriba). TODO VERIFICAR con el bidón real:
+// llenarlo de 5 en 5 L, apuntar el nivel en mm de cada paso (docs/06-maqueta.md) y corregir estos dos números.
+const BIDON = { litros: 25, alturaLlenoMm: 400 };
+const nivelPct = mm => mm == null ? null : Math.max(0, Math.min(100, mm / BIDON.alturaLlenoMm * 100));
+const nivelLitros = mm => mm == null ? null : Math.max(0, Math.min(BIDON.litros, mm / BIDON.alturaLlenoMm * BIDON.litros));
+
 const VARIABLES = [
   { id: "temperatura_c", nombre: "Temperatura", unidad: "°C", dec: 1, color: "#f97316", rangoMin: 4,
     icono: "termometro", escala: [0, 40], estado: v => v > 35 ? "mal" : v > 30 ? "aviso" : "bien" },
@@ -20,8 +27,12 @@ const VARIABLES = [
     icono: "burbujas", escala: [0, 14], estado: v => v < 4 ? "mal" : v < 6 ? "aviso" : "bien" },
   { id: "ph", nombre: "pH", unidad: "", dec: 2, color: "#a855f7", rangoMin: 1,
     icono: "matraz", escala: [0, 14], estado: v => (v < 6 || v > 9) ? "mal" : (v < 6.5 || v > 8.5) ? "aviso" : "bien" },
-  { id: "nivel_mm", nombre: "Nivel del depósito", unidad: "mm", dec: 0, color: "#14b8a6", rangoMin: 200,
-    icono: "nivel", escala: [0, 1000] },
+  // Nivel en % del bidón. Con un sensor de 0-5 m en un bidón de 40 cm el error es de unos ±2,5 cm (±6 %, ±1,5 L),
+  // por eso se enseña sin decimales. Por debajo del 30 % el agua está cerca de la punta del pH (docs/06-maqueta.md).
+  { id: "nivel_mm", nombre: "Nivel del bidón", unidad: "%", dec: 0, color: "#14b8a6", rangoMin: 10,
+    icono: "nivel", escala: [0, 100], conv: nivelPct,
+    extra: mm => `≈ ${fmtNum(nivelLitros(mm), 1)} L de ${BIDON.litros} · ${fmtNum(mm, 0)} mm`,
+    estado: v => v < 30 ? "mal" : v < 50 ? "aviso" : "bien" },
   { id: "caudal_lmin", nombre: "Caudal de la bomba", unidad: "L/min", dec: 2, color: "#3b82f6", rangoMin: 2,
     icono: "caudal", escala: [0, 10], estado: v => v < 0.3 ? "mal" : "bien" },
   { id: "bateria_v", nombre: "Batería", unidad: "V", dec: 2, color: "#22c55e", rangoMin: 1,
@@ -31,6 +42,11 @@ const VARIABLES = [
   { id: "snr_db", nombre: "SNR", unidad: "dB", dec: 1, color: "#94a3b8",
     icono: "onda", escala: [-20, 15], estado: v => v < -15 ? "mal" : v < -7 ? "aviso" : "bien" },
 ];
+// Valor que se enseña de una variable (algunas se convierten, como el nivel de mm a %)
+const valorDe = (v, m) => {
+  const x = m ? m[v.id] : null;
+  return x == null ? null : (v.conv ? v.conv(x) : x);
+};
 const TEXTO_ESTADO = { bien: "Correcto", aviso: "Vigilar", mal: "Fuera de rango" };
 const MIN_SIN_DATOS = 35; // envía cada 15 min: más de 2 envíos perdidos = nodo caído
 const ZONA = "Europe/Madrid";
@@ -108,17 +124,18 @@ function pintarTarjetas(m, destacar) {
   estado.ultima = m;
   for (const v of VARIABLES) {
     const t = document.getElementById("t-" + v.id);
-    const val = m ? m[v.id] : null;
+    const val = valorDe(v, m);
     const clase = val != null && v.estado ? v.estado(val) : "";
     t.classList.remove("bien", "aviso", "mal", "nuevo");
     if (clase) t.classList.add(clase);
     if (destacar) { void t.offsetWidth; t.classList.add("nuevo"); } // reinicia el destello
-    const previo = anterior && anterior.dev_eui === m?.dev_eui ? anterior[v.id] : (val != null ? v.escala[0] : null);
+    const previo = anterior && anterior.dev_eui === m?.dev_eui ? valorDe(v, anterior) : (val != null ? v.escala[0] : null);
     animarNumero(t.querySelector(".numero"), previo, val, v.dec);
     const [a, b] = v.escala;
     const pct = val == null ? 0 : Math.max(3, Math.min(100, (val - a) / (b - a) * 100));
     t.querySelector(".barra i").style.width = pct + "%";
     t.querySelector(".etq-estado").textContent = val == null ? "Sin dato" : (TEXTO_ESTADO[clase] || "Informativo");
+    if (v.extra) t.querySelector(".extra").textContent = m && m[v.id] != null ? v.extra(m[v.id]) : "";
   }
   // Datos de radio de la portada
   // SF arriba y RSSI debajo: en una sola línea no cabía en el móvil
@@ -228,7 +245,10 @@ async function cargarHistorico() {
   $("#info-historico").textContent = "Cargando…";
   const h = await pedir(`/api/historico?${q}`);
   const s = h.serie;
-  for (const v of VARIABLES) ponerSerie(estado.graficas[v.id], s.tiempo.map((t, i) => [t, s[v.id][i]]), r);
+  for (const v of VARIABLES) {
+    const conv = v.conv || (x => x);
+    ponerSerie(estado.graficas[v.id], s.tiempo.map((t, i) => [t, s[v.id][i] == null ? null : conv(s[v.id][i])]), r);
+  }
   $("#info-historico").textContent = h.puntos === 0
     ? "No hay medidas en este intervalo."
     : `${h.medidas_totales.toLocaleString("es-ES")} medidas` + (h.agrupado_cada_s
@@ -242,7 +262,7 @@ function anadirPuntoEnVivo(m) {
   for (const v of VARIABLES) {
     const g = estado.graficas[v.id];
     const datos = g.getOption().series[0].data.filter(p => new Date(p[0]) >= r.desde);
-    datos.push([m.tiempo, m[v.id]]);
+    datos.push([m.tiempo, valorDe(v, m)]);
     ponerSerie(g, datos, r);
   }
 }

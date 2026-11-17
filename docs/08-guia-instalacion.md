@@ -225,12 +225,15 @@ Diseño y balance de energía en `06-maqueta.md`; colocación de cada sonda en `
 
 ![Instalación de las sondas](img/instalacion-sensores.png)
 
-1. **Depósito**: opaco, tapado, a la sombra y sobre una base firme y nivelada. Llenar con agua de red.
+1. **Depósito**: bidón de plástico de 25 L, a la sombra y sobre una base firme y nivelada. Lavarlo bien antes
+   (ha podido llevar productos químicos) y hacerle los agujeros de `06-maqueta.md` (apartado 1.2), todos arriba.
+   Llenar con agua de red hasta unos 30 cm (75 %).
 2. **Circuito de agua**: bomba (va aparte, con su propia alimentación) con rejilla en el fondo → manguera → caudalímetro (horizontal, flecha en el
    sentido del agua) → válvula de bola → retorno al mismo depósito por debajo del nivel del agua y lejos de las sondas.
    Abrazaderas en todas las espigas. Probar fugas con la bomba encendida y ver el caudal con el comando `caudal` del modo calibración.
-3. **Sondas**: pH y SEN0681 colgadas del soporte de la tapa a media altura; KIT0139 en el fondo; SEN0204 por fuera
-   de la pared a la altura del nivel mínimo. La punta del pH siempre mojada.
+3. **Sondas**: pH y SEN0681 colgadas del tapón con la punta a 8-10 cm del fondo; KIT0139 en el fondo; SEN0204 por fuera
+   de la pared a 12 cm del fondo (nivel mínimo). La punta del pH siempre mojada. Después, calibrar el nivel
+   (`06-maqueta.md`, apartado 1.4).
 4. **Caja 1** (nodo) en el poste, con los prensaestopas y conectores **hacia abajo**, membrana de ventilación y gel
    de sílice. La antena vertical, por encima de la caja.
 5. **Energía**, en este orden (el habitual en reguladores MPPT; confirmar en el manual del modelo comprado):

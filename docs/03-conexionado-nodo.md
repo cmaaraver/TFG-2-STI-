@@ -151,13 +151,16 @@ con el caudalímetro: si al medir no hay caudal (bomba apagada, atascada o sin a
 
 ![Instalación de las sondas](img/instalacion-sensores.png)
 
+El depósito es un bidón de plástico de 25 L (2026-11-17). Agujeros, medidas, alturas y resolución del nivel en
+`06-maqueta.md`, apartados 1.1 a 1.4. Las alturas de esta tabla son desde el fondo del bidón.
+
 | Sensor | Dónde va | Cómo se sujeta | Ojo con |
 |---|---|---|---|
-| pH SEN0169-V2 | Colgado del soporte de la tapa, a media altura, lado contrario a la bomba | Prensaestopas o abrazadera en el soporte; la punta siempre por debajo del nivel mínimo | Nunca dejarlo en seco. Cable BNC sin tensión |
-| Oxígeno SEN0681 | Colgado junto al pH, membrana hacia abajo | Igual que el pH | Lejos del retorno y de la bomba (las burbujas falsean el O2) |
-| Nivel KIT0139 | Apoyado en el fondo | Colgado de su propio cable hasta tocar fondo | El cable lleva un tubo de aire dentro: no aplastarlo ni doblarlo fuerte; el extremo del cable, dentro de la caja seca |
-| Bomba 12 V (alimentación aparte) | En el fondo, lado contrario a las sondas | Con su rejilla de aspiración | Que no aspire lodo: un par de cm por encima del fondo si tiene patas. Su cable no entra en la caja del nodo |
-| Presencia de agua SEN0204 | Pegado por fuera de la pared del depósito, a la altura del nivel mínimo | Cinta de doble cara o adhesivo | Detecta a través de una pared de hasta 13 mm (wiki DFRobot SEN0204: "thickness of induction 0 ~ 13 mm"); sin metal cerca |
+| pH SEN0169-V2 | Colgado del tapón (agujero A), punta a 8-10 cm del fondo, lado contrario a la bomba | Entra por la boca; el cable sale por el tapón y se sujeta con una brida a la altura buena | Nunca dejarlo en seco. Cable BNC sin tensión |
+| Oxígeno SEN0681 | Colgado junto al pH (agujero B), membrana hacia abajo a 8-10 cm del fondo | Igual que el pH | Lejos del retorno y de la bomba (las burbujas falsean el O2). Medir su diámetro: si no pasa por la boca, agujero G aparte |
+| Nivel KIT0139 | Apoyado en el fondo (agujero C) | Colgado de su propio cable hasta tocar fondo | El cable lleva un tubo de aire dentro: no aplastarlo ni doblarlo fuerte; el extremo del cable, dentro de la caja seca. El bidón necesita el respiradero F |
+| Bomba 12 V (alimentación aparte) | En el fondo, en la esquina contraria a la boca (agujero D) | Con su rejilla de aspiración | Que no aspire lodo: un par de cm por encima del fondo si tiene patas. Su cable no entra en la caja del nodo |
+| Presencia de agua SEN0204 | Pegado por fuera, en una cara lisa del bidón, a 12 cm del fondo (nivel mínimo, 30 %) | Cinta de doble cara o adhesivo | Detecta a través de una pared de hasta 13 mm (wiki DFRobot SEN0204: "thickness of induction 0 ~ 13 mm"); la del bidón tiene 2-3 mm. Sin metal cerca y lejos de los nervios del plástico |
 | Caudalímetro YF-S201 | En la tubería de salida, horizontal, antes de la válvula | Racores de espiga 1/2" | La flecha del cuerpo en el sentido del agua |
 
 Los cables salen de la caja 1 por los prensaestopas y conectores GX16, **siempre hacia abajo** para que el agua

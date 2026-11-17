@@ -108,7 +108,7 @@ static float calcularPH(float mv, float tempC) {
 static float calcularNivel(float mv) {
   float mA = mv / NIVEL_R_SHUNT_OHM;
   if (mA < 3.5f) return NAN;                                   // cable cortado o sensor apagado
-  float mm = (mA - 4.0f) / 16.0f * NIVEL_RANGO_MM;
+  float mm = (mA - 4.0f) / 16.0f * NIVEL_RANGO_MM - NIVEL_CERO_MM;
   return mm < 0 ? 0 : mm;
 }
 
@@ -127,7 +127,12 @@ void sensoresIniciar() {
   adsOk = true;                                                // no hay ADS1115: se usa el ADC del ESP32
   analogReadResolution(12);
   analogSetPinAttenuation(PIN_PH, ADC_11db);
-  analogSetPinAttenuation(PIN_NIVEL, ADC_11db);
+  // Nivel con atenuación de 2,5 dB (rango útil 100-1250 mV según la documentación del ADC del ESP32 en ESP-IDF,
+  // https://docs.espressif.com/projects/esp-idf/en/v4.4/esp32/api-reference/peripherals/adc.html).
+  // En el bidón de 25 L (unos 40 cm) la señal solo va de 480 a ~635 mV, así que con 11 dB se desperdiciaba casi
+  // todo el rango. Con 2,5 dB cada paso del ADC vale menos mV y la lectura es más fina. Límite: por encima de
+  // 1250 mV (≈ 2 m de agua) la lectura se satura, cosa que en el bidón no puede pasar.
+  analogSetPinAttenuation(PIN_NIVEL, ADC_2_5db);
 #else
   adsOk = ads.begin(ADS_DIRECCION, &Wire);
   if (adsOk) ads.setGain(GAIN_ONE);                            // ±4,096 V

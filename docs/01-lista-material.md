@@ -16,6 +16,7 @@ Versión 2 (2026-09-29). Cambios respecto a la versión anterior:
   un pasamuros BNC y la solución de 1413 µS/cm. La DFR0300-H (K=10) tampoco se usa.
 - **Circuito de agua completo**: bomba, tubos, racores, válvula, filtro y soporte con cantidades.
 - **Sin cámara de medida**: las sondas van colgadas dentro del depósito.
+- **Depósito** (2026-11-17): bidón de plástico de 25 L que ya tenemos (tapón de rosca y asa). Agujeros y medidas en `06-maqueta.md`.
 - **Todo lo de la maqueta es autónomo**: bomba, LILYGO y sensores funcionan solo con el panel solar y la
   batería. No hay ningún cable de 230 V ni de red hasta la maqueta; los datos salen por LoRaWAN.
 

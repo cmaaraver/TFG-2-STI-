@@ -123,6 +123,9 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
       los bytes 8-9 van siempre a 0xFFFF ("sin dato"), `decoder.js` da `null` y la BD guarda NULL (`docs/04`).
       Si algún día se quiere quitar también de `decoder.js`/`10-init.sql`/ingestor, sería payload v3: preguntar antes.
 - [x] Bomba aparte, con su propia alimentación y sin conexión al nodo (2026-10-26).
+- [x] Depósito = bidón de plástico de 25 L (2026-11-17, `docs/06` apartados 1.1-1.4). Agujeros solo arriba; nivel en % en la web.
+- [ ] Medidas reales del bidón (alto, boca) y diámetros del SEN0681, KIT0139 y bomba; calibrar el nivel de 5 en 5 L
+      (`NIVEL_CERO_MM` en `config.h` y `BIDON` en `raspberry/web/static/app.js`).
 - [x] Montaje real (2026-11-13): todo se lee con la LILYGO, sin ADS1115 ni aislador (entorno `lilygo_t3_simple`,
       `docs/03` apartado 0, `docs/img/conexionado-simple.png`). LILYGO por USB con respaldo; sensores con fuente de 12 V de PC.
 - [ ] Módulo RS485 a TTL de 3,3 V: por conseguir (sin él no se lee el SEN0681).
