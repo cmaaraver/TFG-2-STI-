@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1130" viewBox="0 0 1400 1130" font-family="DejaVu Sans, Arial, sans-serif">
 <defs><linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#7dd3fc"/></linearGradient></defs>
 <rect x="0" y="0" width="1400" height="1130" rx="0" fill="#fff" stroke="none" stroke-width="0" />
-<text x="30" y="40" font-size="24" font-weight="700" fill="#0f172a" text-anchor="start">Bidón de 25 L de la maqueta: sondas y agujeros</text>
+<text x="30" y="40" font-size="24" font-weight="700" fill="#0f172a" text-anchor="start">Bidón de 25 L de la maqueta: sondas y agujeros (sin caudalímetro, bomba fuera)</text>
 <text x="30" y="64" font-size="14" font-weight="400" fill="#475569" text-anchor="start">Medidas típicas de un bidón de 25 L (≈ 40 cm de alto, 29 × 24 cm de planta): medir el real. Todos los agujeros van arriba, por encima del agua.</text>
 <text x="330" y="110" font-size="15" font-weight="700" fill="#0f172a" text-anchor="start">VISTA LATERAL (de frente al tapón)</text>
 <line x1="20" y1="804" x2="860" y2="804" stroke="#78716c" stroke-width="3" />
@@ -37,57 +37,50 @@
 <path d="M375,214 C375,150 260,150 230,330" fill="none" stroke="#111" stroke-width="2.5"/>
 <path d="M405,214 C405,130 250,130 200,330" fill="none" stroke="#111" stroke-width="2.5"/>
 <path d="M390,214 C390,140 240,140 170,330" fill="none" stroke="#111" stroke-width="2.5"/>
-<rect x="670" y="750" width="70" height="46" rx="8" fill="#1d4ed8" stroke="#111" stroke-width="2" />
-<rect x="648" y="760" width="22" height="30" rx="0" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
-<text x="705" y="778" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">bomba</text>
-<polyline points="705,750 705,184 745,144 900,144 900,170 960,170" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
-<polyline points="1240,170 1290,170 1290,120 755,120 755,702" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
-<path d="M743,702 L755,720 L767,702 z" fill="#0369a1"/>
-<rect x="960" y="148" width="90" height="44" rx="6" fill="#fde68a" stroke="#111" stroke-width="2" />
-<text x="1005" y="175" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">caudal.</text>
-<line x1="1050" y1="170" x2="1150" y2="170" stroke="#0369a1" stroke-width="7" />
-<circle cx="1170" cy="170" r="18" fill="#ef4444" stroke="#111" stroke-width="2"/>
-<line x1="1170" y1="152" x2="1170" y2="132" stroke="#111" stroke-width="4" />
-<line x1="1188" y1="170" x2="1240" y2="170" stroke="#0369a1" stroke-width="7" />
-<text x="1005" y="136" font-size="13" font-weight="700" fill="#0f172a" text-anchor="middle">Caudalímetro YF-S201</text>
-<text x="1005" y="214" font-size="11.5" font-weight="400" fill="#334155" text-anchor="middle">horizontal, flecha en el sentido del agua</text>
-<text x="1196" y="200" font-size="12" font-weight="700" fill="#0f172a" text-anchor="start">válvula</text>
-<text x="1100" y="108" font-size="12" font-weight="700" fill="#0369a1" text-anchor="middle">retorno al mismo bidón</text>
+<rect x="860" y="744" width="90" height="52" rx="8" fill="#1d4ed8" stroke="#111" stroke-width="2" />
+<text x="905" y="775" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">bomba</text>
+<polyline points="695,758 695,194 825,194 825,770 860,770" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
+<rect x="683" y="754" width="24" height="14" rx="0" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
+<polyline points="930,744 930,154 750,154 750,702" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
+<path d="M738,702 L750,720 L762,702 z" fill="#0369a1"/>
+<text x="870" y="146" font-size="12" font-weight="700" fill="#0369a1" text-anchor="middle">retorno (E)</text>
+<text x="800" y="186" font-size="12" font-weight="700" fill="#0369a1" text-anchor="end">aspiración (D)</text>
 <circle cx="353" cy="196" r="12" fill="#b91c1c"/>
 <text x="353" y="201" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
 <circle cx="431" cy="186" r="12" fill="#b91c1c"/>
 <text x="431" y="191" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">B</text>
 <circle cx="392" cy="170" r="12" fill="#b91c1c"/>
 <text x="392" y="175" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">C</text>
-<circle cx="683" cy="234" r="12" fill="#b91c1c"/>
-<text x="683" y="239" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
-<circle cx="777" cy="234" r="12" fill="#b91c1c"/>
-<text x="777" y="239" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
+<circle cx="673" cy="234" r="12" fill="#b91c1c"/>
+<text x="673" y="239" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
+<circle cx="772" cy="234" r="12" fill="#b91c1c"/>
+<text x="772" y="239" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
 <circle cx="562" cy="238" r="12" fill="#b91c1c"/>
 <text x="562" y="243" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
-<rect x="793" y="617" width="30" height="30" rx="4" fill="#16a34a" stroke="#111" stroke-width="2" />
+<rect x="297" y="617" width="30" height="30" rx="4" fill="#16a34a" stroke="#111" stroke-width="2" />
 <line x1="375" y1="604" x2="470" y2="470" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
 <circle cx="375" cy="604" r="3.5" fill="#64748b"/>
 <line x1="405" y1="564" x2="470" y2="400" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
 <circle cx="405" cy="564" r="3.5" fill="#64748b"/>
 <line x1="473" y1="792" x2="470" y2="730" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
 <circle cx="473" cy="792" r="3.5" fill="#64748b"/>
-<line x1="740" y1="772" x2="870" y2="766" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
-<circle cx="740" cy="772" r="3.5" fill="#64748b"/>
-<line x1="823" y1="632" x2="870" y2="632" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
-<circle cx="823" cy="632" r="3.5" fill="#64748b"/>
+<line x1="905" y1="796" x2="965" y2="830" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="905" cy="796" r="3.5" fill="#64748b"/>
+<line x1="297" y1="632" x2="250" y2="615" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="297" cy="632" r="3.5" fill="#64748b"/>
 <text x="476" y="404" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">Oxígeno SEN0681</text>
 <text x="476" y="420" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">membrana abajo, a 8-10 cm del fondo</text>
 <text x="476" y="474" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">pH SEN0169-V2 (Ø 27 mm)</text>
 <text x="476" y="490" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">punta a 8-10 cm del fondo, siempre mojada</text>
 <text x="476" y="734" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">KIT0139 (nivel) en el fondo</text>
-<text x="876" y="762" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">Bomba + rejilla (aparte)</text>
-<text x="876" y="778" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="start">alimentación propia, sin cable al nodo</text>
-<text x="876" y="628" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">SEN0204 pegado por FUERA</text>
-<text x="876" y="644" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">en una cara lisa, a 12 cm del fondo</text>
-<text x="876" y="660" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">(sin agujero; pared de 2-3 mm)</text>
-<text x="876" y="708" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">E: retorno 5 cm bajo el nivel mínimo,</text>
-<text x="876" y="724" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">apuntando a la pared (sin burbujas en las sondas)</text>
+<text x="975" y="834" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">Bomba FUERA del bidón (aparte)</text>
+<text x="975" y="850" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="start">autocebante o cebarla la 1.ª vez; sin cable al nodo</text>
+<text x="40" y="600" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">SEN0204 pegado por FUERA</text>
+<text x="40" y="616" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">pared del lado del tapón,</text>
+<text x="40" y="632" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">a ~12 cm del fondo (sin agujero)</text>
+<text x="975" y="682" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">D: aspira a ~3 cm del fondo, con rejilla.</text>
+<text x="975" y="698" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">E: devuelve 5 cm bajo el nivel mínimo,</text>
+<text x="975" y="714" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">apuntando a la pared (sin burbujas en las sondas)</text>
 <rect x="40" y="330" width="210" height="150" rx="10" fill="#e2e8f0" stroke="#111" stroke-width="3" />
 <text x="145" y="360" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">Caja del nodo</text>
 <text x="145" y="384" font-size="12" font-weight="400" fill="#334155" text-anchor="middle">LILYGO T3 V1.6.1, placa</text>
@@ -101,29 +94,34 @@
 <text x="40" y="537" font-size="12" font-weight="700" fill="#b45309" text-anchor="start">calientan rápido (SEN0681</text>
 <text x="40" y="554" font-size="12" font-weight="700" fill="#b45309" text-anchor="start">hasta 40 °C).</text>
 <text x="960" y="264" font-size="15" font-weight="700" fill="#0f172a" text-anchor="start">VISTA DE ARRIBA</text>
-<rect x="960" y="300" width="380" height="300" rx="28" fill="#dbeafe" stroke="#1d4ed8" stroke-width="5" />
-<rect x="1070" y="530" width="160" height="40" rx="14" fill="none" stroke="#1d4ed8" stroke-width="6" />
-<text x="1150" y="556" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">asa</text>
-<circle cx="1030" cy="370" r="44" fill="#ef4444" stroke="#7f1d1d" stroke-width="2"/>
-<circle cx="1014" cy="356" r="8" fill="#fff" stroke="#111" stroke-width="1.5"/>
-<circle cx="1048" cy="360" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
-<circle cx="1030" cy="390" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
-<circle cx="968" cy="330" r="12" fill="#b91c1c"/>
-<text x="968" y="335" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
-<circle cx="1090" cy="324" r="12" fill="#b91c1c"/>
-<text x="1090" y="329" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">B</text>
-<circle cx="974" cy="410" r="12" fill="#b91c1c"/>
-<text x="974" y="415" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">C</text>
-<circle cx="1250" cy="370" r="11" fill="#fff" stroke="#111" stroke-width="2"/>
-<circle cx="1248" cy="340" r="12" fill="#b91c1c"/>
-<text x="1248" y="345" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
-<circle cx="1290" cy="420" r="11" fill="#fff" stroke="#111" stroke-width="2"/>
-<circle cx="1288" cy="390" r="12" fill="#b91c1c"/>
-<text x="1288" y="395" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
-<circle cx="1225" cy="392" r="4" fill="#fff" stroke="#111" stroke-width="1.5"/>
-<circle cx="1150" cy="510" r="4" fill="#fff" stroke="#111" stroke-width="1.5"/>
-<circle cx="1150" cy="480" r="12" fill="#b91c1c"/>
-<text x="1150" y="485" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
+<rect x="960" y="300" width="400" height="300" rx="28" fill="#dbeafe" stroke="#1d4ed8" stroke-width="5" />
+<rect x="1080" y="430.0" width="170" height="40" rx="14" fill="none" stroke="#1d4ed8" stroke-width="6" />
+<text x="1165" y="455.0" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">asa</text>
+<circle cx="1020" cy="450.0" r="44" fill="#ef4444" stroke="#7f1d1d" stroke-width="2"/>
+<circle cx="1006" cy="434.0" r="8" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1038" cy="444.0" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1022" cy="470.0" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="990" cy="390.0" r="12" fill="#b91c1c"/>
+<text x="990" y="395.0" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
+<circle cx="1054" cy="392.0" r="12" fill="#b91c1c"/>
+<text x="1054" y="397.0" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">B</text>
+<circle cx="1022" cy="514.0" r="12" fill="#b91c1c"/>
+<text x="1022" y="519.0" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">C</text>
+<circle cx="1120" cy="395" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1210" cy="395" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1120" cy="505" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1210" cy="505" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1165" cy="375" r="12" fill="#b91c1c"/>
+<text x="1165" y="380" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
+<text x="1165" y="550" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">4 hechos: dejar 1, tapar 3</text>
+<circle cx="1300" cy="410" r="11" fill="#fff" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
+<circle cx="1330" cy="410" r="12" fill="#b91c1c"/>
+<text x="1330" y="415" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
+<circle cx="1300" cy="490" r="11" fill="#fff" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
+<circle cx="1330" cy="490" r="12" fill="#b91c1c"/>
+<text x="1330" y="495" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
+<text x="1300" y="545" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">por hacer</text>
+<text x="960" y="626" font-size="11.5" font-weight="400" fill="#475569" text-anchor="start">Izquierda = lado del tapón; el SEN0204 va en esa pared, por fuera.</text>
 <text x="40" y="870" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">Agujeros (medir antes cables y sondas)</text>
 <circle cx="60" cy="898" r="12" fill="#b91c1c"/>
 <text x="60" y="903" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
@@ -136,13 +134,13 @@
 <text x="82" y="954" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Tapón: cable del KIT0139 (~7-8 mm), sin apretar el tubo de aire</text>
 <circle cx="60" cy="976" r="12" fill="#b91c1c"/>
 <text x="60" y="981" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
-<text x="82" y="980" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Arriba, esquina contraria: manguera (~20 mm) y cable de la bomba</text>
+<text x="82" y="980" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Por hacer, punta contraria: aspiración de la bomba (grosor de la manguera)</text>
 <circle cx="680" cy="898" r="12" fill="#b91c1c"/>
 <text x="680" y="903" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
-<text x="702" y="902" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Arriba, junto al D: retorno (~20 mm)</text>
+<text x="702" y="902" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Por hacer, junto al D: retorno de la bomba (grosor de la manguera)</text>
 <circle cx="680" cy="924" r="12" fill="#b91c1c"/>
 <text x="680" y="929" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
-<text x="702" y="928" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Bajo el asa: respiradero 3-4 mm, sin sellar (lo pide el KIT0139)</text>
+<text x="702" y="928" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Hechos 4 junto al asa: respiraderos (los pide el KIT0139); basta con 1</text>
 <circle cx="680" cy="950" r="12" fill="#64748b"/>
 <text x="680" y="955" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">G</text>
 <text x="702" y="954" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Solo si el SEN0681 no pasa por la boca: a su medida</text>

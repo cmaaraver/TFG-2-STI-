@@ -4,7 +4,7 @@ Proyecto final del 2º curso de Sistemas de Telecomunicaciones e Informáticos (
 Carlos Maraver Román y Rubén Trillo García.
 
 Una maqueta exterior con energía solar mide el oxígeno disuelto, el pH, la temperatura, el nivel del depósito
-y el caudal de la bomba. Envía los datos por LoRaWAN al gateway del edificio. La Raspberry Pi 5 lo hace todo:
+(un bidón de 25 L) y si hay agua. Envía los datos por LoRaWAN al gateway del edificio. La Raspberry Pi 5 lo hace todo:
 servidor LoRaWAN, base de datos y una web con los datos en tiempo real y gráficas del histórico,
 accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto):
 **https://rpi-lora.tailc40e5c.ts.net**. Dentro del instituto, también en `http://172.16.50.3`.

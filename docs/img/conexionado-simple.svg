@@ -11,7 +11,7 @@
 </style>
 <rect width="1400" height="1040" fill="#f7f9f8"/>
 <text x="30" y="40" class="h" font-size="24">Nodo de agua · montaje simple, todo leído por la LILYGO (13-11-2026)</text>
-<text x="30" y="64" class="m">LILYGO T3 V1.6.1 · firmware: entorno lilygo_t3_simple · sin ADS1115, sin aislador, sin conmutadores · solo resistencias y un diodo · la bomba va aparte</text>
+<text x="30" y="64" class="m">LILYGO T3 V1.6.1 · firmware: entorno lilygo_t3_simple · sin ADS1115, sin aislador, sin conmutadores · solo resistencias · la bomba va aparte</text>
 
 <!-- ALIMENTACION -->
 <rect x="30" y="85" width="1340" height="150" rx="10" fill="#fffaf2" stroke="#e8c79a"/>
@@ -22,7 +22,7 @@
 <rect x="540" y="170" width="260" height="56" rx="8" class="pwr"/><text x="554" y="193" class="t" font-weight="600">Fuente 12 V de PC adaptada</text><text x="554" y="214" class="m">≥ 1 A · medir 12-13 V antes</text>
 <path d="M278 157 H320" class="w g"/><path d="M490 157 H515 V133 H540 M515 157 V198 H540" class="w g"/>
 <rect x="850" y="105" width="240" height="56" rx="8" class="box"/><text x="864" y="128" class="t" font-weight="600">→ USB de la LILYGO</text><text x="864" y="149" class="m">5V y 3V3 salen de sus pines</text>
-<rect x="850" y="170" width="240" height="56" rx="8" class="box"/><text x="864" y="193" class="t" font-weight="600">Bornas +12 V y GND</text><text x="864" y="214" class="m">SEN0681, KIT0139, SEN0204, caudal</text>
+<rect x="850" y="170" width="240" height="56" rx="8" class="box"/><text x="864" y="193" class="t" font-weight="600">Bornas +12 V y GND</text><text x="864" y="214" class="m">SEN0681, KIT0139 y SEN0204</text>
 <path d="M800 133 H850" class="w r5"/><path d="M800 198 H850" class="w r12"/>
 <text x="1110" y="128" class="m">GND de la fuente de 12 V</text><text x="1110" y="146" class="m">unido al GND de la LILYGO</text><text x="1110" y="164" class="m">(una sola masa común).</text>
 <text x="1110" y="190" class="warn">Nada de 230 V dentro de la caja:</text><text x="1110" y="208" class="warn">solo fuente y cargador enchufados.</text>
@@ -39,7 +39,7 @@
 <text x="538" y="532">GPIO36 pH</text><text x="538" y="612">GPIO39 nivel</text><text x="538" y="702">GPIO4 agua</text><text x="538" y="812">GPIO15 cal</text>
 </g>
 <g class="pin" text-anchor="end">
-<text x="862" y="532">GPIO13 TX</text><text x="862" y="572">GPIO14 RX</text><text x="862" y="612">GPIO25 DE</text><text x="862" y="742">GPIO34 caudal</text>
+<text x="862" y="532">GPIO13 TX</text><text x="862" y="572">GPIO14 RX</text><text x="862" y="612">GPIO25 DE</text><text x="862" y="742">GPIO34 libre</text>
 </g>
 <text x="700" y="860" text-anchor="middle" fill="#b9c4c9" font-size="13">GPIO12 libre · sin microSD · pin 5V sin usar</text>
 <g fill="#ffd54a"><rect x="512" y="364" width="12" height="12"/><rect x="512" y="404" width="12" height="12"/><rect x="512" y="444" width="12" height="12"/><rect x="512" y="524" width="12" height="12"/><rect x="512" y="604" width="12" height="12"/><rect x="512" y="694" width="12" height="12"/><rect x="512" y="804" width="12" height="12"/>
@@ -88,16 +88,14 @@
 <path d="M1140 575 H1180" class="w b"/><path d="M1140 595 H1180" class="w b" stroke-dasharray="6 4"/>
 <text x="940" y="655" class="m">Módulo de dirección automática: GPIO25 sin usar; GPIO13 a su</text><text x="940" y="673" class="m">entrada (T/DI) y GPIO14 a su salida (R/RO). Si no lee, cruzar 13/14.</text>
 
-<!-- caudal -->
-<rect x="1000" y="700" width="370" height="95" rx="8" class="box"/>
-<text x="1014" y="723" class="t" font-weight="600">Caudalímetro (en la tubería)</text>
-<text x="1014" y="743" class="m">rojo → +12 V · negro → GND</text><text x="1014" y="763" class="m">amarillo → diodo 1N4148 (raya al sensor) → GPIO34</text><text x="1014" y="783" class="m">+ 10 kΩ de GPIO34 a 3V3 (pulsos de 0 a 3,3 V)</text>
-<path d="M888 740 H920" class="w s"/><circle cx="920" cy="740" r="4" fill="#1e56c8"/><path d="M920 740 V760" class="w s"/><rect x="910" y="760" width="20" height="40" class="res"/><path d="M920 800 V812" class="w r33"/><text x="936" y="790" class="lab" fill="#1e56c8">10k</text><text x="905" y="826" class="lab" fill="#b8930a">3V3</text>
-<path d="M920 740 H948" class="w s"/><polygon points="950,740 970,730 970,750" fill="#fff" stroke="#1e56c8" stroke-width="2"/><line x1="950" y1="729" x2="950" y2="751" stroke="#1e56c8" stroke-width="3"/><text x="938" y="722" class="lab" fill="#1e56c8">1N4148</text><path d="M970 740 H1000" class="w s"/>
+<!-- caudal: no hay caudalímetro (2026-11-17) -->
+<rect x="1000" y="715" width="370" height="60" rx="8" fill="#f1f3f2" stroke="#c5ceca" stroke-dasharray="6 4"/>
+<text x="1014" y="740" class="t" font-weight="600">Sin caudalímetro (no lo tenemos)</text>
+<text x="1014" y="762" class="m">GPIO34 se queda sin conectar</text>
 
 <!-- bomba -->
 <rect x="940" y="830" width="430" height="50" rx="8" fill="#f1f3f2" stroke="#c5ceca"/>
-<text x="954" y="852" class="t" font-weight="600">Bomba: aparte, con su propia alimentación</text><text x="954" y="871" class="m">no se conecta al nodo; el nodo solo mide su caudal</text>
+<text x="954" y="852" class="t" font-weight="600">Bomba: aparte, con su propia alimentación</text><text x="954" y="871" class="m">fuera del bidón; no se conecta ni se vigila desde el nodo</text>
 
 <!-- notas -->
 <rect x="30" y="900" width="1340" height="120" rx="10" fill="#fff" stroke="#d6ddda"/>

@@ -189,7 +189,7 @@ PASOS
    - Siempre: "--- Nodo calidad agua, ciclo 1 ---" y que NO salga "Error de radio".
    - Con claves a cero: "Fallo de join" es normal en este punto (luego duerme 5 min).
    - Con claves buenas y el gateway y ChirpStack ya funcionando: "Join OK (sesion nueva)" o "Sesion restaurada",
-     la línea "T=... O2=... pH=... nivel=... bat=... caudal=... agua=..." y
+     la línea "T=... O2=... pH=... nivel=... bat=... agua=..." y
      "Uplink enviado: fcnt=N SFx, X ms en el aire, Y ms en total".
    Pregúntame qué enseña la pantalla OLED (logo de Los Viveros y fase del ciclo con contador).
 6. Modo calibración, solo si te lo pido: yo pongo el puente MODO_CAL a GND. Lanza el script con reinicio,

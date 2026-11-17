@@ -135,16 +135,22 @@ void setup() {
 #ifndef SIMULAR_SENSORES
   pantallaFase("Esperando sensores");
 
+#if HAY_CAUDALIMETRO
   // Sensores calientes antes de medir; el caudal se mide en los últimos segundos de la espera
   while (millis() - t0 < T_CALENTAMIENTO_MS - T_MEDIDA_CAUDAL_MS) delay(100);
   pantallaFase("Midiendo caudal");
   float caudal = medirCaudal(T_MEDIDA_CAUDAL_MS);
+#else
+  // Sin caudalímetro: solo se espera a que se calienten los sensores (el SEN0681 tarda hasta 60 s)
+  while (millis() - t0 < T_CALENTAMIENTO_MS) delay(100);
+  float caudal = NAN;                            // "sin dato" en el mensaje
+#endif
 
   pantallaFase("Leyendo sensores");
   Medida m = sensoresMedir();
   sensoresApagar();
   m.caudal_lmin = caudal;
-  m.bomba_sin_caudal = caudal < CAUDAL_MINIMO_LMIN;
+  m.bomba_sin_caudal = !isnan(caudal) && caudal < CAUDAL_MINIMO_LMIN;
   Serial.printf("T=%.2f O2=%.2f pH=%.2f nivel=%.0f bat=%.0f caudal=%.2f agua=%d\n",
                 m.temperatura_c, m.oxigeno_mgl, m.ph, m.nivel_mm, m.bateria_mv,
                 m.caudal_lmin, m.agua_presente);

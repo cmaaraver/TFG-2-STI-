@@ -1,11 +1,12 @@
 # Maqueta exterior
 
 ## 1. Qué es
-Depósito con agua de red con **todas las sondas colgadas dentro**, una bomba sumergida que mueve el agua
-en circuito cerrado (sale por la tubería, pasa por el caudalímetro y vuelve al mismo depósito), y el
+Depósito con agua de red con **todas las sondas colgadas dentro**, una bomba que mueve el agua
+en circuito cerrado (aspira del bidón por una manguera y lo devuelve por otra), y el
 nodo LILYGO en una caja estanca. No hay cámara de medida aparte. El nodo y los sensores van alimentados con un
 panel solar y una batería. **La bomba va aparte** (decisión de 2026-10-26): tiene su propia alimentación, no se
-conecta al nodo y el nodo no la enciende ni la apaga; solo mide el caudal que da.
+conecta al nodo y el nodo no la enciende ni la apaga. Va **fuera del bidón** (2026-11-17) y **no hay
+caudalímetro**: el nodo no sabe si la bomba funciona.
 Está fuera del edificio; la telemetría entra al centro por LoRaWAN hasta el gateway.
 
 El depósito es un **bidón azul de plástico de 25 L** con tapón rojo de rosca y asa (2026-11-17, apartado 1.1).
@@ -40,26 +41,28 @@ Tamaño de cada una:
 | pH SEN0169-V2 (electrodo industrial) | 27,4 mm, 177 mm de largo con la funda (wiki DFRobot FIT0348) | Sí |
 | Oxígeno SEN0681 | La wiki no da la medida (solo un plano en imagen) | **TODO VERIFICAR** con el calibre. Si es más gorda que la boca, hacer un agujero G aparte (ver abajo) |
 | Nivel KIT0139 | La wiki no da la medida | **TODO VERIFICAR**. Las sondas de este tipo suelen tener unos 26-28 mm, así que debería pasar |
-| Bomba | Depende del modelo | **TODO VERIFICAR**. Si no pasa por la boca, hacer un agujero en la parte de arriba a su medida |
 
 ### 1.2. Agujeros del bidón
 
-Bidón de pie, con el tapón arriba. Ningún agujero en las paredes ni por debajo del agua.
+Bidón de pie, con el tapón arriba. Ningún agujero en las paredes ni por debajo del agua. Estado a 2026-11-17
+(fotos de Carlos): el tapón ya tiene 3 agujeros y hay 4 respiraderos hechos junto al asa.
 
-| Agujero | Dónde | Tamaño | Para qué |
-|---|---|---|---|
-| A | Tapón rojo | Lo justo para que pase el conector BNC (~15 mm) | Cable de la sonda de pH |
-| B | Tapón rojo | Al diámetro del cable (medirlo, ~6-8 mm) | Cable del SEN0681 (RS485 + 12 V) |
-| C | Tapón rojo | Al diámetro del cable (~7-8 mm) | Cable del KIT0139 (lleva dentro el tubo de aire: no apretarlo) |
-| D | Arriba, en la esquina contraria a la boca (en diagonal) | Al diámetro exterior de la manguera de la bomba (~19-20 mm con la de 13 mm por dentro) + uno pequeño para su cable | Salida de la bomba hacia el caudalímetro |
-| E | Arriba, al lado del D | Igual que el D (~20 mm) | Retorno: la manguera entra hasta 5 cm por debajo del nivel mínimo, apuntando a la pared, para que no haga burbujas en las sondas |
-| F | Arriba, debajo del asa (protegido de la lluvia) | 3-4 mm | Respiradero. **Hace falta**: el KIT0139 mide la presión del agua contra la del aire de fuera (por su tubo de aire). Si el bidón queda cerrado del todo, el aire de dentro se calienta al sol, empuja y el nivel sale mal |
-| G (solo si hace falta) | Arriba, al lado de la boca | Diámetro de la sonda + 1 mm | Solo si el SEN0681 no pasa por la boca |
-| — | Pared exterior lisa, a 12 cm del fondo | Sin agujero | SEN0204 pegado por fuera (presencia de agua = nivel mínimo) |
+| Agujero | Dónde | Tamaño | Para qué | Estado |
+|---|---|---|---|---|
+| A, B, C | Tapón rojo | Al grosor de cada cable (el del pH, lo justo para el BNC) | Cables del pH, del SEN0681 y del KIT0139 | Hechos |
+| F | Arriba, a los lados del asa | Pequeños | Respiraderos. **Hacen falta**: el KIT0139 mide la presión del agua contra la del aire de fuera (por su tubo de aire). Si el bidón queda cerrado, el aire de dentro se calienta al sol, empuja y el nivel sale mal | Hechos 4; **basta con 1**: tapar 3 con cinta o silicona y proteger el otro de la lluvia (están en el hueco del asa, donde se junta el agua) |
+| D | Arriba, en la punta contraria al tapón | Al diámetro exterior de la manguera | Aspiración de la bomba (que está fuera): la manguera baja hasta unos 3 cm del fondo, con rejilla o malla | Falta |
+| E | Arriba, junto al D | Igual que el D | Retorno: la manguera entra hasta 5 cm por debajo del nivel mínimo, apuntando a la pared, para que no haga burbujas en las sondas | Falta |
+| G (solo si hace falta) | Arriba, al lado de la boca | Diámetro de la sonda + 1 mm | Solo si el SEN0681 no pasa por la boca | — |
+| — | Pared del lado del tapón, lisa, a ~12 cm del fondo | Sin agujero | SEN0204 pegado por fuera (presencia de agua = nivel mínimo) | Hecho |
 
 Cómo hacerlos: broca escalonada o corona para plástico, a pocas vueltas para no derretir el polietileno. Después,
 pasar los cables, sujetar cada sonda a su altura con una brida por dentro del tapón, y sellar los agujeros A, B y C
-con silicona neutra por fuera (que la lluvia no entre por el tapón). El respiradero F no se sella.
+con silicona neutra por fuera (que la lluvia no entre por el tapón). El respiradero no se sella.
+
+Como la bomba va fuera y aspira desde arriba, tiene que ser **autocebante** (capaz de sacar el agua aunque la
+manguera empiece con aire) o hay que cebarla la primera vez llenando la manguera de agua. TODO VERIFICAR con el
+modelo de bomba.
 
 ### 1.3. Alturas de las sondas (desde el fondo del bidón)
 
@@ -71,8 +74,8 @@ con silicona neutra por fuera (que la lluvia no entre por el tapón). El respira
 | Nivel de trabajo (rellenar hasta aquí) | ~30 cm | ~19 L (75 %) |
 | Lleno (no llenar más: el aire de arriba hace falta para el respiradero) | ~40 cm | 25 L |
 
-La sonda de pH y el SEN0681 cuelgan juntos cerca de la boca; la bomba y el retorno quedan en la otra punta del
-bidón. Con solo 25 L todo está cerca: que el retorno no apunte a las sondas.
+La sonda de pH y el SEN0681 cuelgan juntos cerca de la boca; la aspiración y el retorno de la bomba quedan en la
+otra punta del bidón. Con solo 25 L todo está cerca: que el retorno no apunte a las sondas.
 
 ### 1.4. Resolución del nivel en el bidón
 
@@ -105,8 +108,7 @@ agua o si alguien lo ha rellenado, pero no para medir litros finos. Por eso:
 La bomba, que va aparte, es la que mueve el agua para que las sondas no vean agua estancada. El nodo:
 1. Se despierta, enciende los sensores y hace el join (o recupera la sesión LoRaWAN).
 2. Espera 60 s a que se calienten los sensores (el SEN0681 tarda hasta 60 s en dar un valor estable).
-3. En los últimos 10 s de esa espera mide el caudal. Si es menor de 0,3 L/min → aviso "bomba sin caudal"
-   (la bomba está apagada, atascada o sin agua).
+3. (Sin caudalímetro, 2026-11-17: ya no se mide el caudal ni se avisa de "bomba sin caudal".)
 4. Lee todos los sensores, los apaga, envía el mensaje y se duerme.
 
 ## 3. Balance de energía (estimación, se confirma midiendo en la fase 6)

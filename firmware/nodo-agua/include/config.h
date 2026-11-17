@@ -84,6 +84,10 @@
 #define T_MEDIDA_CAUDAL_MS       10000UL   // contar pulsos del caudalímetro durante 10 s
 
 // ---------- Caudalímetro de efecto Hall ----------
+// 0 = no hay caudalímetro (2026-11-17: no lo tenemos). El caudal va siempre como "sin dato" (0xFFFF) en el
+// mensaje, igual que la conductividad, y no se usa el pin PIN_CAUDAL. El formato del payload no cambia.
+// Si algún día se pone uno (YF-S201 o parecido), poner 1, revisar CAUDAL_HZ_POR_LMIN y volver a grabar.
+#define HAY_CAUDALIMETRO    0
 #define CAUDAL_HZ_POR_LMIN  7.5f   // TODO VERIFICAR con el modelo comprado (YF-S201: F = 7,5 × Q)
 #define CAUDAL_MINIMO_LMIN  0.3f   // por debajo = la bomba (que va aparte) está parada, atascada o sin agua
 
