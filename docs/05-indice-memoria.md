@@ -4,8 +4,11 @@
    1.1 Motivación (por qué medir la calidad del agua)
    1.2 Objetivos
    1.3 Alcance y limitaciones
+   1.4 Punto de partida: cartel "Proyecto de innovación colaborativo en digitalización aplicada"
+       y en qué se parece y se diferencia nuestro sistema (`11-cartel-referencia.md`)
 2. Fundamentos
-   2.1 Parámetros de calidad del agua: oxígeno disuelto, pH, temperatura (y por qué no se mide la conductividad)
+   2.1 Parámetros de calidad del agua: oxígeno disuelto, pH, temperatura y nivel (y por qué no se miden
+       la conductividad, el caudal ni la presión)
    2.2 Comunicaciones LoRa y LoRaWAN (modulación, SF, clases, OTAA)
    2.3 Normativa de la banda de 868 MHz (ETSI EN 300 220, ciclo de trabajo del 1 %)
    2.4 Protocolos usados: RS485/Modbus, I2C, MQTT

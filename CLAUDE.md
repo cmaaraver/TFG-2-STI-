@@ -11,9 +11,12 @@ Léelo entero antes de hacer nada y consulta la carpeta `docs/` para los detalle
   que mide la calidad del agua (oxígeno disuelto, pH, temperatura y nivel; **sin caudal**, decisión de 2026-11-17),
   envía la telemetría por LoRaWAN al gateway situado en el edificio, la guarda con fecha y hora en
   una base de datos y la muestra en un panel accesible desde fuera del instituto.
-- Referencia: proyecto de innovación colaborativo "Sistema de telemetría para la monitorización de la
-  calidad del agua" (cartel del centro). Nuestra versión sustituye WiFi por LoRaWAN privado y añade
-  oxígeno. **No se mide conductividad** (decisión de 2026-09-29).
+- Referencia: cartel del centro **"Proyecto de innovación colaborativo en digitalización aplicada"**
+  (`docs/img/cartel-referencia.jpg`): depósito con sensores de nivel ultrasónico, temperatura, presión, pH y flujo,
+  sistema de adquisición y control, pantalla local opcional, Internet, app móvil, plataforma web y servidor con BD.
+  Nuestra versión sustituye WiFi por LoRaWAN privado, añade oxígeno y **no tiene sensor de presión ni de flujo**;
+  la "app" es la web adaptada al móvil. Comparación bloque por bloque en `docs/11-cartel-referencia.md`
+  (2026-11-19): las diferencias se explican, no se esconden. **No se mide conductividad** (decisión de 2026-09-29).
 - Las sondas van **colgadas directamente dentro del depósito** (no hay cámara de medida aparte);
   el depósito es un bidón de 25 L y **no hay caudalímetro** (2026-11-17: no lo tenemos).
 - **La bomba va aparte** (decisión de 2026-10-26): tiene su propia alimentación y no se conecta al nodo
@@ -91,6 +94,7 @@ docs/
   08-guia-instalacion.md      ← guía de instalación completa, de la caja de material a la web funcionando
   09-acceso-internet.md       ← web pública con Tailscale Funnel y qué pedir al coordinador TIC
   10-prompts-claude-code.md   ← prompts para Claude Code: Raspberry por SSH y LILYGO por USB
+  11-cartel-referencia.md     ← cartel de referencia del centro comparado bloque por bloque con nuestro sistema
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
