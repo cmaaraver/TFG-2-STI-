@@ -9,6 +9,11 @@ servidor LoRaWAN, base de datos y una web con los datos en tiempo real y gráfic
 accesible desde Internet con Tailscale Funnel (sin abrir puertos en el instituto):
 **https://rpi-lora.tailc40e5c.ts.net**. Dentro del instituto, también en `http://172.16.50.3`.
 
+Parte del cartel de referencia del centro, **"Proyecto de innovación colaborativo en digitalización aplicada"**
+(depósito con sensores, sistema de adquisición, Internet, web, móvil y servidor con base de datos). En qué coincide
+nuestro sistema con el cartel y en qué no (sin caudal ni presión, LoRaWAN en vez de WiFi, oxígeno añadido):
+[`docs/11-cartel-referencia.md`](docs/11-cartel-referencia.md).
+
 ## Ver los datos de los sensores
 
 | Qué | Enlace | Quién puede entrar |
@@ -30,6 +35,7 @@ Más detalle en [`docs/09-acceso-internet.md`](docs/09-acceso-internet.md).
 | Tema | Documento |
 |---|---|
 | Plan del proyecto, fases y tareas pendientes | [`CLAUDE.md`](CLAUDE.md) |
+| Cartel de referencia del instituto comparado con nuestro sistema | [`docs/11-cartel-referencia.md`](docs/11-cartel-referencia.md) |
 | Material (ya lo tenemos todo) | [`docs/01-lista-material.md`](docs/01-lista-material.md) |
 | Lista de compra con enlaces (ya comprado, se guarda para la memoria) | [`docs/07-lista-compra.md`](docs/07-lista-compra.md) · [hoja de cálculo](docs/07-lista-compra.xlsx) |
 | Red: VLAN 500 e IPs, puertos, acceso desde Internet, seguridad | [`docs/02-arquitectura-red.md`](docs/02-arquitectura-red.md) |
@@ -49,7 +55,7 @@ Más detalle en [`docs/09-acceso-internet.md`](docs/09-acceso-internet.md).
 README.md                  ← esta página
 CLAUDE.md                  ← plan maestro: arquitectura, reglas, fases y pendientes
 docs/                      ← documentación (numerada en el orden de lectura)
-  01 … 10 *.md
+  01 … 11 *.md
   07-lista-compra.xlsx     ← lista de compra en hoja de cálculo
   img/                     ← esquemas (.png y .svg editables) y capturas
 firmware/nodo-agua/        ← código de la LILYGO (PlatformIO)
