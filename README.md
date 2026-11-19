@@ -42,6 +42,7 @@ Más detalle en [`docs/09-acceso-internet.md`](docs/09-acceso-internet.md).
 | Conexionado del nodo e instalación de las sondas | [`docs/03-conexionado-nodo.md`](docs/03-conexionado-nodo.md) |
 | Formato del mensaje LoRaWAN | [`docs/04-formato-payload.md`](docs/04-formato-payload.md) |
 | Maqueta, ciclo de medida y energía solar | [`docs/06-maqueta.md`](docs/06-maqueta.md) |
+| Memoria del TFG en Word (con planos y capturas) | [`docs/memoria/Memoria_TFG_Calidad_Agua_LoRaWAN.docx`](docs/memoria/Memoria_TFG_Calidad_Agua_LoRaWAN.docx) · [cómo se regenera](docs/memoria/fuentes-word/README.md) |
 | Índice de la memoria del TFG | [`docs/05-indice-memoria.md`](docs/05-indice-memoria.md) |
 | Firmware de la LILYGO | [`firmware/nodo-agua/README.md`](firmware/nodo-agua/README.md) |
 | Servidor en la Raspberry: instalación con un script (`raspberry/instalar.sh`) | [`raspberry/README.md`](raspberry/README.md) |

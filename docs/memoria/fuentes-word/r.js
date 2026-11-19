@@ -1,0 +1,2 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{const b=await chromium.launch();for(const n of ['plano-sondas','plano-general','plano-red','plano-datos']){const s=fs.readFileSync(n+'.svg','utf8');const m=s.match(/width="(\d+)" height="(\d+)"/);const p=await b.newPage({viewport:{width:+m[1],height:+m[2]},deviceScaleFactor:2});await p.setContent('<body style="margin:0">'+s+'</body>');await p.screenshot({path:n+'.png'});}await b.close()})();

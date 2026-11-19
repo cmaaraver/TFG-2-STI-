@@ -96,7 +96,7 @@ docs/
   10-prompts-claude-code.md   ← prompts para Claude Code: Raspberry por SSH y LILYGO por USB
   11-cartel-referencia.md     ← cartel de referencia del centro comparado bloque por bloque con nuestro sistema
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
-  memoria/                    ← (se crea en la fase 7) capítulos de la memoria del TFG
+  memoria/                    ← memoria del TFG en Word (.docx), planos, capturas de la web y fuentes-word/ (scripts que generan el Word)
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
   herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
 pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor;
