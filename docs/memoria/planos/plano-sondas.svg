@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1130" viewBox="0 0 1400 1130" font-family="DejaVu Sans, Arial, sans-serif" xmlns:c2pa="http://c2pa.org/manifest">
+<defs><linearGradient id="agua" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#7dd3fc"/></linearGradient></defs>
+<rect x="0" y="0" width="1400" height="1130" rx="0" fill="#fff" stroke="none" stroke-width="0" />
+<text x="30" y="40" font-size="24" font-weight="700" fill="#0f172a" text-anchor="start">Bidón de 25 L de la maqueta: sondas y agujeros (sin caudalímetro, bomba fuera)</text>
+<text x="30" y="64" font-size="14" font-weight="400" fill="#475569" text-anchor="start">Medidas típicas de un bidón de 25 L (≈ 40 cm de alto, 29 × 24 cm de planta): medir el real. Todos los agujeros van arriba, por encima del agua.</text>
+<text x="330" y="110" font-size="15" font-weight="700" fill="#0f172a" text-anchor="start">VISTA LATERAL (de frente al tapón)</text>
+<line x1="20" y1="804" x2="860" y2="804" stroke="#78716c" stroke-width="3" />
+<rect x="330" y="380" width="460" height="420" rx="0" fill="url(#agua)" stroke="none" stroke-width="0" />
+<path d="M330,800 L330,296 L360,268 L360,240 L420,240 L440,254 L770,254 Q790,254 790,282 L790,800 Z" fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linejoin="round"/>
+<rect x="360" y="214" width="60" height="26" rx="4" fill="#ef4444" stroke="#7f1d1d" stroke-width="2" />
+<text x="430" y="236" font-size="12" font-weight="700" fill="#b91c1c" text-anchor="start">tapón rojo</text>
+<path d="M580,254 L600,220 L730,220 L750,254" fill="none" stroke="#1d4ed8" stroke-width="7"/>
+<text x="665" y="212" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">asa</text>
+<line x1="330" y1="380" x2="790" y2="380" stroke="#0284c7" stroke-width="2" />
+<text x="440" y="374" font-size="12" font-weight="700" fill="#0369a1" text-anchor="start">nivel de trabajo ≈ 30 cm (≈ 19 L, 75 %)</text>
+<line x1="330" y1="632" x2="790" y2="632" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="7,5"/>
+<text x="440" y="626" font-size="12" font-weight="700" fill="#dc2626" text-anchor="start">nivel mínimo 12 cm (≈ 7,5 L, 30 %)</text>
+<line x1="290" y1="800" x2="300" y2="800" stroke="#475569" stroke-width="1.5" />
+<text x="284" y="804" font-size="11" font-weight="400" fill="#475569" text-anchor="end">0 cm</text>
+<line x1="290" y1="660" x2="300" y2="660" stroke="#475569" stroke-width="1.5" />
+<text x="284" y="664" font-size="11" font-weight="400" fill="#475569" text-anchor="end">10 cm</text>
+<line x1="290" y1="520" x2="300" y2="520" stroke="#475569" stroke-width="1.5" />
+<text x="284" y="524" font-size="11" font-weight="400" fill="#475569" text-anchor="end">20 cm</text>
+<line x1="290" y1="380" x2="300" y2="380" stroke="#475569" stroke-width="1.5" />
+<text x="284" y="384" font-size="11" font-weight="400" fill="#475569" text-anchor="end">30 cm</text>
+<line x1="290" y1="240" x2="300" y2="240" stroke="#475569" stroke-width="1.5" />
+<text x="284" y="244" font-size="11" font-weight="400" fill="#475569" text-anchor="end">40 cm</text>
+<line x1="295" y1="800" x2="295" y2="240" stroke="#475569" stroke-width="1.5" />
+<line x1="375" y1="214" x2="375" y2="524" stroke="#111" stroke-width="3" />
+<rect x="366" y="524" width="18" height="150" rx="6" fill="#e5e7eb" stroke="#111" stroke-width="2" />
+<rect x="369" y="660" width="12" height="14" rx="6" fill="#fde68a" stroke="#111" stroke-width="1" />
+<line x1="405" y1="214" x2="405" y2="514" stroke="#111" stroke-width="3" />
+<rect x="392" y="514" width="26" height="160" rx="8" fill="#cbd5e1" stroke="#111" stroke-width="2" />
+<rect x="392" y="656" width="26" height="18" rx="0" fill="#1e293b" stroke="#111" stroke-width="1" />
+<path d="M390,214 L390,520 Q390,758 450,783.2" fill="none" stroke="#111" stroke-width="3"/>
+<rect x="450" y="784" width="46" height="16" rx="5" fill="#9ca3af" stroke="#111" stroke-width="2" />
+<path d="M375,214 C375,150 260,150 230,330" fill="none" stroke="#111" stroke-width="2.5"/>
+<path d="M405,214 C405,130 250,130 200,330" fill="none" stroke="#111" stroke-width="2.5"/>
+<path d="M390,214 C390,140 240,140 170,330" fill="none" stroke="#111" stroke-width="2.5"/>
+<rect x="860" y="744" width="90" height="52" rx="8" fill="#1d4ed8" stroke="#111" stroke-width="2" />
+<text x="905" y="775" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">bomba</text>
+<polyline points="695,758 695,194 825,194 825,770 860,770" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
+<rect x="683" y="754" width="24" height="14" rx="0" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
+<polyline points="930,744 930,154 750,154 750,702" fill="none" stroke="#0369a1" stroke-width="7" stroke-linejoin="round"/>
+<path d="M738,702 L750,720 L762,702 z" fill="#0369a1"/>
+<text x="870" y="146" font-size="12" font-weight="700" fill="#0369a1" text-anchor="middle">retorno (E)</text>
+<text x="800" y="186" font-size="12" font-weight="700" fill="#0369a1" text-anchor="end">aspiración (D)</text>
+<circle cx="353" cy="196" r="12" fill="#b91c1c"/>
+<text x="353" y="201" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
+<circle cx="431" cy="186" r="12" fill="#b91c1c"/>
+<text x="431" y="191" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">B</text>
+<circle cx="392" cy="170" r="12" fill="#b91c1c"/>
+<text x="392" y="175" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">C</text>
+<circle cx="673" cy="234" r="12" fill="#b91c1c"/>
+<text x="673" y="239" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
+<circle cx="772" cy="234" r="12" fill="#b91c1c"/>
+<text x="772" y="239" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
+<circle cx="562" cy="238" r="12" fill="#b91c1c"/>
+<text x="562" y="243" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
+<rect x="297" y="617" width="30" height="30" rx="4" fill="#16a34a" stroke="#111" stroke-width="2" />
+<line x1="375" y1="604" x2="470" y2="470" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="375" cy="604" r="3.5" fill="#64748b"/>
+<line x1="405" y1="564" x2="470" y2="400" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="405" cy="564" r="3.5" fill="#64748b"/>
+<line x1="473" y1="792" x2="470" y2="730" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="473" cy="792" r="3.5" fill="#64748b"/>
+<line x1="905" y1="796" x2="965" y2="830" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="905" cy="796" r="3.5" fill="#64748b"/>
+<line x1="297" y1="632" x2="250" y2="615" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3"/>
+<circle cx="297" cy="632" r="3.5" fill="#64748b"/>
+<text x="476" y="404" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">Oxígeno SEN0681</text>
+<text x="476" y="420" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">membrana abajo, a 8-10 cm del fondo</text>
+<text x="476" y="474" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">pH SEN0169-V2 (Ø 27 mm)</text>
+<text x="476" y="490" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">punta a 8-10 cm del fondo, siempre mojada</text>
+<text x="476" y="734" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">KIT0139 (nivel) en el fondo</text>
+<text x="975" y="834" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">Bomba FUERA del bidón (aparte)</text>
+<text x="975" y="850" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="start">autocebante o cebarla la 1.ª vez; sin cable al nodo</text>
+<text x="40" y="600" font-size="13" font-weight="700" fill="#0f172a" text-anchor="start">SEN0204 pegado por FUERA</text>
+<text x="40" y="616" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">pared del lado del tapón,</text>
+<text x="40" y="632" font-size="11.5" font-weight="400" fill="#334155" text-anchor="start">a ~12 cm del fondo (sin agujero)</text>
+<text x="975" y="682" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">D: aspira a ~3 cm del fondo, con rejilla.</text>
+<text x="975" y="698" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">E: devuelve 5 cm bajo el nivel mínimo,</text>
+<text x="975" y="714" font-size="11.5" font-weight="400" fill="#0369a1" text-anchor="start">apuntando a la pared (sin burbujas en las sondas)</text>
+<rect x="40" y="330" width="210" height="150" rx="10" fill="#e2e8f0" stroke="#111" stroke-width="3" />
+<text x="145" y="360" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">Caja del nodo</text>
+<text x="145" y="384" font-size="12" font-weight="400" fill="#334155" text-anchor="middle">LILYGO T3 V1.6.1, placa</text>
+<text x="145" y="401" font-size="12" font-weight="400" fill="#334155" text-anchor="middle">del pH, conversor 4-20 mA,</text>
+<text x="145" y="418" font-size="12" font-weight="400" fill="#334155" text-anchor="middle">RS485 y resistencias</text>
+<text x="145" y="446" font-size="11.5" font-weight="700" fill="#b91c1c" text-anchor="middle">cables hacia ABAJO (goteo)</text>
+<line x1="145" y1="330" x2="145" y2="290" stroke="#111" stroke-width="4" />
+<path d="M135,290 L145,265 L155,290 z" fill="#111"/>
+<text x="130" y="284" font-size="12" font-weight="700" fill="#0f172a" text-anchor="end">antena 868 MHz</text>
+<text x="40" y="520" font-size="12" font-weight="700" fill="#b45309" text-anchor="start">Bidón a la SOMBRA: 25 L se</text>
+<text x="40" y="537" font-size="12" font-weight="700" fill="#b45309" text-anchor="start">calientan rápido (SEN0681</text>
+<text x="40" y="554" font-size="12" font-weight="700" fill="#b45309" text-anchor="start">hasta 40 °C).</text>
+<text x="960" y="264" font-size="15" font-weight="700" fill="#0f172a" text-anchor="start">VISTA DE ARRIBA</text>
+<rect x="960" y="300" width="400" height="300" rx="28" fill="#dbeafe" stroke="#1d4ed8" stroke-width="5" />
+<rect x="1080" y="430.0" width="170" height="40" rx="14" fill="none" stroke="#1d4ed8" stroke-width="6" />
+<text x="1165" y="455.0" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">asa</text>
+<circle cx="1020" cy="450.0" r="44" fill="#ef4444" stroke="#7f1d1d" stroke-width="2"/>
+<circle cx="1006" cy="434.0" r="8" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1038" cy="444.0" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1022" cy="470.0" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="990" cy="390.0" r="12" fill="#b91c1c"/>
+<text x="990" y="395.0" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
+<circle cx="1054" cy="392.0" r="12" fill="#b91c1c"/>
+<text x="1054" y="397.0" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">B</text>
+<circle cx="1022" cy="514.0" r="12" fill="#b91c1c"/>
+<text x="1022" y="519.0" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">C</text>
+<circle cx="1120" cy="395" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1210" cy="395" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1120" cy="505" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1210" cy="505" r="5" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<circle cx="1165" cy="375" r="12" fill="#b91c1c"/>
+<text x="1165" y="380" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
+<text x="1165" y="550" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">4 respiraderos pequeños (hechos)</text>
+<circle cx="1300" cy="410" r="11" fill="#fff" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
+<circle cx="1330" cy="410" r="12" fill="#b91c1c"/>
+<text x="1330" y="415" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
+<circle cx="1300" cy="490" r="11" fill="#fff" stroke="#111" stroke-width="2" stroke-dasharray="3,2"/>
+<circle cx="1330" cy="490" r="12" fill="#b91c1c"/>
+<text x="1330" y="495" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
+<text x="1300" y="545" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">por hacer</text>
+<text x="960" y="626" font-size="11.5" font-weight="400" fill="#475569" text-anchor="start">Izquierda = lado del tapón; el SEN0204 va en esa pared, por fuera.</text>
+<text x="40" y="870" font-size="14" font-weight="700" fill="#0f172a" text-anchor="start">Agujeros (medir antes cables y sondas)</text>
+<circle cx="60" cy="898" r="12" fill="#b91c1c"/>
+<text x="60" y="903" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">A</text>
+<text x="82" y="902" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Tapón: cable del pH, ~15 mm (pasa el BNC)</text>
+<circle cx="60" cy="924" r="12" fill="#b91c1c"/>
+<text x="60" y="929" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">B</text>
+<text x="82" y="928" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Tapón: cable del SEN0681, a su diámetro (~6-8 mm)</text>
+<circle cx="60" cy="950" r="12" fill="#b91c1c"/>
+<text x="60" y="955" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">C</text>
+<text x="82" y="954" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Tapón: cable del KIT0139 (~7-8 mm), sin apretar el tubo de aire</text>
+<circle cx="60" cy="976" r="12" fill="#b91c1c"/>
+<text x="60" y="981" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">D</text>
+<text x="82" y="980" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Por hacer, punta contraria: aspiración de la bomba (grosor de la manguera)</text>
+<circle cx="680" cy="898" r="12" fill="#b91c1c"/>
+<text x="680" y="903" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">E</text>
+<text x="702" y="902" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Por hacer, junto al D: retorno de la bomba (grosor de la manguera)</text>
+<circle cx="680" cy="924" r="12" fill="#b91c1c"/>
+<text x="680" y="929" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">F</text>
+<text x="702" y="928" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Hechos 4 junto al asa: 4 respiraderos pequeños (los pide el KIT0139)</text>
+<circle cx="680" cy="950" r="12" fill="#64748b"/>
+<text x="680" y="955" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">G</text>
+<text x="702" y="954" font-size="13" font-weight="400" fill="#334155" text-anchor="start">Solo si el SEN0681 no pasa por la boca: a su medida</text>
+<text x="40" y="1020" font-size="12" font-weight="700" fill="#0f172a" text-anchor="start">Las sondas entran de una en una por la boca. A, B y C con</text>
+<text x="40" y="1037" font-size="12" font-weight="700" fill="#0f172a" text-anchor="start">silicona neutra por fuera. Ningún agujero bajo el agua.</text>
+<text x="30" y="1110" font-size="13" font-weight="400" fill="#475569" text-anchor="start">Nivel: el KIT0139 mide 0-5 m con ±0,5 % (±25 mm); en el bidón son unos ±1,5 L (±6 %). La web lo enseña en % del bidón (docs/06, apartado 1.4).</text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo2NTMwZDdlYi1hMWM5LTRhYjMtOTk1MC1mOTQwZGM0NGJhOTIAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaMTJ3lgEP8NNdqb0Pg2dj3QAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpmMzEwNDlkYi1iMDJhLTQ1NDYtOWI5Ny1mNzRiMmRiNzUxMjlscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoqw7kyoOoe3RnfP+7zAr5WwAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg4/AvxgOJxWZzjyE8Gbur0G4bV9rBBlaHwiQLJ9JlCKekZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaCvZ3pWKowGDZG83iF58idkAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIJfeo1zSMsoX3V5/ms6aOD1W+gyxJ1hiS1p0Lwo5x96dZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GTvIZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjY1MzBkN2ViLWExYzktNGFiMy05OTUwLWY5NDBkYzQ0YmE5Mi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjY2NTA0NWY4LTFhMzYtNDlmZC04YzYxLTAzZGRiNGEyZDI1NXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDj8C/GA4nFZnOPITwZu6vQbhtX2sEGVofCJAsn0mUIp6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg9v+KLtcbn+LHUhdsTkg80K2+iXD2sUFq0X62WrrzkACiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggDKVuWMC0P0GZTzT0UsadT0LkmSFABITZ8FXH9grc9ZJ0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQCNRwzJ4+R+BnQ6rLY5T4WmU59ajlpWjBiesYYu28Hkge5LKNO52vXOgFQbzyJc+g53Z+BuvF2sIe5DU8nAsxlQ=</c2pa:manifest></metadata></svg>
