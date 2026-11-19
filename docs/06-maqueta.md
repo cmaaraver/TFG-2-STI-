@@ -50,7 +50,7 @@ Bidón de pie, con el tapón arriba. Ningún agujero en las paredes ni por debaj
 | Agujero | Dónde | Tamaño | Para qué | Estado |
 |---|---|---|---|---|
 | A, B, C | Tapón rojo | Al grosor de cada cable (el del pH, lo justo para el BNC) | Cables del pH, del SEN0681 y del KIT0139 | Hechos |
-| F | Arriba, a los lados del asa | Pequeños | Respiraderos. **Hacen falta**: el KIT0139 mide la presión del agua contra la del aire de fuera (por su tubo de aire). Si el bidón queda cerrado, el aire de dentro se calienta al sol, empuja y el nivel sale mal | Hechos 4; **basta con 1**: tapar 3 con cinta o silicona y proteger el otro de la lluvia (están en el hueco del asa, donde se junta el agua) |
+| F | Arriba, a los lados del asa | Pequeños | Respiraderos. **Hacen falta**: el KIT0139 mide la presión del agua contra la del aire de fuera (por su tubo de aire). Si el bidón queda cerrado, el aire de dentro se calienta al sol, empuja y el nivel sale mal | Hechos 4, pequeños, y se dejan los 4 (decisión de Carlos, 2026-11-19). Vigilar que no entre agua de lluvia por el hueco del asa; si entra, ponerles un tejadito de cinta sin taparlos |
 | D | Arriba, en la punta contraria al tapón | Al diámetro exterior de la manguera | Aspiración de la bomba (que está fuera): la manguera baja hasta unos 3 cm del fondo, con rejilla o malla | Falta |
 | E | Arriba, junto al D | Igual que el D | Retorno: la manguera entra hasta 5 cm por debajo del nivel mínimo, apuntando a la pared, para que no haga burbujas en las sondas | Falta |
 | G (solo si hace falta) | Arriba, al lado de la boca | Diámetro de la sonda + 1 mm | Solo si el SEN0681 no pasa por la boca | — |
