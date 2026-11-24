@@ -789,7 +789,7 @@
 <text x="445" y="1235" class="m" text-anchor="middle" style="fill:#9fc3d6;font-size:11px">logo Los Viveros</text>
 <text x="985" y="1210" class="t" text-anchor="middle" style="fill:#ffffff;font-size:22px;font-weight:700">LILYGO T3 V1.6.1 (fuera de la protoboard)</text>
 <text x="985" y="1237" class="m" text-anchor="middle" style="fill:#c9d1cd">cables dupont macho-hembra: el macho a la protoboard, la hembra al pin de la LILYGO</text>
-<text x="985" y="1261" class="m" text-anchor="middle" style="fill:#ffb4a8">GPIO36 = VP y GPIO39 = VN en la serigrafía · sin microSD · pin 5V, GPIO12 y GPIO34 sin conectar</text>
+<text x="985" y="1261" class="m" text-anchor="middle" style="fill:#ffb4a8">S_VP = GPIO36 y S_VN = GPIO39 · sin microSD · pin 5V, GPIO12 y GPIO34 sin conectar</text>
 <path d="M1460,1270 h40" stroke="#888" stroke-width="6"/><rect x="1498" y="1258" width="70" height="24" rx="10" fill="#333"/>
 <text x="1580" y="1268" class="warn" text-anchor="start">antena 868 MHz:</text>
 <text x="1580" y="1284" class="warn" text-anchor="start">siempre puesta</text>
@@ -804,7 +804,7 @@
 <path d="M408,1000 L408,1060 L385,1060 L385,1106" fill="none" stroke="#f07c00" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="408" cy="1000" r="4.5" fill="#f07c00" stroke="#111" stroke-width="1.3"/>
 <rect x="358" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="381" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="385" y="1134" class="pin" text-anchor="middle" style="font-size:11px">3V3</text>
+<text x="385" y="1134" class="pin" text-anchor="middle" style="font-size:11px">3.3V</text>
 <path d="M444,978 L444,1060 L455,1060 L455,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M444,978 L444,1060 L455,1060 L455,1106" fill="none" stroke="#222" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="444" cy="978" r="4.5" fill="#222" stroke="#111" stroke-width="1.3"/>
@@ -814,36 +814,36 @@
 <path d="M552,812 L552,1060 L540,1060 L540,1106" fill="none" stroke="#8e3fd1" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="552" cy="812" r="4.5" fill="#8e3fd1" stroke="#111" stroke-width="1.3"/>
 <rect x="513" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="536" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="540" y="1134" class="pin" text-anchor="middle" style="font-size:11px">GPIO13</text>
+<text x="540" y="1134" class="pin" text-anchor="middle" style="font-size:11px">IO13</text>
 <path d="M588,812 L588,1060 L610,1060 L610,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M588,812 L588,1060 L610,1060 L610,1106" fill="none" stroke="#8a8f94" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="588" cy="812" r="4.5" fill="#8a8f94" stroke="#111" stroke-width="1.3"/>
 <rect x="583" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="606" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="610" y="1134" class="pin" text-anchor="middle" style="font-size:11px">GPIO14</text>
+<text x="610" y="1134" class="pin" text-anchor="middle" style="font-size:11px">IO14</text>
 <path d="M624,812 L624,1060 L680,1060 L680,1106" fill="none" stroke="#555" stroke-width="7.0" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M624,812 L624,1060 L680,1060 L680,1106" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="624" cy="812" r="4.5" fill="#fff" stroke="#111" stroke-width="1.3"/>
 <rect x="653" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="676" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="680" y="1134" class="pin" text-anchor="middle" style="font-size:11px">GPIO25</text>
+<text x="680" y="1134" class="pin" text-anchor="middle" style="font-size:11px">IO25</text>
 <path d="M876,812 L876,1060 L876,1060 L876,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M876,812 L876,1060 L876,1060 L876,1106" fill="none" stroke="#1f9d48" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="876" cy="812" r="4.5" fill="#1f9d48" stroke="#111" stroke-width="1.3"/>
 <rect x="849" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="872" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="876" y="1134" class="pin" text-anchor="middle" style="font-size:11px">VN (39)</text>
+<text x="876" y="1134" class="pin" text-anchor="middle" style="font-size:11px">S_VN</text>
 <path d="M1020,812 L1020,1060 L1020,1060 L1020,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1020,812 L1020,1060 L1020,1060 L1020,1106" fill="none" stroke="#1e5fd0" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="1020" cy="812" r="4.5" fill="#1e5fd0" stroke="#111" stroke-width="1.3"/>
 <rect x="993" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="1016" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="1020" y="1134" class="pin" text-anchor="middle" style="font-size:11px">VP (36)</text>
+<text x="1020" y="1134" class="pin" text-anchor="middle" style="font-size:11px">S_VP</text>
 <path d="M1308,812 L1308,1060 L1308,1060 L1308,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1308,812 L1308,1060 L1308,1060 L1308,1106" fill="none" stroke="#f2c100" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="1308" cy="812" r="4.5" fill="#f2c100" stroke="#111" stroke-width="1.3"/>
 <rect x="1281" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="1304" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="1308" y="1134" class="pin" text-anchor="middle" style="font-size:11px">GPIO4</text>
+<text x="1308" y="1134" class="pin" text-anchor="middle" style="font-size:11px">IO4</text>
 <rect x="1500" y="1090" width="330" height="140" rx="10" fill="#fff" stroke="#9aa8a2"/>
 <text x="1514" y="1114" class="b" text-anchor="start">Puente de calibración</text>
 <rect x="1548" y="1130" width="64" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/>
-<text x="1580" y="1146" class="pin" text-anchor="middle" style="font-size:11.5px">GPIO15</text>
+<text x="1580" y="1146" class="pin" text-anchor="middle" style="font-size:11.5px">IO15</text>
 <rect x="1698" y="1130" width="64" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/>
 <text x="1730" y="1146" class="pin" text-anchor="middle" style="font-size:11.5px">GND</text>
 <path d="M1580,1152 L1580,1174 L1730,1174 L1730,1152" fill="none" stroke="#ffffff" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
@@ -869,10 +869,10 @@
 <text x="1686" y="255" class="s" text-anchor="start">+12 V SEN0681 · lazo I+</text>
 <path d="M1636,275 L1676,275" fill="none" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1636,275 L1676,275" fill="none" stroke="#1f9d48" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="1686" y="280" class="s" text-anchor="start">salida SEN0204 · VN (39)</text>
+<text x="1686" y="280" class="s" text-anchor="start">SEN0204 / nivel S_VN</text>
 <path d="M1636,300 L1676,300" fill="none" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1636,300 L1676,300" fill="none" stroke="#1e5fd0" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="1686" y="305" class="s" text-anchor="start">señal pH / nivel · VP (36)</text>
+<text x="1686" y="305" class="s" text-anchor="start">señal pH / nivel · S_VP</text>
 <path d="M1636,325 L1676,325" fill="none" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1636,325 L1676,325" fill="none" stroke="#8e3fd1" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="1686" y="330" class="s" text-anchor="start">DI ↔ GPIO13</text>

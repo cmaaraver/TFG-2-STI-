@@ -84,29 +84,28 @@ sensor suelto con cinta). Va en las mismas columnas.
 
 ### 1.5. Pines de la LILYGO T3 V1.6.1
 
-Los pines que salen por las dos tiras de la placa, según el esquema oficial de LilyGO (`T3_V1.6.1.pdf`, conectores
-JP1 y JP2). **GPIO36 y GPIO39 no salen con ese número**: en el esquema se llaman **S_VP** y **S_VN**, y en la
-serigrafía suelen aparecer como **VP** y **VN** (o SVP y SVN).
+Nombres tal y como salen en la serigrafía de nuestra placa (`T3_V1.6.1 20210104`, foto del 24-11-2026), de arriba
+abajo, con la antena de cerámica arriba. Coinciden con el esquema oficial de LilyGO (`T3_V1.6.1.pdf`, conectores JP1
+y JP2). **GPIO36 y GPIO39 no salen con ese número**: en la placa se llaman **S_VP** (GPIO36) y **S_VN** (GPIO39).
 
-| Pin | JP1 | JP2 |
-|---|---|---|
-| 1 | 5V (no se usa) | IO25 → DE/RE del RS485 |
-| 2 | GND | IO4 → presencia de agua |
-| 3 | 3V3 | IO0 (botón de arranque, no usar) |
-| 4 | GND | IO2 (microSD, no usar) |
-| 5 | IO26 (radio LoRa) | IO15 → puente de calibración |
-| 6 | IO33 (radio LoRa) | IO13 → DI del RS485 |
-| 7 | IO32 (radio LoRa) | IO12 (pin de arranque, no usar) |
-| 8 | IO19 (radio LoRa) | IO14 → RO del RS485 |
-| 9 | RESET (radio LoRa) | R9 (va a IO35, la medida de la batería de la placa; no usar) |
-| 10 | IO22 (pantalla) | IO34 (libre) |
-| 11 | RXD (USB) | RST/EN (reset, no usar) |
-| 12 | TXD (USB) | **S_VN = GPIO39** → nivel |
-| 13 | IO21 (pantalla) | **S_VP = GPIO36** → pH |
+| Tira izquierda | Uso | Tira derecha | Uso |
+|---|---|---|---|
+| **S_VP** (GPIO36) | **pH** (dupont azul) | IO21 | pantalla, no usar |
+| **S_VN** (GPIO39) | **nivel** (dupont verde) | TxD | USB, no usar |
+| RST | reset, no usar | RXD | USB, no usar |
+| IO34 | libre | IO22 | pantalla, no usar |
+| IO35 | medida de la batería de la placa, no usar | IO23 | radio LoRa, no usar |
+| **IO14** | **RO del RS485** (dupont gris) | IO19 | radio LoRa, no usar |
+| IO12 | pin de arranque, no usar | LoRa2 | radio LoRa (IO32), no usar |
+| **IO13** | **DI del RS485** (dupont morado) | LoRa1 | radio LoRa (IO33), no usar |
+| **IO15** | **puente de calibración** (a GND) | IO26 | radio LoRa, no usar |
+| IO2 | microSD, no usar | **GND** | **GND** (dupont negro) y puente de calibración |
+| IO0 | botón de arranque, no usar | **3.3V** | **3V3** (dupont naranja) |
+| **IO4** | **presencia de agua** (dupont amarillo) | GND | otro GND |
+| **IO25** | **DE/RE del RS485** (dupont blanco) | 5V | no se usa |
 
-La numeración de pines del esquema no tiene por qué coincidir con el orden físico de la tira, y la serigrafía
-puede abreviar los nombres. Por eso hay que buscar cada pin por su nombre. Si en vuestra placa no aparece ni VP/VN
-ni 36/39, mandad una foto de las dos tiras y se cambian de pin el pH y el nivel en `config.h`.
+Las tiras de pines vienen sueltas: hay que **soldarlas** a la placa para poder pinchar en ellas las hembras de los
+dupont.
 
 ## 2. Tabla de conexiones
 
@@ -120,8 +119,8 @@ ni 36/39, mandad una foto de las dos tiras y se cambian de pin el pH y el nivel 
 | Columna 7 | RS485 **RO** → dupont a **GPIO14** |
 | Columna 8 | RS485 **DE** y **RE** (unidos en el módulo) → dupont a **GPIO25** |
 | Columna 11 | KIT0139 **negro** + conversor **I+** (no va a la LILYGO) |
-| Columna 15 | Conversor **SIG** → dupont a **VN** (GPIO39) |
-| Columna 19 | Placa pH **A** → dupont a **VP** (GPIO36) |
+| Columna 15 | Conversor **SIG** → dupont a **S_VN** (GPIO39) |
+| Columna 19 | Placa pH **A** → dupont a **S_VP** (GPIO36) |
 | Columna 23 | SEN0204 (placa) **verde** + pata de la **27 kΩ** |
 | Columna 27 | Otra pata de la **27 kΩ** + pata de la **10 kΩ** (la otra a la − de arriba) → dupont a **GPIO4** |
 | Fuera de la protoboard | SEN0681 **amarillo → A** y **azul → B** del módulo RS485 · dupont hembra-hembra **GPIO15 ↔ GND** solo para calibrar |
@@ -193,14 +192,14 @@ Cables dupont **macho-hembra**: el macho a la protoboard y la hembra al pin de l
 
 | Desde | Color | Pin de la LILYGO |
 |---|---|---|
-| + de abajo (3V3) | naranja | 3V3 |
+| + de abajo (3V3) | naranja | 3.3V |
 | − de abajo (GND) | negro | GND |
-| Columna 6 | morado | GPIO13 |
-| Columna 7 | gris | GPIO14 |
-| Columna 8 | blanco | GPIO25 |
-| Columna 15 | verde | **VN** (GPIO39) |
-| Columna 19 | azul | **VP** (GPIO36) |
-| Columna 27 | amarillo | GPIO4 |
+| Columna 6 | morado | IO13 (GPIO13) |
+| Columna 7 | gris | IO14 (GPIO14) |
+| Columna 8 | blanco | IO25 (GPIO25) |
+| Columna 15 | verde | **S_VN** (GPIO39) |
+| Columna 19 | azul | **S_VP** (GPIO36) |
+| Columna 27 | amarillo | IO4 (GPIO4) |
 
 Cada pin se busca por su nombre en la serigrafía de la placa (apartado 1.5). Etiquetad la hembra de cada cable con
 un trozo de cinta.
@@ -227,7 +226,7 @@ un trozo de cinta.
    pio run -e lilygo_t3_simple -t upload
    pio device monitor -b 115200
    ```
-2. Poner el **puente de calibración** (dupont hembra-hembra entre GPIO15 y GND) y pulsar reset. En el monitor sale
+2. Poner el **puente de calibración** (dupont hembra-hembra entre IO15 y GND) y pulsar reset. En el monitor sale
    `=== MODO CALIBRACION ===` y espera 60 s a que calienten los sensores.
 3. Escribir `leer`. Sale una línea así (ejemplo con todo montado):
    ```
