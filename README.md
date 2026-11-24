@@ -36,6 +36,7 @@ Más detalle en [`docs/09-acceso-internet.md`](docs/09-acceso-internet.md).
 |---|---|
 | Plan del proyecto, fases y tareas pendientes | [`CLAUDE.md`](CLAUDE.md) |
 | Cartel de referencia del instituto comparado con nuestro sistema | [`docs/11-cartel-referencia.md`](docs/11-cartel-referencia.md) |
+| Montaje del nodo cable a cable (colores, regleta, pines) y pasos | [`docs/12-guia-montaje.md`](docs/12-guia-montaje.md) · [PDF](docs/12-guia-montaje.pdf) |
 | Material (ya lo tenemos todo) | [`docs/01-lista-material.md`](docs/01-lista-material.md) |
 | Lista de compra con enlaces (ya comprado, se guarda para la memoria) | [`docs/07-lista-compra.md`](docs/07-lista-compra.md) · [hoja de cálculo](docs/07-lista-compra.xlsx) |
 | Red: VLAN 500 e IPs, puertos, acceso desde Internet, seguridad | [`docs/02-arquitectura-red.md`](docs/02-arquitectura-red.md) |
