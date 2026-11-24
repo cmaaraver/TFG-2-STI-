@@ -6,6 +6,9 @@
 
 (Editable: `img/conexionado-simple.svg`. Firmware: entorno `lilygo_t3_simple`.)
 
+Esquema **cable a cable** con colores, regleta de clemas numerada y pasos de montaje: `12-guia-montaje.md`
+(dibujo `img/montaje-visual.png`).
+
 Material que hace falta además de los sensores, la LILYGO, la Raspberry y la gateway: una fuente de 12 V de PC
 adaptada (≥ 1 A), un cargador USB de 5 V con batería de respaldo, resistencias (27k y 10k, para el SEN0204)
 y un módulo RS485 a TTL de 3,3 V (MAX3485 o parecido), que está **por conseguir**. Sin el módulo RS485 no se puede
