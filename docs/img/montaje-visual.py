@@ -221,15 +221,15 @@ a(f'<rect x="{LX+30}" y="{LY+60}" width="170" height="100" rx="4" fill="#0b2a3d"
 t(LX+115,LY+105,'OLED','pin'); t(LX+115,LY+125,'logo Los Viveros','m','middle','fill:#9fc3d6;font-size:11px')
 t(LX+LW/2+90,LY+100,'LILYGO T3 V1.6.1 (fuera de la protoboard)','t','middle','fill:#ffffff;font-size:22px;font-weight:700')
 t(LX+LW/2+90,LY+127,'cables dupont macho-hembra: el macho a la protoboard, la hembra al pin de la LILYGO','m','middle','fill:#c9d1cd')
-t(LX+LW/2+90,LY+151,'GPIO36 = VP y GPIO39 = VN en la serigrafía · sin microSD · pin 5V, GPIO12 y GPIO34 sin conectar','m','middle','fill:#ffb4a8')
+t(LX+LW/2+90,LY+151,'S_VP = GPIO36 y S_VN = GPIO39 · sin microSD · pin 5V, GPIO12 y GPIO34 sin conectar','m','middle','fill:#ffb4a8')
 a(f'<path d="M{LX+LW},{LY+160} h40" stroke="#888" stroke-width="6"/><rect x="{LX+LW+38}" y="{LY+148}" width="70" height="24" rx="10" fill="#333"/>')
 t(LX+LW+120,LY+158,'antena 868 MHz:','warn','start'); t(LX+LW+120,LY+174,'siempre puesta','warn','start')
 a(f'<rect x="{LX-18}" y="{LY+80}" width="22" height="40" rx="4" fill="#b8b8b8" stroke="#555"/>')
 a('<rect x="30" y="1170" width="230" height="100" rx="10" fill="#fff4e5" stroke="#e0a060" stroke-width="1.5"/>')
 t(42,1192,'Cargador USB 5 V','b','start'); t(42,1210,'con batería de respaldo','m','start')
 wire([(260,1240),(300,1240),(300,LY+100),(LX-18,LY+100)],'negro',8); t(36,1292,'cable USB de datos → LILYGO','m','start')
-pins=[(2,'B+','3V3','naranja',385),(3,'B-','GND','negro',455),(6,'e','GPIO13','morado',540),(7,'e','GPIO14','gris',610),(8,'e','GPIO25','blanco',680),
-      (15,'e','VN (39)','verde',876),(19,'e','VP (36)','azul',1020),(27,'e','GPIO4','amarillo',1308)]
+pins=[(2,'B+','3.3V','naranja',385),(3,'B-','GND','negro',455),(6,'e','IO13','morado',540),(7,'e','IO14','gris',610),(8,'e','IO25','blanco',680),
+      (15,'e','S_VN','verde',876),(19,'e','S_VP','azul',1020),(27,'e','IO4','amarillo',1308)]
 for c,r,name,col,xp in pins:
     x0,y=hole(c,r)
     wire([(x0,y),(x0,1060),(xp,1060),(xp,LY-4)],col,4.5); tip(x0,y,col); x=xp
@@ -240,7 +240,7 @@ for c,r,name,col,xp in pins:
 CX=LX+LW+40
 a(f'<rect x="{CX}" y="{LY-20}" width="330" height="140" rx="10" fill="#fff" stroke="#9aa8a2"/>')
 t(CX+14,LY+4,'Puente de calibración','b','start')
-for k,nme in enumerate(['GPIO15','GND']):
+for k,nme in enumerate(['IO15','GND']):
     x=CX+80+k*150
     a(f'<rect x="{x-32}" y="{LY+20}" width="64" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/>'); t(x,LY+36,nme,'pin','middle','font-size:11.5px')
 wire([(CX+80,LY+42),(CX+80,LY+64),(CX+230,LY+64),(CX+230,LY+42)],'marron',4)
@@ -251,7 +251,7 @@ GX=1620
 a(f'<rect x="{GX}" y="95" width="260" height="540" rx="10" fill="#fff" stroke="#9aa8a2"/>')
 t(GX+14,120,'Código de colores','b','start')
 leg=[('rojo','+12 V (o VCC del cable)'),('negro','GND (una sola masa)'),('naranja','3V3 de la LILYGO'),('amarillo','+12 V de la fuente · GPIO4'),
-     ('marron','+12 V SEN0681 · lazo I+'),('verde','salida SEN0204 · VN (39)'),('azul','señal pH / nivel · VP (36)'),('morado','DI ↔ GPIO13'),
+     ('marron','+12 V SEN0681 · lazo I+'),('verde','SEN0204 / nivel S_VN'),('azul','señal pH / nivel · S_VP'),('morado','DI ↔ GPIO13'),
      ('gris','RO ↔ GPIO14'),('blanco','DE+RE ↔ GPIO25'),('rojog','tubo de aire (no es cable)')]
 for k,(c,txt) in enumerate(leg):
     y=150+k*25; wire([(GX+16,y),(GX+56,y)],c,6); t(GX+66,y+5,txt,'s','start')
