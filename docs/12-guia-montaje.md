@@ -82,6 +82,32 @@ sensor suelto con cinta). Va en las mismas columnas.
    va directa a un pin.
 6. La sonda de pH siempre con su capuchón con líquido o en agua: si se seca, se estropea.
 
+### 1.5. Pines de la LILYGO T3 V1.6.1
+
+Los pines que salen por las dos tiras de la placa, según el esquema oficial de LilyGO (`T3_V1.6.1.pdf`, conectores
+JP1 y JP2). **GPIO36 y GPIO39 no salen con ese número**: en el esquema se llaman **S_VP** y **S_VN**, y en la
+serigrafía suelen aparecer como **VP** y **VN** (o SVP y SVN).
+
+| Pin | JP1 | JP2 |
+|---|---|---|
+| 1 | 5V (no se usa) | IO25 → DE/RE del RS485 |
+| 2 | GND | IO4 → presencia de agua |
+| 3 | 3V3 | IO0 (botón de arranque, no usar) |
+| 4 | GND | IO2 (microSD, no usar) |
+| 5 | IO26 (radio LoRa) | IO15 → puente de calibración |
+| 6 | IO33 (radio LoRa) | IO13 → DI del RS485 |
+| 7 | IO32 (radio LoRa) | IO12 (pin de arranque, no usar) |
+| 8 | IO19 (radio LoRa) | IO14 → RO del RS485 |
+| 9 | RESET (radio LoRa) | R9 (va a IO35, la medida de la batería de la placa; no usar) |
+| 10 | IO22 (pantalla) | IO34 (libre) |
+| 11 | RXD (USB) | RST/EN (reset, no usar) |
+| 12 | TXD (USB) | **S_VN = GPIO39** → nivel |
+| 13 | IO21 (pantalla) | **S_VP = GPIO36** → pH |
+
+La numeración de pines del esquema no tiene por qué coincidir con el orden físico de la tira, y la serigrafía
+puede abreviar los nombres. Por eso hay que buscar cada pin por su nombre. Si en vuestra placa no aparece ni VP/VN
+ni 36/39, mandad una foto de las dos tiras y se cambian de pin el pH y el nivel en `config.h`.
+
 ## 2. Tabla de conexiones
 
 | Dónde en la protoboard | Qué se pincha |
@@ -94,8 +120,8 @@ sensor suelto con cinta). Va en las mismas columnas.
 | Columna 7 | RS485 **RO** → dupont a **GPIO14** |
 | Columna 8 | RS485 **DE** y **RE** (unidos en el módulo) → dupont a **GPIO25** |
 | Columna 11 | KIT0139 **negro** + conversor **I+** (no va a la LILYGO) |
-| Columna 15 | Conversor **SIG** → dupont a **GPIO39** |
-| Columna 19 | Placa pH **A** → dupont a **GPIO36** |
+| Columna 15 | Conversor **SIG** → dupont a **VN** (GPIO39) |
+| Columna 19 | Placa pH **A** → dupont a **VP** (GPIO36) |
 | Columna 23 | SEN0204 (placa) **verde** + pata de la **27 kΩ** |
 | Columna 27 | Otra pata de la **27 kΩ** + pata de la **10 kΩ** (la otra a la − de arriba) → dupont a **GPIO4** |
 | Fuera de la protoboard | SEN0681 **amarillo → A** y **azul → B** del módulo RS485 · dupont hembra-hembra **GPIO15 ↔ GND** solo para calibrar |
@@ -172,12 +198,12 @@ Cables dupont **macho-hembra**: el macho a la protoboard y la hembra al pin de l
 | Columna 6 | morado | GPIO13 |
 | Columna 7 | gris | GPIO14 |
 | Columna 8 | blanco | GPIO25 |
-| Columna 15 | verde | GPIO39 |
-| Columna 19 | azul | GPIO36 |
+| Columna 15 | verde | **VN** (GPIO39) |
+| Columna 19 | azul | **VP** (GPIO36) |
 | Columna 27 | amarillo | GPIO4 |
 
-Cada pin se busca por su nombre en la serigrafía de la placa (y si hay duda, en el pinout oficial de LilyGO de la
-T3 V1.6.1). Etiquetad la hembra de cada cable con un trozo de cinta.
+Cada pin se busca por su nombre en la serigrafía de la placa (apartado 1.5). Etiquetad la hembra de cada cable con
+un trozo de cinta.
 
 ### Paso 7. Comprobaciones antes de pinchar la LILYGO
 

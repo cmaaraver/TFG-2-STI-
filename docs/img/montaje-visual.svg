@@ -789,7 +789,7 @@
 <text x="445" y="1235" class="m" text-anchor="middle" style="fill:#9fc3d6;font-size:11px">logo Los Viveros</text>
 <text x="985" y="1210" class="t" text-anchor="middle" style="fill:#ffffff;font-size:22px;font-weight:700">LILYGO T3 V1.6.1 (fuera de la protoboard)</text>
 <text x="985" y="1237" class="m" text-anchor="middle" style="fill:#c9d1cd">cables dupont macho-hembra: el macho a la protoboard, la hembra al pin de la LILYGO</text>
-<text x="985" y="1261" class="m" text-anchor="middle" style="fill:#ffb4a8">sin tarjeta microSD · pin 5V sin usar · GPIO12 y GPIO34 sin conectar</text>
+<text x="985" y="1261" class="m" text-anchor="middle" style="fill:#ffb4a8">GPIO36 = VP y GPIO39 = VN en la serigrafía · sin microSD · pin 5V, GPIO12 y GPIO34 sin conectar</text>
 <path d="M1460,1270 h40" stroke="#888" stroke-width="6"/><rect x="1498" y="1258" width="70" height="24" rx="10" fill="#333"/>
 <text x="1580" y="1268" class="warn" text-anchor="start">antena 868 MHz:</text>
 <text x="1580" y="1284" class="warn" text-anchor="start">siempre puesta</text>
@@ -829,12 +829,12 @@
 <path d="M876,812 L876,1060 L876,1060 L876,1106" fill="none" stroke="#1f9d48" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="876" cy="812" r="4.5" fill="#1f9d48" stroke="#111" stroke-width="1.3"/>
 <rect x="849" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="872" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="876" y="1134" class="pin" text-anchor="middle" style="font-size:11px">GPIO39</text>
+<text x="876" y="1134" class="pin" text-anchor="middle" style="font-size:11px">VN (39)</text>
 <path d="M1020,812 L1020,1060 L1020,1060 L1020,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1020,812 L1020,1060 L1020,1060 L1020,1106" fill="none" stroke="#1e5fd0" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="1020" cy="812" r="4.5" fill="#1e5fd0" stroke="#111" stroke-width="1.3"/>
 <rect x="993" y="1118" width="54" height="22" rx="3" fill="#2d3136" stroke="#d9b44a"/><rect x="1016" y="1106" width="8" height="12" fill="#d9b44a"/>
-<text x="1020" y="1134" class="pin" text-anchor="middle" style="font-size:11px">GPIO36</text>
+<text x="1020" y="1134" class="pin" text-anchor="middle" style="font-size:11px">VP (36)</text>
 <path d="M1308,812 L1308,1060 L1308,1060 L1308,1106" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1308,812 L1308,1060 L1308,1060 L1308,1106" fill="none" stroke="#f2c100" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="1308" cy="812" r="4.5" fill="#f2c100" stroke="#111" stroke-width="1.3"/>
@@ -869,10 +869,10 @@
 <text x="1686" y="255" class="s" text-anchor="start">+12 V SEN0681 · lazo I+</text>
 <path d="M1636,275 L1676,275" fill="none" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1636,275 L1676,275" fill="none" stroke="#1f9d48" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="1686" y="280" class="s" text-anchor="start">salida SEN0204 · GPIO39</text>
+<text x="1686" y="280" class="s" text-anchor="start">salida SEN0204 · VN (39)</text>
 <path d="M1636,300 L1676,300" fill="none" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1636,300 L1676,300" fill="none" stroke="#1e5fd0" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="1686" y="305" class="s" text-anchor="start">señal pH / nivel · GPIO36</text>
+<text x="1686" y="305" class="s" text-anchor="start">señal pH / nivel · VP (36)</text>
 <path d="M1636,325 L1676,325" fill="none" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
 <path d="M1636,325 L1676,325" fill="none" stroke="#8e3fd1" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="1686" y="330" class="s" text-anchor="start">DI ↔ GPIO13</text>
