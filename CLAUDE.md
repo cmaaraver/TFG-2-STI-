@@ -95,7 +95,7 @@ docs/
   09-acceso-internet.md       ← web pública con Tailscale Funnel y qué pedir al coordinador TIC
   10-prompts-claude-code.md   ← prompts para Claude Code: Raspberry por SSH y LILYGO por USB
   11-cartel-referencia.md     ← cartel de referencia del centro comparado bloque por bloque con nuestro sistema
-  12-guia-montaje.md          ← montaje cable a cable (colores, regleta de 20 clemas, pines) y pasos; PDF al lado
+  12-guia-montaje.md          ← montaje cable a cable en la protoboard de la caja (colores, columnas, pines) y pasos; PDF al lado
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← memoria del TFG en Word (.docx), planos, capturas de la web y fuentes-word/ (scripts que generan el Word)
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
