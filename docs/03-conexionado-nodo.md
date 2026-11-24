@@ -6,7 +6,7 @@
 
 (Editable: `img/conexionado-simple.svg`. Firmware: entorno `lilygo_t3_simple`.)
 
-Esquema **cable a cable** con colores, regleta de clemas numerada y pasos de montaje: `12-guia-montaje.md`
+Esquema **cable a cable** en la protoboard de la caja estanca, con colores y pasos de montaje: `12-guia-montaje.md`
 (dibujo `img/montaje-visual.png`).
 
 Material que hace falta además de los sensores, la LILYGO, la Raspberry y la gateway: una fuente de 12 V de PC
