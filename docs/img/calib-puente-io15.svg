@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 830" width="1500" height="830" font-family="DejaVu Sans, Arial, sans-serif" font-size="15">
+<style>
+.t{fill:#17201d}.m{fill:#4f5b57;font-size:14px}.h{font-weight:700;font-size:22px;fill:#17201d}
+.b{font-weight:700;fill:#17201d}.s{font-size:13px;fill:#17201d}.w{fill:#fff;font-weight:700}
+.mono{font-family:DejaVu Sans Mono,monospace;font-size:14px;fill:#d8f5d0}
+.monob{font-family:DejaVu Sans Mono,monospace;font-size:14px;fill:#ffffff;font-weight:700}
+.pin{font-family:DejaVu Sans Mono,monospace;font-size:13px;fill:#ffe07a;font-weight:700}
+.oled{font-family:DejaVu Sans Mono,monospace;font-size:13px;fill:#9fe0ff}
+.warn{fill:#b3261e;font-size:14px;font-weight:700}.ok{fill:#1f7a3c;font-size:14px;font-weight:700}
+</style>
+<defs><marker id="fl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4f5b57"/></marker></defs>
+<rect width="1500" height="830" fill="#f6f8f7"/>
+<text x="28" y="38" class="h" text-anchor="start">Puente de calibración: un dupont hembra-hembra entre IO15 y GND</text>
+<text x="28" y="62" class="m" text-anchor="start">Con el puente puesto al arrancar, la LILYGO entra en el menú de calibración. Sin el puente, funciona normal y envía cada 15 min.</text>
+<rect x="520" y="110" width="420" height="600" rx="14" fill="#1b3b8f" stroke="#0f2560" stroke-width="3" />
+<rect x="690" y="80" width="80" height="40" rx="6" fill="#c7a14a" stroke="#7a6125" stroke-width="2" />
+<text x="782" y="106" class="s" text-anchor="start" style="font-weight:700">antena (siempre puesta)</text>
+<rect x="685" y="700" width="90" height="40" rx="6" fill="#b8bcbf" stroke="#6b7074" stroke-width="2" />
+<text x="730" y="760" class="s" text-anchor="middle" style="font-weight:700">USB al PC (COM7)</text>
+<rect x="630" y="180" width="200" height="120" rx="4" fill="#05121a" stroke="#3b5563" stroke-width="3" />
+<text x="730" y="235" class="oled" text-anchor="middle" style="font-weight:700">MODO</text>
+<text x="730" y="257" class="oled" text-anchor="middle" style="font-weight:700">CALIBRACION</text>
+<rect x="650" y="360" width="160" height="130" rx="6" fill="#9aa1a6" stroke="#5f666b" stroke-width="2" />
+<text x="730" y="430" class="b" text-anchor="middle" style="fill:#333">ESP32</text>
+<rect x="650" y="520" width="160" height="100" rx="6" fill="#c9ccce" stroke="#6b7074" stroke-width="2" />
+<text x="730" y="575" class="b" text-anchor="middle" style="fill:#333">SX1276</text>
+<rect x="630" y="640" width="40" height="30" rx="4" fill="#e0e0e0" stroke="#555" stroke-width="2" />
+<circle cx="650" cy="655" r="8" fill="#333"/>
+<text x="650" y="690" class="pin" text-anchor="middle" style="fill:#fff">RST</text>
+<rect x="790" y="640" width="40" height="30" rx="4" fill="#e0e0e0" stroke="#555" stroke-width="2" />
+<circle cx="810" cy="655" r="8" fill="#333"/>
+<text x="810" y="690" class="pin" text-anchor="middle" style="fill:#fff">BOOT</text>
+<text x="730" y="140" class="pin" text-anchor="middle" style="fill:#cfd8ff">T3_V1.6.1 · cara de los componentes</text>
+<rect x="537" y="159" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="170" r="5" fill="#333"/>
+<text x="568" y="175" class="pin" text-anchor="start">S_VP</text>
+<text x="504" y="175" class="s" text-anchor="end" style="fill:#1e5fd0;font-weight:700">pH</text>
+<rect x="537" y="199" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="210" r="5" fill="#333"/>
+<text x="568" y="215" class="pin" text-anchor="start">S_VN</text>
+<text x="504" y="215" class="s" text-anchor="end" style="fill:#1f9d48;font-weight:700">nivel</text>
+<rect x="537" y="239" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="250" r="5" fill="#333"/>
+<text x="568" y="255" class="pin" text-anchor="start">RST</text>
+<text x="504" y="255" class="s" text-anchor="end" style="fill:#999">no tocar</text>
+<rect x="537" y="279" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="290" r="5" fill="#333"/>
+<text x="568" y="295" class="pin" text-anchor="start">IO34</text>
+<rect x="537" y="319" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="330" r="5" fill="#333"/>
+<text x="568" y="335" class="pin" text-anchor="start">IO35</text>
+<rect x="537" y="359" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="370" r="5" fill="#333"/>
+<text x="568" y="375" class="pin" text-anchor="start">IO14</text>
+<text x="504" y="375" class="s" text-anchor="end" style="fill:#8a8f94;font-weight:700">RS485 RO</text>
+<rect x="537" y="399" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="410" r="5" fill="#333"/>
+<text x="568" y="415" class="pin" text-anchor="start">IO12</text>
+<text x="504" y="415" class="s" text-anchor="end" style="fill:#999">no tocar</text>
+<rect x="537" y="439" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="450" r="5" fill="#333"/>
+<text x="568" y="455" class="pin" text-anchor="start">IO13</text>
+<text x="504" y="455" class="s" text-anchor="end" style="fill:#8e3fd1;font-weight:700">RS485 DI</text>
+<rect x="537" y="479" width="22" height="22" rx="3" fill="#ff5a4f" stroke="#8b0000" stroke-width="2" />
+<circle cx="548" cy="490" r="5" fill="#333"/>
+<text x="568" y="495" class="pin" text-anchor="start" style="fill:#ff8a80">IO15</text>
+<text x="504" y="495" class="warn" text-anchor="end" style="font-size:16px">PUENTE ▶</text>
+<rect x="537" y="519" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="530" r="5" fill="#333"/>
+<text x="568" y="535" class="pin" text-anchor="start">IO2</text>
+<text x="504" y="535" class="s" text-anchor="end" style="fill:#999">no tocar</text>
+<rect x="537" y="559" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="570" r="5" fill="#333"/>
+<text x="568" y="575" class="pin" text-anchor="start">IO0</text>
+<text x="504" y="575" class="s" text-anchor="end" style="fill:#999">no tocar</text>
+<rect x="537" y="599" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="610" r="5" fill="#333"/>
+<text x="568" y="615" class="pin" text-anchor="start">IO4</text>
+<text x="504" y="615" class="s" text-anchor="end" style="fill:#c9a000;font-weight:700">agua</text>
+<rect x="537" y="639" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="548" cy="650" r="5" fill="#333"/>
+<text x="568" y="655" class="pin" text-anchor="start">IO25</text>
+<text x="504" y="655" class="s" text-anchor="end" style="fill:#8a8f94;font-weight:700">RS485 DE</text>
+<rect x="901" y="159" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="170" r="5" fill="#333"/>
+<text x="892" y="175" class="pin" text-anchor="end">IO21</text>
+<rect x="901" y="199" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="210" r="5" fill="#333"/>
+<text x="892" y="215" class="pin" text-anchor="end">TxD</text>
+<rect x="901" y="239" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="250" r="5" fill="#333"/>
+<text x="892" y="255" class="pin" text-anchor="end">RXD</text>
+<rect x="901" y="279" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="290" r="5" fill="#333"/>
+<text x="892" y="295" class="pin" text-anchor="end">IO22</text>
+<rect x="901" y="319" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="330" r="5" fill="#333"/>
+<text x="892" y="335" class="pin" text-anchor="end">IO23</text>
+<rect x="901" y="359" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="370" r="5" fill="#333"/>
+<text x="892" y="375" class="pin" text-anchor="end">IO19</text>
+<rect x="901" y="399" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="410" r="5" fill="#333"/>
+<text x="892" y="415" class="pin" text-anchor="end">LoRa2</text>
+<rect x="901" y="439" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="450" r="5" fill="#333"/>
+<text x="892" y="455" class="pin" text-anchor="end">LoRa1</text>
+<rect x="901" y="479" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="490" r="5" fill="#333"/>
+<text x="892" y="495" class="pin" text-anchor="end">IO26</text>
+<rect x="901" y="519" width="22" height="22" rx="3" fill="#ff5a4f" stroke="#8b0000" stroke-width="2" />
+<circle cx="912" cy="530" r="5" fill="#333"/>
+<text x="892" y="535" class="pin" text-anchor="end" style="fill:#ff8a80">GND</text>
+<text x="956" y="535" class="warn" text-anchor="start" style="font-size:16px">◀ PUENTE</text>
+<rect x="901" y="559" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="570" r="5" fill="#333"/>
+<text x="892" y="575" class="pin" text-anchor="end">3.3V</text>
+<text x="956" y="575" class="s" text-anchor="start" style="fill:#f07c00;font-weight:700">3V3</text>
+<rect x="901" y="599" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="610" r="5" fill="#333"/>
+<text x="892" y="615" class="pin" text-anchor="end">GND</text>
+<rect x="901" y="639" width="22" height="22" rx="3" fill="#e8c35a" stroke="#7a6125" stroke-width="2" />
+<circle cx="912" cy="650" r="5" fill="#333"/>
+<text x="892" y="655" class="pin" text-anchor="end">5V</text>
+<text x="956" y="655" class="s" text-anchor="start" style="fill:#999">no tocar</text>
+<path d="M548,490 L528,502 L528,768 Q528,788 548,788 L912,788 Q932,788 932,768 L932,542 L912,530" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+<path d="M548,490 L528,502 L528,768 Q528,788 548,788 L912,788 Q932,788 932,768 L932,542 L912,530" fill="none" stroke="#d32f2f" stroke-width="7" stroke-linecap="round"/>
+<rect x="539" y="476" width="18" height="28" rx="3" fill="#222" stroke="#000" stroke-width="1" />
+<rect x="903" y="516" width="18" height="28" rx="3" fill="#222" stroke="#000" stroke-width="1" />
+<rect x="28" y="110" width="380" height="300" rx="10" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="46" y="140" class="b" text-anchor="start">Cómo ponerlo</text>
+<text x="46" y="172" class="s" text-anchor="start" style="font-size:15px">1. Fuente de 12 V apagada.</text>
+<text x="46" y="202" class="s" text-anchor="start" style="font-size:15px">2. Hembra del dupont en IO15 (tira</text>
+<text x="46" y="232" class="s" text-anchor="start" style="font-size:15px">    izquierda, 9.º pin desde arriba).</text>
+<text x="46" y="262" class="s" text-anchor="start" style="font-size:15px">3. La otra hembra en GND (tira</text>
+<text x="46" y="292" class="s" text-anchor="start" style="font-size:15px">    derecha, 10.º pin desde arriba).</text>
+<text x="46" y="322" class="s" text-anchor="start" style="font-size:15px">4. Encender la fuente y pulsar RST.</text>
+<text x="46" y="352" class="s" text-anchor="start" style="font-size:15px">5. La OLED pone MODO CALIBRACION.</text>
+<rect x="28" y="430" width="380" height="170" rx="10" fill="#fff3f2" stroke="#e0a19b" stroke-width="1.5" />
+<text x="46" y="460" class="warn" text-anchor="start">Errores típicos</text>
+<text x="46" y="492" class="s" text-anchor="start" style="font-size:15px">✗ En IO12 o IO2: la placa no arranca.</text>
+<text x="46" y="520" class="s" text-anchor="start" style="font-size:15px">✗ En IO13 (justo encima): es el RS485.</text>
+<text x="46" y="548" class="s" text-anchor="start" style="font-size:15px">✗ Olvidarlo puesto al acabar: el nodo</text>
+<text x="46" y="576" class="s" text-anchor="start" style="font-size:15px">    se queda en el menú y no envía.</text>
+<rect x="1092" y="110" width="380" height="250" rx="10" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="1110" y="140" class="b" text-anchor="start">Colores de los otros pines</text>
+<rect x="1110" y="158" width="18" height="18" rx="3" fill="#1e5fd0"/>
+<text x="1138" y="172" class="s" text-anchor="start" style="font-size:15px">S_VP: pH</text>
+<rect x="1110" y="186" width="18" height="18" rx="3" fill="#1f9d48"/>
+<text x="1138" y="200" class="s" text-anchor="start" style="font-size:15px">S_VN: nivel</text>
+<rect x="1110" y="214" width="18" height="18" rx="3" fill="#8a8f94"/>
+<text x="1138" y="228" class="s" text-anchor="start" style="font-size:15px">IO14: RS485 RO</text>
+<rect x="1110" y="242" width="18" height="18" rx="3" fill="#8e3fd1"/>
+<text x="1138" y="256" class="s" text-anchor="start" style="font-size:15px">IO13: RS485 DI</text>
+<rect x="1110" y="270" width="18" height="18" rx="3" fill="#c9a000"/>
+<text x="1138" y="284" class="s" text-anchor="start" style="font-size:15px">IO4: agua</text>
+<rect x="1110" y="298" width="18" height="18" rx="3" fill="#8a8f94"/>
+<text x="1138" y="312" class="s" text-anchor="start" style="font-size:15px">IO25: RS485 DE</text>
+<rect x="1110" y="326" width="18" height="18" rx="3" fill="#f07c00"/>
+<text x="1138" y="340" class="s" text-anchor="start" style="font-size:15px">3.3V: 3V3</text>
+<rect x="1092" y="380" width="380" height="120" rx="10" fill="#f1fbf4" stroke="#9cc9a8" stroke-width="1.5" />
+<text x="1110" y="410" class="ok" text-anchor="start">Cómo saber que ha entrado</text>
+<text x="1110" y="440" class="s" text-anchor="start" style="font-size:15px">OLED: «MODO CALIBRACION».</text>
+<text x="1110" y="468" class="s" text-anchor="start" style="font-size:15px">Monitor: «=== MODO CALIBRACION ===».</text>
+</svg>

@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 760" width="1500" height="760" font-family="DejaVu Sans, Arial, sans-serif" font-size="15">
+<style>
+.t{fill:#17201d}.m{fill:#4f5b57;font-size:14px}.h{font-weight:700;font-size:22px;fill:#17201d}
+.b{font-weight:700;fill:#17201d}.s{font-size:13px;fill:#17201d}.w{fill:#fff;font-weight:700}
+.mono{font-family:DejaVu Sans Mono,monospace;font-size:14px;fill:#d8f5d0}
+.monob{font-family:DejaVu Sans Mono,monospace;font-size:14px;fill:#ffffff;font-weight:700}
+.pin{font-family:DejaVu Sans Mono,monospace;font-size:13px;fill:#ffe07a;font-weight:700}
+.oled{font-family:DejaVu Sans Mono,monospace;font-size:13px;fill:#9fe0ff}
+.warn{fill:#b3261e;font-size:14px;font-weight:700}.ok{fill:#1f7a3c;font-size:14px;font-weight:700}
+</style>
+<defs><marker id="fl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4f5b57"/></marker></defs>
+<rect width="1500" height="760" fill="#f6f8f7"/>
+<text x="28" y="38" class="h" text-anchor="start">pH en dos puntos: tampón 7 y tampón 4</text>
+<text x="28" y="62" class="m" text-anchor="start">Antes de cada vaso: enjuagar la sonda y secarla con papel, sin frotar el bulbo. Esperar a que el valor no cambie más de 2 mV.</text>
+<rect x="50" y="90" width="260" height="560" rx="12" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="180" y="122" class="b" text-anchor="middle" style="font-size:18px">1. Enjuagar y secar</text>
+<rect x="90" y="260" width="70" height="130" rx="10" fill="#e6f3fb" stroke="#7d8f99" stroke-width="2.5" />
+<path d="M125,260 L125,225 L190,205" stroke="#7d8f99" stroke-width="5" fill="none"/>
+<path d="M192,205 Q220,215 225,270" stroke="#53a7d8" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+<rect x="215" y="180" width="22" height="220" rx="6" fill="#2b2b2b" stroke="#111" stroke-width="1.5" />
+<ellipse cx="226" cy="405" rx="13" ry="17" fill="#cfe7f3" stroke="#6b8794" stroke-width="2"/>
+<text x="125" y="420" class="s" text-anchor="middle">agua destilada</text>
+<rect x="80" y="470" width="200" height="40" rx="4" fill="#faf6ee" stroke="#c9bfa9" stroke-width="1.5" />
+<text x="180" y="495" class="s" text-anchor="middle">papel: secar a toques</text>
+<rect x="70" y="544" width="92" height="22" rx="11" fill="#e07a1f" stroke="#e07a1f" stroke-width="1.5" />
+<text x="116" y="560" class="w" text-anchor="middle" style="font-size:12px">PERSONA</text>
+<text x="170" y="560" class="s" text-anchor="start">enjuaga y seca</text>
+<text x="180" y="600" class="warn" text-anchor="middle">nunca frotar el bulbo</text>
+<path d="M312,370 L328,370" stroke="#4f5b57" stroke-width="2.5" fill="none" marker-end="url(#fl)"/>
+<rect x="330" y="90" width="260" height="560" rx="12" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="460" y="122" class="b" text-anchor="middle" style="font-size:18px">2. Tampón 7</text>
+<path d="M390,330 L402,500 L518,500 L530,330 Z" fill="#eef6fb" stroke="#7d8f99" stroke-width="2.5"/>
+<path d="M396,390 L402,500 L518,500 L524,390 Z" fill="#f3e27a" opacity=".75"/>
+<text x="460" y="528" class="b" text-anchor="middle" style="font-size:18px">pH 7,00</text>
+<rect x="448" y="190" width="24" height="270" rx="6" fill="#2b2b2b" stroke="#111" stroke-width="1.5" />
+<ellipse cx="460" cy="468" rx="14" ry="18" fill="#cfe7f3" stroke="#6b8794" stroke-width="2"/>
+<path d="M460,190 C460,140 540,140 550,110" stroke="#2b2b2b" stroke-width="6" fill="none"/>
+<rect x="350" y="544" width="92" height="22" rx="11" fill="#e07a1f" stroke="#e07a1f" stroke-width="1.5" />
+<text x="396" y="560" class="w" text-anchor="middle" style="font-size:12px">PERSONA</text>
+<text x="450" y="560" class="s" text-anchor="start">mete la sonda</text>
+<text x="460" y="590" class="s" text-anchor="middle" style="font-weight:700">espera 1-2 min · ≈ 1500 mV</text>
+<rect x="350" y="612" width="80" height="22" rx="11" fill="#6d4bd1" stroke="#6d4bd1" stroke-width="1.5" />
+<text x="390" y="628" class="w" text-anchor="middle" style="font-size:12px">CLAUDE</text>
+<text x="440" y="628" class="mono" text-anchor="start" style="fill:#6d4bd1;font-weight:700">mv … y luego ph7</text>
+<path d="M592,370 L608,370" stroke="#4f5b57" stroke-width="2.5" fill="none" marker-end="url(#fl)"/>
+<rect x="610" y="90" width="260" height="560" rx="12" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="740" y="122" class="b" text-anchor="middle" style="font-size:18px">3. Enjuagar y secar</text>
+<rect x="650" y="260" width="70" height="130" rx="10" fill="#e6f3fb" stroke="#7d8f99" stroke-width="2.5" />
+<path d="M685,260 L685,225 L750,205" stroke="#7d8f99" stroke-width="5" fill="none"/>
+<path d="M752,205 Q780,215 785,270" stroke="#53a7d8" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+<rect x="775" y="180" width="22" height="220" rx="6" fill="#2b2b2b" stroke="#111" stroke-width="1.5" />
+<ellipse cx="786" cy="405" rx="13" ry="17" fill="#cfe7f3" stroke="#6b8794" stroke-width="2"/>
+<text x="685" y="420" class="s" text-anchor="middle">agua destilada</text>
+<rect x="640" y="470" width="200" height="40" rx="4" fill="#faf6ee" stroke="#c9bfa9" stroke-width="1.5" />
+<text x="740" y="495" class="s" text-anchor="middle">papel: secar a toques</text>
+<rect x="630" y="544" width="92" height="22" rx="11" fill="#e07a1f" stroke="#e07a1f" stroke-width="1.5" />
+<text x="676" y="560" class="w" text-anchor="middle" style="font-size:12px">PERSONA</text>
+<text x="730" y="560" class="s" text-anchor="start">enjuaga y seca</text>
+<text x="740" y="600" class="warn" text-anchor="middle">nunca frotar el bulbo</text>
+<path d="M872,370 L888,370" stroke="#4f5b57" stroke-width="2.5" fill="none" marker-end="url(#fl)"/>
+<rect x="890" y="90" width="260" height="560" rx="12" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="1020" y="122" class="b" text-anchor="middle" style="font-size:18px">4. Tampón 4</text>
+<path d="M950,330 L962,500 L1078,500 L1090,330 Z" fill="#eef6fb" stroke="#7d8f99" stroke-width="2.5"/>
+<path d="M956,390 L962,500 L1078,500 L1084,390 Z" fill="#f39a8a" opacity=".75"/>
+<text x="1020" y="528" class="b" text-anchor="middle" style="font-size:18px">pH 4,00</text>
+<rect x="1008" y="190" width="24" height="270" rx="6" fill="#2b2b2b" stroke="#111" stroke-width="1.5" />
+<ellipse cx="1020" cy="468" rx="14" ry="18" fill="#cfe7f3" stroke="#6b8794" stroke-width="2"/>
+<path d="M1020,190 C1020,140 1100,140 1110,110" stroke="#2b2b2b" stroke-width="6" fill="none"/>
+<rect x="910" y="544" width="92" height="22" rx="11" fill="#e07a1f" stroke="#e07a1f" stroke-width="1.5" />
+<text x="956" y="560" class="w" text-anchor="middle" style="font-size:12px">PERSONA</text>
+<text x="1010" y="560" class="s" text-anchor="start">mete la sonda</text>
+<text x="1020" y="590" class="s" text-anchor="middle" style="font-weight:700">espera 1-2 min · ≈ 2000 mV</text>
+<rect x="910" y="612" width="80" height="22" rx="11" fill="#6d4bd1" stroke="#6d4bd1" stroke-width="1.5" />
+<text x="950" y="628" class="w" text-anchor="middle" style="font-size:12px">CLAUDE</text>
+<text x="1000" y="628" class="mono" text-anchor="start" style="fill:#6d4bd1;font-weight:700">mv … y luego ph4</text>
+<path d="M1152,370 L1168,370" stroke="#4f5b57" stroke-width="2.5" fill="none" marker-end="url(#fl)"/>
+<rect x="1170" y="90" width="260" height="560" rx="12" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="1300" y="122" class="b" text-anchor="middle" style="font-size:18px">5. Comprobar</text>
+<rect x="1182" y="160" width="236" height="160" rx="8" fill="#13201b" stroke="#13201b" stroke-width="1.5" />
+<rect x="1182" y="160" width="236" height="24" rx="8" fill="#2c3a34" stroke="#2c3a34" stroke-width="1.5" />
+<text x="1194" y="177" class="s" text-anchor="start" style="fill:#c9d6d0">Monitor</text>
+<text x="1194" y="204" class="monob" text-anchor="start">> leer</text>
+<text x="1194" y="225" class="mono" text-anchor="start">pH=7.02  (en tampón 7)</text>
+<text x="1194" y="246" class="monob" text-anchor="start">> leer</text>
+<text x="1194" y="267" class="mono" text-anchor="start">pH=3.97  (en tampón 4)</text>
+<text x="1194" y="288" class="monob" text-anchor="start">> ver</text>
+<text x="1194" y="309" class="mono" text-anchor="start">ph7=1512 ph4=2018</text>
+<text x="1300" y="380" class="ok" text-anchor="middle">Bien si:</text>
+<text x="1300" y="410" class="s" text-anchor="middle" style="font-size:15px">tampón 7 → 6,90 a 7,10</text>
+<text x="1300" y="436" class="s" text-anchor="middle" style="font-size:15px">tampón 4 → 3,90 a 4,10</text>
+<text x="1300" y="462" class="s" text-anchor="middle" style="font-size:15px">ph4 − ph7 ≈ 450-550 mV</text>
+<text x="1300" y="520" class="warn" text-anchor="middle">Si no: repetir desde 2</text>
+<text x="1300" y="560" class="s" text-anchor="middle" style="font-weight:700">Al acabar: sonda en agua</text>
+<text x="1300" y="582" class="s" text-anchor="middle" style="font-weight:700">o con su capuchón.</text>
+<text x="1300" y="610" class="warn" text-anchor="middle">Nunca seca.</text>
+<text x="28" y="700" class="m" text-anchor="start">La calibración se guarda en la flash de la LILYGO: no se pierde al apagar ni al grabar otra vez el firmware. Repetir cada mes.</text>
+<text x="28" y="724" class="m" text-anchor="start">Sin el SEN0681 el pH se compensa como si el agua estuviera a 25 °C: el error es de menos de 0,05 pH entre 15 y 30 °C.</text>
+</svg>
