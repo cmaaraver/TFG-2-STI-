@@ -25,6 +25,7 @@ static void IRAM_ATTR contarPulso() { pulsosCaudal++; }
 struct Calibracion {
   float ph7_mv = 1500.0f;
   float ph4_mv = 2032.44f;
+  float nivel_cero_mm = NIVEL_CERO_MM;   // cero del nivel (comando "nivel0"); por defecto el de config.h
 };
 static Calibracion cal;
 
@@ -33,6 +34,7 @@ static void cargarCalibracion() {
   p.begin("cal", true);
   cal.ph7_mv = p.getFloat("ph7", cal.ph7_mv);
   cal.ph4_mv = p.getFloat("ph4", cal.ph4_mv);
+  cal.nivel_cero_mm = p.getFloat("nivel0", cal.nivel_cero_mm);
   p.end();
 }
 
@@ -41,6 +43,7 @@ static void guardarCalibracion() {
   p.begin("cal", false);
   p.putFloat("ph7", cal.ph7_mv);
   p.putFloat("ph4", cal.ph4_mv);
+  p.putFloat("nivel0", cal.nivel_cero_mm);
   p.end();
 }
 
@@ -104,18 +107,24 @@ static float calcularPH(float mv, float tempC) {
   return 7.0f - (mv - cal.ph7_mv) * pendiente * factorT;
 }
 
-// Nivel: convertidor 4-20 mA → tensión en una resistencia
-static float calcularNivel(float mv) {
+// Nivel: convertidor 4-20 mA → tensión en una resistencia. Sin restar el cero (sirve para calibrarlo).
+static float nivelSinCero(float mv) {
   float mA = mv / NIVEL_R_SHUNT_OHM;
   if (mA < 3.5f) return NAN;                                   // cable cortado o sensor apagado
-  float mm = (mA - 4.0f) / 16.0f * NIVEL_RANGO_MM - NIVEL_CERO_MM;
+  return (mA - 4.0f) / 16.0f * NIVEL_RANGO_MM;
+}
+
+static float calcularNivel(float mv) {
+  float mm = nivelSinCero(mv);
+  if (isnan(mm)) return NAN;
+  mm -= cal.nivel_cero_mm;
   return mm < 0 ? 0 : mm;
 }
 
 // ---------- API ----------
 void sensoresIniciar() {
-  pinMode(PIN_EN_12V, OUTPUT);
-  pinMode(PIN_EN_5V, OUTPUT);
+  if (PIN_EN_12V >= 0) pinMode(PIN_EN_12V, OUTPUT);           // -1 = no hay conmutador (montaje simple)
+  if (PIN_EN_5V >= 0)  pinMode(PIN_EN_5V, OUTPUT);
   sensoresApagar();
   pinMode(PIN_AGUA, INPUT);
 #if HAY_CAUDALIMETRO
@@ -149,13 +158,13 @@ void sensoresIniciar() {
 }
 
 void sensoresEncender() {
-  digitalWrite(PIN_EN_12V, HIGH);
-  digitalWrite(PIN_EN_5V, HIGH);
+  if (PIN_EN_12V >= 0) digitalWrite(PIN_EN_12V, HIGH);
+  if (PIN_EN_5V >= 0)  digitalWrite(PIN_EN_5V, HIGH);
 }
 
 void sensoresApagar() {
-  digitalWrite(PIN_EN_12V, LOW);
-  digitalWrite(PIN_EN_5V, LOW);
+  if (PIN_EN_12V >= 0) digitalWrite(PIN_EN_12V, LOW);
+  if (PIN_EN_5V >= 0)  digitalWrite(PIN_EN_5V, LOW);
 }
 
 float medirCaudal(uint32_t duracionMs) {
@@ -203,6 +212,22 @@ Medida sensoresMedir() {
 }
 
 // ---------- Modo calibración (monitor serie a 115200) ----------
+// Lee la salinidad del SEN0681. La wiki no dice si es un entero o un float, así que se enseñan las dos lecturas.
+static void leerSalinidad() {
+  uint8_t r = mb.readHoldingRegisters(REG_SALINIDAD, 2);
+  if (r != mb.ku8MBSuccess) { Serial.printf("Salinidad: sin respuesta (error Modbus 0x%02X)\n", r); return; }
+  uint16_t a = mb.getResponseBuffer(0), b = mb.getResponseBuffer(1);
+  uint32_t crudo = ((uint32_t)a << 16) | b;
+  float f; memcpy(&f, &crudo, sizeof(float));
+  Serial.printf("Salinidad: registros 0x%04X 0x%04X  (como entero: %u, como float: %.3f)\n", a, b, a, f);
+}
+
+// Escribe un registro del SEN0681 con la función 0x06 y cuenta si ha ido bien
+static void escribirRegistro(uint16_t reg, uint16_t valor, const char* que) {
+  uint8_t r = mb.writeSingleRegister(reg, valor);
+  if (r == mb.ku8MBSuccess) Serial.printf("%s: OK\n", que);
+  else Serial.printf("%s: ERROR Modbus 0x%02X\n", que, r);
+}
 static void imprimir(const Medida& m) {
   Serial.printf("T=%.2f C  O2=%.2f mg/L  pH=%.2f  nivel=%.0f mm  bat=%.0f mV  agua=%d  rs485_err=%d\n",
                 m.temperatura_c, m.oxigeno_mgl, m.ph, m.nivel_mm, m.bateria_mv,
@@ -212,9 +237,9 @@ static void imprimir(const Medida& m) {
 void modoCalibracion() {
   Serial.println("\n=== MODO CALIBRACION ===");
 #if HAY_CAUDALIMETRO
-  Serial.println("Comandos: leer | caudal | ph7 | ph4 | ver | reset | salir");
+  Serial.println("Comandos: leer | mv | caudal | ph7 | ph4 | nivel0 | sal | sal0 | o2_100 | o2_cero | ver | reset | salir");
 #else
-  Serial.println("Comandos: leer | ph7 | ph4 | ver | reset | salir");
+  Serial.println("Comandos: leer | mv | ph7 | ph4 | nivel0 | sal | sal0 | o2_100 | o2_cero | ver | reset | salir");
 #endif
   sensoresEncender();
   Serial.println("Esperando calentamiento de sensores (60 s)...");
@@ -238,8 +263,25 @@ void modoCalibracion() {
     } else if (c == "ph4") {
       cal.ph4_mv = leerMv(CANAL_PH); guardarCalibracion();
       Serial.printf("pH4 guardado: %.1f mV\n", cal.ph4_mv);
+    } else if (c == "mv") {                      // tensiones crudas en los pines, para comprobar el cableado
+      float mvPH = leerMv(CANAL_PH), mvN = leerMv(CANAL_NIVEL);
+      Serial.printf("pH: %.0f mV   nivel: %.0f mV (%.2f mA, %.0f mm sin restar el cero)   agua: pin=%d\n",
+                    mvPH, mvN, mvN / NIVEL_R_SHUNT_OHM, nivelSinCero(mvN), digitalRead(PIN_AGUA));
+    } else if (c == "nivel0") {                  // con la sonda de nivel en el fondo del bidón VACÍO
+      float mm = nivelSinCero(leerMv(CANAL_NIVEL));
+      if (isnan(mm)) { Serial.println("Nivel sin señal (menos de 3,5 mA): revisar el KIT0139"); }
+      else { cal.nivel_cero_mm = mm; guardarCalibracion(); Serial.printf("Cero del nivel guardado: %.0f mm\n", mm); }
+    } else if (c == "sal") {
+      leerSalinidad();
+    } else if (c == "sal0") {                    // agua de red (dulce): salinidad a 0
+      escribirRegistro(REG_SALINIDAD, 0, "Salinidad a 0");
+      leerSalinidad();
+    } else if (c == "o2_100") {                  // SEN0681 en aire saturado de agua (wiki SEN0680)
+      escribirRegistro(REG_CALIBRACION, 2, "Calibracion O2 al 100 %");
+    } else if (c == "o2_cero") {                 // SEN0681 en solución sin oxígeno (sulfito sódico)
+      escribirRegistro(REG_CALIBRACION, 1, "Calibracion O2 a cero");
     } else if (c == "ver") {
-      Serial.printf("ph7=%.1f mV  ph4=%.1f mV\n", cal.ph7_mv, cal.ph4_mv);
+      Serial.printf("ph7=%.1f mV  ph4=%.1f mV  nivel0=%.0f mm\n", cal.ph7_mv, cal.ph4_mv, cal.nivel_cero_mm);
     } else if (c == "reset") {
       cal = Calibracion(); guardarCalibracion(); Serial.println("Calibracion por defecto");
     } else if (c == "salir") {

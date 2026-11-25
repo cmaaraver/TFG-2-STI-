@@ -111,6 +111,8 @@ lo primero es mirar que no haya nada conectado al GPIO 12, que es pin de arranqu
 
 ## 3. Calibración (modo calibración por el monitor serie)
 
+Paso a paso completo, con el montaje real (`lilygo_t3_simple`): `docs/13-guia-calibracion.md`.
+
 1. Poner el **puente MODO_CAL a GND** y reiniciar. La pantalla pone *MODO CALIBRACION*.
 2. En el monitor serie sale `=== MODO CALIBRACION ===` y espera 60 s a que calienten los sensores.
 3. Comandos (escribir y pulsar Intro):
@@ -120,6 +122,10 @@ lo primero es mirar que no haya nada conectado al GPIO 12, que es pin de arranqu
    | `leer` | Mide todo una vez: `T=... C  O2=... mg/L  pH=...  nivel=... mm  bat=... mV  agua=...  rs485_err=...` |
    | `ph7` | Con la sonda en tampón pH 7,00: guarda ese punto en la memoria (NVS) |
    | `ph4` | Con la sonda en tampón pH 4,00 (tras enjuagarla con agua destilada): guarda el segundo punto |
+   | `mv` | Tensiones crudas de los pines (pH, nivel en mV y mA, presencia de agua) |
+   | `nivel0` | Con el bidón vacío: guarda el cero del nivel |
+   | `sal` / `sal0` | Lee / pone a 0 la salinidad del SEN0681 |
+   | `o2_100` / `o2_cero` | Calibra el SEN0681 al 100 % (aire saturado) / a cero (sulfito sódico) |
    | `ver` | Enseña la calibración guardada |
    | `reset` | Vuelve a la calibración por defecto |
    | `salir` | Apaga todo; quitar el puente y reiniciar |

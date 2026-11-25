@@ -99,7 +99,7 @@ agua o si alguien lo ha rellenado, pero no para medir litros finos. Por eso:
   sale en rojo (agua cerca de la punta del pH) y menos del 50 % en "Vigilar". El CSV sigue en mm.
 
 **Calibración del nivel** (10 minutos, con el monitor serie en modo calibración y el comando `leer`):
-1. Bidón vacío con el KIT0139 en el fondo: apuntar `nivel=`. Ese valor va en `NIVEL_CERO_MM` y se graba otra vez.
+1. Bidón vacío con el KIT0139 en el fondo: comando `nivel0` (guarda el cero en la flash; `docs/13-guia-calibracion.md`, apartado 3).
 2. Echar agua de 5 en 5 L (con una garrafa de 5 L) y apuntar el nivel en cada paso: 5, 10, 15, 20 y 25 L.
 3. Con la tabla, corregir `BIDON.alturaLlenoMm` (mm que marca con 25 L) en `raspberry/web/static/app.js`.
    Si la tabla no sale recta (el bidón se estrecha arriba), apuntarlo en la memoria como limitación.

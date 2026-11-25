@@ -55,6 +55,10 @@
     #define PIN_MODO_CAL  15   // puente a GND al arrancar = calibración. GPIO15 es pin de arranque: a 0 solo
                                // calla los mensajes de arranque del ESP32, así que el puente no estorba
     #define PIN_MODO_CAL_PULLUP 1  // pull-up interna: no hace falta resistencia
+    #undef  PIN_EN_12V
+    #undef  PIN_EN_5V
+    #define PIN_EN_12V    -1   // sin conmutadores: los sensores van siempre encendidos con la fuente de 12 V.
+    #define PIN_EN_5V     -1   // (antes eran GPIO4 y GPIO25, que en este montaje son la presencia de agua y el DE)
     #undef  RS485_DE
     #define RS485_DE      25   // DE+RE de un módulo MAX485. Con un módulo de dirección automática este pin
                                // se queda sin conectar y no molesta (solo parpadea el LED de la placa al enviar)
@@ -107,9 +111,12 @@
 #define REG_SATURACION      0x0000     // saturación de oxígeno (1,0 = 100 %), no se envía
 #define REG_OXIGENO_MGL     0x0002     // oxígeno disuelto en mg/L
 #define REG_TEMPERATURA_C   0x0004     // temperatura en °C
-#define REG_SALINIDAD       0x1020     // salinidad (lectura/escritura). Con agua de red tiene que valer 0.
+#define REG_SALINIDAD       0x1020     // salinidad en % (wiki: "Freshwater version defaults to 0"). Con agua de red = 0.
                                        // TODO VERIFICAR el valor de fábrica del SEN0681 (al ser de agua de mar
                                        // puede venir distinto de 0) y el formato del dato, que la wiki no indica.
+                                       // Escribir 0 con la función 0x06 deja 0 tanto si es entero como si es float.
+#define REG_CALIBRACION     0x1010     // wiki SEN0680: escribir 1 = calibrar cero, 2 = calibrar 100 % de saturación
+                                       // (trama de la wiki para el cero: 01 06 10 10 00 01 4D 0F)
 
 // ---------- ADS1115 ----------
 #define ADS_DIRECCION 0x48
