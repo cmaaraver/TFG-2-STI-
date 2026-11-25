@@ -11,6 +11,7 @@ T(['Plano', 'Contenido'], [
     ['Plano 1', 'Esquema general del sistema'],
     ['Plano 2', 'Plano de red: VLAN 500, direcciones IP y accesos'],
     ['Plano 3', 'Esquema de conexionado del nodo'],
+    ['Plano 3B', 'Montaje en la protoboard de la caja estanca, cable a cable'],
     ['Plano 4', 'Instalación de las sondas en el depósito'],
     ['Plano 5', 'Flujo de datos y servicios del servidor'],
     ['Plano 6', 'Situación: ubicación del nodo, del gateway y del servidor en el centro (por completar)'],
@@ -42,12 +43,12 @@ T(['Señal', 'Pin de la LILYGO', 'Va a', 'Notas'], [
     ['Alimentación', 'USB', 'Cargador de 5 V con batería de respaldo', 'El pin de 5 V no se usa'],
     ['3,3 V', '3V3', 'Placa del pH, conversor de 4-20 mA y módulo RS485', 'Es una salida de la placa'],
     ['Masa', 'GND', 'Negativo de la fuente de 12 V', 'Masa común de todo'],
-    ['pH', 'GPIO36', 'Salida de la placa del pH (0-3,0 V)', 'Entrada analógica'],
-    ['Nivel', 'GPIO39', 'Salida del conversor del KIT0139 (0,48-2,40 V)', 'Entrada analógica'],
-    ['Presencia de agua', 'GPIO4', 'SEN0204 por 27 kΩ en serie y 10 kΩ a masa', 'El cable negro (ajuste) del sensor se deja suelto'],
+    ['pH', 'S_VP (GPIO36)', 'Salida A de la placa del pH (0-3,0 V)', 'Entrada analógica'],
+    ['Nivel', 'S_VN (GPIO39)', 'Salida SIG del conversor SEN0262 del KIT0139 (0,48-2,40 V)', 'Entrada analógica'],
+    ['Presencia de agua', 'IO4 (GPIO4)', 'Cable verde de la placa del SEN0204 por 27 kΩ en serie y 10 kΩ a masa', 'Sensibilidad con el botón SET de la placa'],
     ['Libre', 'GPIO34', 'Sin conectar', 'Era el caudalímetro, que no tenemos'],
-    ['Calibración', 'GPIO15', 'Puente a masa', 'Puesto al arrancar = modo calibración'],
-    ['RS485', 'GPIO13, GPIO14 y GPIO25', 'Entrada, salida y control del módulo RS485', 'Si no lee, cruzar 13 y 14'],
+    ['Calibración', 'IO15 (GPIO15)', 'Puente a masa', 'Puesto al arrancar = modo calibración'],
+    ['RS485', 'IO13, IO14 e IO25', 'DI, RO y DE/RE del módulo RS485', 'Si no lee, cruzar 13 y 14'],
     ['Radio y pantalla', 'Internos', '—', 'No se tocan'],
     ['Sin usar', 'GPIO12 y pin de 5 V', '—', 'GPIO12 es un pin de arranque'],
 ], anchos=[2.8, 3.2, 6.0, 4.0], titulo='Tabla de conexiones del nodo', tam=9)
@@ -57,6 +58,12 @@ T(['Cable del SEN0681', 'Función', 'Va a'], [
     ['Amarillo', 'RS485 A', 'Borna A del módulo'],
     ['Azul', 'RS485 B', 'Borna B del módulo'],
 ], anchos=[4.5, 6.0, 5.5], titulo='Colores del cable del sensor de oxígeno')
+
+H(3, 'Plano 3B. Montaje en la protoboard', salto=True)
+FIG(REPO + 'docs/img/montaje-visual.png', 'Plano 3B. Montaje cable a cable en la protoboard de la caja estanca', ancho=16.5)
+P('Las columnas son las de la mitad de arriba de la protoboard (filas a-e). La + de arriba es 12 V, la + de abajo '
+  '3V3 y las dos − son masa. Si la protoboard está numerada de otra forma no pasa nada: lo que importa es que cada '
+  'grupo vaya en su propia columna.')
 
 H(3, 'Plano 4. Instalación de las sondas en el depósito', salto=True)
 FIG(PLANOS + 'plano-sondas.png', 'Plano 4. Bidón de 25 L: sondas, bomba y agujeros', ancho=16.5)
@@ -97,7 +104,8 @@ TODO OK (3 payloads, 10 campos del ingestor comprobados)''')
 H(3, '5.2 Compilación del firmware')
 P('El firmware se compiló sin errores con PlatformIO antes de tener la placa conectada (26-10-2026). Ocupaba el '
   '8,4 % de la memoria RAM y el 29,9 % de la memoria de programa, así que hay sitio de sobra para ampliarlo. '
-  'Después se han ido compilando todos los entornos cada vez que se ha cambiado algo.')
+  'Después se han ido compilando todos los entornos cada vez que se ha cambiado algo. La última vez fue el '
+  '25-11-2026, con la versión real revisada pin a pin: compilan los cuatro entornos sin errores.')
 
 H(3, '5.3 Nodo y gateway simulados contra el servidor')
 P('El siguiente paso fue probar el servidor real sin radio. Un programa en Python hace de gateway y de nodo a la '
@@ -186,6 +194,8 @@ B([
     'tensión de 0 a 3 V o pulsos), para no tener que cambiar el firmware.',
     'El módulo RS485 será de 3,3 V. No vale uno de 5 V, porque su salida dañaría el pin de la LILYGO.',
     'Las resistencias, de 1/4 W y, a ser posible, del 1 % de tolerancia.',
+    'La protoboard tendrá las líneas de alimentación continuas de punta a punta (se comprueba con el polímetro) y '
+    'las puntas de los cables de los sensores irán estañadas.',
     'La fuente de los sensores dará entre 12 y 13 V en continua y al menos 1 A.',
     'El cable del gateway será Cat6 para exterior, resistente al sol.',
     'La sonda de pH será de inmersión continua.',
@@ -196,7 +206,10 @@ B([
     'Ninguna entrada de la LILYGO recibirá más de 3,3 V. Se comprobará con el polímetro antes de conectarla.',
     'La LILYGO se alimenta solo por USB. El pin de 5 V queda sin conectar.',
     'La LILYGO no se encenderá nunca sin la antena puesta.',
-    'El negativo de la fuente de 12 V y el GND de la LILYGO irán unidos.',
+    'El negativo de la fuente de 12 V y el GND de la LILYGO irán unidos (puente entre las dos líneas − de la protoboard).',
+    'Las líneas + de la protoboard irán marcadas: la de arriba «12 V» y la de abajo «3V3».',
+    'Se encenderá primero la LILYGO y después la fuente de 12 V, y se apagará al revés.',
+    'La fuente de 12 V y el cargador irán en su propia caja estanca, separada de la del nodo.',
     'No entrará ningún cable de 230 V en la caja del nodo.',
     'No se pondrá tarjeta microSD en la LILYGO y el GPIO12 quedará libre.',
     'Los cables entrarán en la caja por abajo y la antena quedará vertical.',
@@ -315,10 +328,14 @@ P('Lo que más nos ha enseñado han sido los problemas. El que más tiempo nos l
   'no siempre viene configurado para lo que uno necesita.')
 P('La otra lección ha sido simplificar. El primer diseño tenía panel solar propio, batería, convertidores, '
   'aisladores y conmutadores, y sobre el papel era mejor. Pero había que montarlo con el material que teníamos de '
-  'verdad, y al final el nodo lee todo directamente con unas resistencias y un diodo. Se pierde algo de precisión en '
+  'verdad, y al final el nodo lee todo directamente, con dos resistencias y una protoboard. Se pierde algo de precisión en '
   'las medidas analógicas y el pH comparte masa con el resto de sensores, pero el montaje es mucho más fácil de '
   'hacer, de entender y de reparar. Si el pH diera lecturas inestables, lo primero que habría que probar es '
   'desenchufar la bomba para ver si el problema viene de ahí.')
+P('También aprendimos a no fiarnos solo de los papeles: los pines que el esquema llamaba GPIO36 y GPIO39 en la '
+  'placa aparecen como S_VP y S_VN, y al revisar el firmware contra la serigrafía real encontramos dos pines '
+  'antiguos que chocaban con el montaje nuevo. Comprobar cada conexión con la placa delante y con el polímetro '
+  'antes de encender nos ha ahorrado más de un susto.')
 H(3, 'Limitaciones')
 B([
     'Sin el módulo RS485 no hay ni oxígeno ni temperatura, que es justo la medida que queríamos añadir.',

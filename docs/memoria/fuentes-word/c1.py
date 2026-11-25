@@ -111,8 +111,9 @@ B([
     'pensados como ampliación y se explican en las conclusiones.',
 ])
 H(3, 'Estado a la fecha de redacción')
-P('Esta memoria se ha empezado a escribir con el proyecto a medias (13-11-2026), así que hay partes terminadas y '
-  'partes que todavía hay que cerrar. Las que faltan están marcadas en amarillo a lo largo del documento para '
+P('Esta memoria se empezó a escribir con el proyecto a medias (13-11-2026) y se ha puesto al día el 25-11-2026, '
+  'con el montaje en la protoboard, los pines reales de la placa y el firmware definitivo. Aun así hay partes '
+  'terminadas y partes que todavía hay que cerrar. Las que faltan están marcadas en amarillo a lo largo del documento para '
   'completarlas con los datos reales.')
 T(['Parte', 'Estado', 'Comentario'], [
     ['Servidor en la Raspberry Pi 5', 'Hecho', 'En marcha desde el 29-10-2026. Arranca solo tras un reinicio (comprobado dos veces)'],
@@ -120,9 +121,9 @@ T(['Parte', 'Estado', 'Comentario'], [
     ['Web pública y acceso remoto', 'Hecho', 'Tailscale Funnel funcionando; comprobada desde fuera del centro'],
     ['Gateway wAP LR8 configurado', 'Hecho', 'Configurado y dado de alta el 12-11-2026; falta subirlo al mástil'],
     ['Enlace de radio nodo → gateway', 'Hecho en pruebas', 'Join y envíos correctos desde el aula, con la señal muy justa'],
-    ['Firmware del nodo', 'Hecho', 'Compila en todos los entornos; ahora mismo está grabada la versión con datos simulados'],
-    ['Conexionado de los sensores', 'En curso', 'Esquema cerrado el 13-11-2026; falta conseguir el módulo RS485'],
-    ['Calibración del pH', 'Pendiente', 'Con tampones de pH 7 y pH 4'],
+    ['Firmware del nodo', 'Hecho', 'Versión real revisada pin a pin y lista para grabar (25-11-2026), con modo calibración ampliado. Compila en los 4 entornos; en la placa sigue grabada la versión con datos simulados hasta montar los sensores'],
+    ['Conexionado de los sensores', 'En curso', 'Montaje en la protoboard de la caja estanca, con guía cable a cable y pines comprobados con la serigrafía real (24-11-2026); falta conseguir el módulo RS485'],
+    ['Calibración de los sensores', 'Pendiente', 'Guía paso a paso preparada (25-11-2026): pH con tampones 7 y 4, cero del nivel, sensibilidad del SEN0204 y salinidad del SEN0681'],
     ['Gateway en el mástil de la azotea', 'Pendiente', '[COMPLETAR: fecha de montaje en la azotea]'],
     ['Pruebas de una semana con sensores reales', 'Pendiente', '[COMPLETAR: fechas y resultado de la semana de pruebas]'],
 ], anchos=[5.3, 2.7, 8.0], titulo='Estado de cada parte del proyecto')
@@ -195,6 +196,8 @@ T(['Tema', 'Diseño inicial', 'Lo que se ha hecho al final', 'Motivo'], [
      'Es el que tenemos; el nivel se enseña en % del bidón'],
     ['Lectura analógica', 'Convertidor ADS1115 y aislador para el pH', 'Entradas analógicas de la propia LILYGO (13-11-2026)',
      'No disponíamos de esos módulos'],
+    ['Soporte del conexionado', 'Placa de topos soldada con bornas', 'Protoboard pegada dentro de la caja estanca, una '
+     'columna por señal (24-11-2026)', 'Es la que tenemos y se puede cambiar sin soldar; si todo va bien se pasa a placa de topos'],
     ['Alimentación', 'Panel de 50 W, regulador MPPT y batería LiFePO4 propios', 'Corriente de 230 V del inversor solar '
      'del centro: fuente de 12 V para los sensores y cargador USB con batería de respaldo para la LILYGO',
      'Se aprovecha la instalación solar que ya existe en vez de montar otra'],
@@ -242,8 +245,8 @@ T(['Magnitud', 'Sensor', 'Cómo llega al nodo', 'Resolución en el mensaje', 'Co
     ['Oxígeno disuelto', 'SEN0681', 'RS485, Modbus RTU (4800 baudios, 8N1, dirección 1)', '0,01 mg/L',
      'Alimentado a 12 V (admite 10-30 V). Trabaja de 0 a 40 °C'],
     ['Temperatura del agua', 'SEN0681', 'La da el mismo sensor de oxígeno', '0,01 °C', 'Se usa también para compensar el pH'],
-    ['pH', 'SEN0169-V2', 'Tensión de 0 a 3,0 V en GPIO36', '0,01 pH', 'Placa alimentada a 3,3 V. La sonda tiene que estar siempre mojada'],
-    ['Nivel', 'KIT0139', 'Lazo 4-20 mA convertido a 0,48-2,40 V en GPIO39', '1 mm', 'Margen de 0 a 5 m. Alimentado a 12 V. La web lo enseña en % del bidón de 25 L'],
+    ['pH', 'SEN0169-V2', 'Tensión de 0 a 3,0 V en GPIO36 (pin S_VP)', '0,01 pH', 'Placa alimentada a 3,3 V. La sonda tiene que estar siempre mojada'],
+    ['Nivel', 'KIT0139', 'Lazo 4-20 mA convertido a 0,48-2,40 V en GPIO39 (pin S_VN)', '1 mm', 'Margen de 0 a 5 m. Alimentado a 12 V. La web lo enseña en % del bidón de 25 L'],
     ['Presencia de agua', 'SEN0204', 'Entrada digital GPIO4 (divisor 27 kΩ / 10 kΩ)', 'Sí / no', 'Alimentado a 12 V. Detecta a través de paredes de hasta 13 mm'],
 ], anchos=[2.6, 1.9, 4.6, 2.4, 4.5], titulo='Magnitudes que mide el sistema', tam=9)
 H(3, 'Avisos que da el sistema')
@@ -277,8 +280,11 @@ H(3, 'Alimentación')
 P('El nodo no lleva ni panel ni batería propios. Se alimenta de la corriente de 230 V que saca el inversor de la '
   'instalación solar del centro, que tiene sus baterías. De una regleta salen dos cosas: una fuente de 12 V (una '
   'fuente de PC adaptada, de más de 1 A) para los sensores, y un cargador USB de 5 V con batería de respaldo para la '
-  'LILYGO, que entra por su conector USB. Dentro de la caja del nodo no hay nada a 230 V: solo llegan los 12 V y el '
+  'LILYGO, que entra por su conector USB. La fuente de 12 V y el cargador de 5 V van en una caja estanca propia, '
+  'separada de la del nodo, así que dentro de la caja del nodo no hay nada a 230 V: solo llegan los 12 V y el '
   'cable USB.')
+P('Para no meter tensión en un pin con el ESP32 apagado se sigue siempre el mismo orden: al encender, primero la '
+  'LILYGO (USB) y después la fuente de 12 V; al apagar, al revés.')
 P('El gateway se alimenta por PoE pasivo a 24 V con el inyector y la fuente que trae el kit, y la Raspberry con su '
   'fuente oficial de 27 W.')
 H(3, 'Red y servidor')
@@ -300,5 +306,5 @@ B([
     'que tiene que estar a la sombra.',
     'El gateway es de exterior (caja IP54, de −40 a +60 °C según la ficha de MikroTik).',
     'El bidón es opaco y va tapado, para que no entre luz y no salgan algas. Las sondas se limpian cada 2-4 semanas.',
-    'La fuente de 12 V, el cargador y la regleta van a cubierto, protegidos de la lluvia.',
+    'La fuente de 12 V y el cargador van en su propia caja estanca, y la regleta a cubierto, protegidos de la lluvia.',
 ])
