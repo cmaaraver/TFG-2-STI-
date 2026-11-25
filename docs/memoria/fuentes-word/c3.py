@@ -192,20 +192,25 @@ P('En este anexo está lo necesario para entender cómo está programado y confi
   'ponerlo en marcha. El código completo está en el repositorio del proyecto.')
 H(3, 'Organización del repositorio')
 T(['Carpeta', 'Qué hay'], [
-    ['`docs/`', 'Documentación: material, red, conexionado, formato del mensaje, guía de instalación y acceso desde Internet'],
+    ['`docs/`', 'Documentación: material, red, conexionado, formato del mensaje, guía de instalación, acceso desde Internet, cartel de referencia, guía de montaje en la protoboard (`12`) y guía de calibración (`13`)'],
     ['`firmware/nodo-agua/`', 'Programa de la LILYGO (PlatformIO): configuración de pines, sensores, LoRaWAN y pantalla'],
     ['`raspberry/`', 'Todo el servidor: script de instalación, Docker Compose, ChirpStack, base de datos, ingestor, web, red y copias'],
     ['`pruebas/`', 'Pruebas que se pueden hacer sin hardware'],
 ], anchos=[4.0, 12.0], titulo='Carpetas del repositorio')
 H(3, 'Configuraciones del firmware')
 T(['Entorno', 'Para qué'], [
-    ['`lilygo_t3_simple`', 'El del montaje real: todo leído por la LILYGO. pH en GPIO36, nivel en GPIO39, presencia de agua en GPIO4, GPIO34 libre (sin caudalímetro), puente de calibración en GPIO15 y RS485 en GPIO13, 14 y 25. Join en SF12'],
+    ['`lilygo_t3_simple`', 'El del montaje real: todo leído por la LILYGO. pH en S_VP (GPIO36), nivel en S_VN (GPIO39), presencia de agua en IO4, IO34 libre (sin caudalímetro), puente de calibración en IO15 y RS485 en IO13, IO14 e IO25. Join en SF12. Revisado contra la serigrafía real el 25-11-2026'],
     ['`lilygo_t3_banco`', 'Para probar la placa suelta en la mesa: no mira el puente de calibración'],
     ['`lilygo_t3_simulado`', 'Inventa valores realistas de todos los sensores y los envía cada 2 minutos, para probar el servidor y la web'],
     ['`lilygo_t3_v1_6_1`', 'El del diseño completo inicial, con convertidor ADS1115 y conmutadores. No se usa en el montaje final'],
 ], anchos=[4.0, 12.0], titulo='Entornos de compilación del firmware')
-COD('''pio run -e lilygo_t3_simple -t upload      (grabar el firmware del montaje real)
-pio device monitor                         (ver el monitor serie)''')
+COD('''pio run -e lilygo_t3_simple -t upload --upload-port COM7   (grabar el firmware real)
+pio device monitor -p COM7 -b 115200                       (ver el monitor serie)
+python herramientas/calibrar.py COM7 leer                  (mandar un comando de calibración)''')
+P('Con el firmware real, sin el puente de calibración, en el monitor tiene que salir «Join OK» (o «Sesion '
+  'restaurada») y ya no «[SIMULADO]». Lo que se calibra (pH, cero del nivel) se guarda en la memoria NVS del ESP32 '
+  'y no se borra al volver a grabar. Los comandos del modo calibración están en el apartado 2.10 y la guía completa '
+  'en `docs/13-guia-calibracion.md`.')
 H(3, 'Formato del mensaje')
 P('El nodo manda un mensaje binario de 16 bytes por el puerto 1 de LoRaWAN. Se hizo binario, y no de texto, '
   'para que ocupe lo mínimo y esté menos tiempo en el aire. Los valores van multiplicados por 100 para no mandar '

@@ -17,13 +17,32 @@ T(['Característica', 'Valor'], [
     ['Alimentación', 'Por USB a 5 V. El pin de 5 V de la placa no se usa'],
     ['Salida de 3,3 V', 'Regulador de 500 mA compartido con la radio; de ahí se alimentan la placa del pH, el conversor de 4-20 mA y el módulo RS485'],
     ['Programación', 'PlatformIO con la librería RadioLib (LoRaWAN) y U8g2 (pantalla)'],
+    ['Pines', 'Dos tiras de 13 pines que vienen sin soldar. GPIO36 y GPIO39 no salen con su número: en la serigrafía se llaman S_VP y S_VN'],
 ], anchos=[4.0, 12.0], titulo='Características de la LILYGO T3 V1.6.1 que usamos')
+P('Al preparar el montaje nos encontramos con que en la placa no aparecían «GPIO36» ni «GPIO39», que eran los pines '
+  'previstos para el pH y el nivel. Comparando el esquema oficial de LilyGO (`T3_V1.6.1.pdf`, conectores JP1 y JP2) '
+  'con una foto de nuestra placa vimos que son los dos primeros de la tira izquierda, **S_VP** (GPIO36) y **S_VN** '
+  '(GPIO39). Desde entonces en las guías y en el esquema ponemos los nombres tal como salen en la serigrafía.')
+T(['Tira izquierda (de arriba abajo)', 'Uso', 'Tira derecha (de arriba abajo)', 'Uso'], [
+    ['S_VP (GPIO36)', 'pH', 'IO21', 'Pantalla'],
+    ['S_VN (GPIO39)', 'Nivel', 'TxD / RXD', 'USB'],
+    ['RST', '—', 'IO22', 'Pantalla'],
+    ['IO34 / IO35', 'Libre / batería de la placa', 'IO23 / IO19', 'Radio LoRa'],
+    ['IO14', 'RS485 RO', 'LoRa2 / LoRa1', 'Radio LoRa (IO32 / IO33)'],
+    ['IO12', 'No se usa (pin de arranque)', 'IO26', 'Radio LoRa'],
+    ['IO13', 'RS485 DI', 'GND', 'Masa común'],
+    ['IO15', 'Puente de calibración', '3.3V', 'Línea de 3V3 de la protoboard'],
+    ['IO2 / IO0', 'microSD / botón de arranque', 'GND', 'Otra masa'],
+    ['IO4', 'Presencia de agua', '5V', 'No se usa'],
+    ['IO25', 'RS485 DE/RE', '', ''],
+], anchos=[3.8, 4.2, 3.8, 4.2], titulo='Pines de la T3 V1.6.1 según la serigrafía de nuestra placa', tam=9)
 FOTO('La placa LILYGO T3 V1.6.1 con la antena puesta y la pantalla encendida (logo de Los Viveros y temporizador).',
      'Nodo LILYGO T3 V1.6.1 con la pantalla en marcha')
 
 H(3, 'Sensor de oxígeno disuelto y temperatura: DFRobot SEN0681')
 P('Es el sensor principal del proyecto y el que añadimos respecto al sistema de referencia. Mide el oxígeno disuelto '
   'por fluorescencia, así que no lleva ni membrana que cambiar ni electrolito, y da también la temperatura del agua. '
+  'Su cable trae cuatro hilos: marrón (+12 V), negro (masa), amarillo (A) y azul (B). '
   'Se comunica por RS485 con protocolo Modbus RTU: el nodo le pregunta y él contesta con los valores. Se alimenta '
   'entre 10 y 30 V (nosotros a 12 V) y consume unos 0,2 W. Tarda hasta 60 segundos en dar un valor estable, y por '
   'eso el nodo espera ese tiempo antes de leer.')
@@ -42,14 +61,21 @@ P('Es una sonda de pH de tipo industrial, que aguanta estar sumergida de forma c
 
 H(3, 'Sensor de nivel: DFRobot KIT0139')
 P('Es un transmisor de nivel de los que se dejan caer al fondo del depósito. Mide la presión de la columna de agua '
-  'que tiene encima y da una corriente de 4 a 20 mA proporcional a la altura, de 0 a 5 metros. El kit trae un '
-  'conversor que pasa esa corriente a tensión con una resistencia de 120 Ω. El cable lleva por dentro un tubito de '
-  'aire para compensar la presión atmosférica, así que no se puede aplastar ni doblar fuerte.')
+  'que tiene encima y da una corriente de 4 a 20 mA proporcional a la altura, de 0 a 5 metros. En la misma caja '
+  'viene el conversor de corriente a tensión, el **SEN0262**: una placa azul pequeña con dos bornas de tornillo '
+  '(**I+** e **I−**) para el lazo y un conector de tres pines (**GND**, **VCC** y **SIG**) para la LILYGO. Pasa la '
+  'corriente por una resistencia de 120 Ω. El cable de la sonda trae un hilo rojo fino (+12 V), uno negro (salida '
+  'del lazo) y uno rojo grueso, que en realidad es un tubito de aire para compensar la presión atmosférica: no se '
+  'conecta, no se puede aplastar ni doblar y su punta tiene que quedar seca.')
 
 H(3, 'Sensor de presencia de agua: DFRobot SEN0204')
 P('Es un sensor sin contacto que se pega por fuera de la pared del depósito y detecta si hay agua al otro lado, a '
   'través de paredes no metálicas de hasta 13 mm. Lo usamos como alarma de nivel mínimo: se pega a la altura por '
   'debajo de la cual la sonda de pH se quedaría en seco. Tenemos un SEN0509 de repuesto.')
+P('El sensor saca cuatro hilos que van a una **placa adaptadora** que viene con él. De esa placa sale un cable de '
+  'tres hilos: **rojo** (alimentación), **negro** (masa) y **verde** (salida). La placa tiene además un botón '
+  '**SET** para elegir entre cuatro niveles de sensibilidad. La salida vale lo mismo que la alimentación cuando hay '
+  'agua, y por eso lleva un divisor de tensión antes de llegar a la LILYGO (Anexo I).')
 
 P('No hay caudalímetro ni sensor de presión de tubería, aunque los dos salen en el cartel de referencia: no los '
   'tenemos. El mensaje LoRaWAN deja reservado el hueco del caudal por si algún día se añade uno.')
@@ -129,6 +155,12 @@ P('Antes de tener nada montado comprobamos todo lo que se podía comprobar sin h
 P('La primera prueba de radio fue ver si los intentos de unirse a la red llegaban al gateway: llegaban con el '
   'CRC correcto, así que la parte de radio funcionaba. Lo que costó más fue que el nodo recibiera la respuesta, '
   'como se cuenta en la fase 3.')
+P('El 25-11-2026 dejamos lista la versión real del firmware (entorno `lilygo_t3_simple`). Revisamos sus pines uno '
+  'a uno contra la serigrafía de la placa y encontramos un fallo: dos pines de los antiguos conmutadores de '
+  'sensores seguían apuntando a IO4 e IO25, que en el montaje simple son la presencia de agua y el control del '
+  'RS485, y al «encender los sensores» dejaban el RS485 transmitiendo. Se corrigió y los cuatro entornos compilan. '
+  'Además se amplió el modo calibración con comandos nuevos (apartado 2.10) y se añadió un pequeño programa en el PC '
+  '(`calibrar.py`) que manda esos comandos por el puerto serie.')
 FOTO('La LILYGO en el banco de pruebas conectada al PC por USB, con el monitor serie en la pantalla.',
      'Pruebas del nodo en el aula')
 FOTO('Captura del monitor serie de la LILYGO con el mensaje «Join OK» y un envío.',
@@ -164,19 +196,25 @@ P('La idea inicial era usar un nombre de DuckDNS y abrir el puerto 443 en el rou
   'instalado y con la cuenta del equipo.')
 
 H(3, 'Fase 6. Montaje e instalación exterior')
-P('El 13-11-2026 cerramos el esquema de conexionado definitivo, con todo leído directamente por la LILYGO. A partir '
-  'de ahí el trabajo es de taller: montar las resistencias, conectar cada sensor, colgar las sondas en el '
-  'bidón, calibrar el pH, subir el gateway al mástil y dejar el sistema una semana midiendo.')
+P('El 13-11-2026 cerramos el esquema de conexionado definitivo, con todo leído directamente por la LILYGO. El '
+  '17-11-2026 se decidió el depósito (bidón de 25 L) y que no habría caudalímetro, con la bomba fuera del bidón. El '
+  '24-11-2026 pasamos el montaje a la protoboard que tenemos pegada dentro de la caja estanca y escribimos una guía '
+  'cable a cable, con los colores reales de cada sensor y qué medir con el polímetro en cada paso. Ese mismo día, '
+  'con la foto de la placa, ajustamos los nombres de los pines a su serigrafía. El 25-11-2026 se preparó la guía '
+  'de calibración de todos los sensores.')
+P('A partir de ahí el trabajo es de taller: soldar las tiras de pines de la LILYGO, pinchar cada sensor en la '
+  'protoboard, colgar las sondas en el bidón, grabar el firmware real, calibrar, subir el gateway al mástil y dejar '
+  'el sistema una semana midiendo.')
 P('[COMPLETAR: contar aquí cómo fue el montaje real: en qué orden se conectaron los sensores, qué costó más y cuánto '
   'se tardó]')
-FOTO('El conexionado del nodo terminado: la LILYGO con los cables de los sensores, las resistencias y el '
-     'módulo RS485.', 'Conexionado del nodo terminado')
+FOTO('El conexionado del nodo terminado: la protoboard dentro de la caja estanca, con la LILYGO, el conversor del '
+     'nivel, la placa del pH, la del SEN0204, las resistencias y el módulo RS485.', 'Conexionado del nodo terminado')
 FOTO('El bidón de 25 L con las sondas colgadas del tapón (pH y oxígeno), el sensor de nivel en el fondo y el sensor de '
      'presencia pegado por fuera.', 'Sondas instaladas en el bidón')
 FOTO('La bomba de recirculación fuera del bidón, con la manguera de aspiración y la de retorno entrando por arriba.',
      'Bomba de recirculación y sus dos mangueras', alto=5.5)
-FOTO('La fuente de 12 V, el cargador USB con batería de respaldo y la regleta conectada a la línea del inversor.',
-     'Alimentación del nodo', alto=5.5)
+FOTO('La caja estanca de la alimentación con la fuente de 12 V y el cargador USB con batería de respaldo, y la '
+     'regleta conectada a la línea del inversor.', 'Alimentación del nodo', alto=5.5)
 FOTO('Vista desde la azotea hacia el depósito (o al revés), para que se vea que hay visión directa entre el gateway '
      'y el nodo.', 'Visión directa entre el gateway y el punto de medida', alto=5.5)
 
@@ -200,9 +238,12 @@ T(['Cant.', 'Material', 'Uso'], [
     ['1', 'Módulo conversor RS485 a TTL de 3,3 V (tipo MAX3485) [COMPLETAR: modelo]', 'Leer el SEN0681 desde la LILYGO'],
     ['1', 'Resistencia de 27 kΩ', 'Divisor de la salida del SEN0204 (en serie)'],
     ['1', 'Resistencia de 10 kΩ', 'A masa en el divisor del SEN0204'],
-    ['1', 'Puente (jumper)', 'Entrar en modo calibración (GPIO15 a masa)'],
-    ['—', 'Placa de montaje, bornas y cables [COMPLETAR: sobre qué se ha montado: placa de topos, protoboard o regletas]', 'Soporte del conexionado'],
-    ['1', 'Caja del nodo [COMPLETAR: tipo de caja y grado de protección]', 'Proteger la electrónica'],
+    ['1', 'Cable dupont hembra-hembra', 'Puente de calibración (IO15 a GND al arrancar)'],
+    ['1', 'Protoboard (de las de Arduino), pegada dentro de la caja estanca', 'Soporte del conexionado: + de arriba 12 V, + de abajo 3V3, las dos − a masa'],
+    ['8', 'Cables dupont macho-hembra', 'De la protoboard a los pines de la LILYGO'],
+    ['—', 'Cables dupont macho-macho y cable rígido', 'Puentes y bornas del conversor del nivel'],
+    ['1', 'Caja estanca del nodo [COMPLETAR: medidas y grado de protección]', 'Proteger la electrónica'],
+    ['1', 'Caja estanca de la alimentación [COMPLETAR: medidas y grado de protección]', 'Fuente de 12 V y cargador USB, aparte del nodo'],
 ], anchos=[1.2, 8.8, 6.0], titulo='Pequeño material del nodo')
 T(['Cant.', 'Material', 'Uso'], [
     ['1', 'Fuente de 12 V de PC adaptada (más de 1 A)', 'Alimentar el SEN0681, el KIT0139 y el SEN0204'],
@@ -223,7 +264,8 @@ T(['Material', 'Uso'], [
     ['Soluciones tampón de pH 7 y pH 4', 'Calibrar la sonda de pH en dos puntos'],
     ['Agua destilada y vasos', 'Enjuagar la sonda entre un tampón y otro'],
     ['Polímetro', 'Comprobar tensiones antes de conectar nada a la LILYGO'],
-    ['Soldador, estaño, pelacables, alicates y destornilladores', 'Montaje del conexionado'],
+    ['Soldador, estaño, pelacables, alicates y destornilladores', 'Soldar las tiras de pines de la LILYGO y estañar las puntas de los cables de los sensores'],
+    ['Cinta aislante o de carrocero', 'Marcar las líneas de 12 V y 3V3 de la protoboard y etiquetar los dupont'],
     ['PC con PlatformIO, WinBox y cliente SSH', 'Programar la LILYGO y configurar el gateway y la Raspberry'],
     ['Herramientas y equipos de protección para el trabajo en la azotea [COMPLETAR: los que se usaron]', 'Montaje del gateway en el mástil'],
 ], anchos=[8.5, 7.5], titulo='Consumibles, herramientas e instrumentos')
@@ -245,11 +287,29 @@ H(2, '2.10 Técnicas Constructivas')
 H(3, 'Conexionado del nodo')
 P('La regla que hemos seguido en todo el conexionado es que a ningún pin de la LILYGO le puede llegar más de 3,3 V. '
   'El problema es que varios sensores trabajan a 12 V, así que cada señal se adapta de la forma más sencilla que '
-  'encontramos, con resistencias (cálculos en el Anexo I y esquema en el plano 3).')
+  'encontramos, con resistencias (cálculos en el Anexo I y esquemas en los planos 3 y 3B).')
+P('Todo se monta sobre una protoboard de las de Arduino pegada dentro de la caja estanca del nodo. Las líneas de '
+  'alimentación se reparten así: la **+ de arriba** lleva los 12 V de la fuente, la **+ de abajo** los 3,3 V de la '
+  'LILYGO y las dos **−** son masa, unidas con un puente. Cada señal va en su propia columna y la LILYGO queda fuera '
+  'de la protoboard, conectada con cables dupont macho-hembra. Las dos líneas + se marcan con cinta («12 V» y '
+  '«3V3»), porque un cable de 3V3 pinchado en la de 12 V quemaría la placa del pH, el conversor o la LILYGO.')
+FIG(REPO + 'docs/img/montaje-visual.png', 'Montaje en la protoboard cable a cable, con los colores reales de cada '
+    'sensor (plano 3B)', ancho=16.5)
+T(['Dónde en la protoboard', 'Qué se pincha', 'Pin de la LILYGO'], [
+    ['+ de arriba (12 V)', 'Fuente amarillo · SEN0681 marrón · KIT0139 rojo fino · SEN0204 rojo', '—'],
+    ['− de arriba (GND)', 'Fuente negro · SEN0681 negro · RS485 GND · conversor I− y GND · pH − · SEN0204 negro · 10 kΩ', '—'],
+    ['+ de abajo (3V3)', 'RS485 VCC · conversor VCC · placa del pH +', '3.3V (dupont naranja)'],
+    ['− de abajo (GND)', 'Puente desde la − de arriba', 'GND (dupont negro)'],
+    ['Columnas 6, 7 y 8', 'RS485 DI, RO y DE+RE', 'IO13, IO14 e IO25'],
+    ['Columna 11', 'KIT0139 negro + conversor I+', '—'],
+    ['Columna 15', 'Conversor SIG', 'S_VN (GPIO39)'],
+    ['Columna 19', 'Placa del pH, salida A', 'S_VP (GPIO36)'],
+    ['Columnas 23 y 27', 'SEN0204 verde, divisor 27 kΩ / 10 kΩ', 'IO4 (desde la 27)'],
+], anchos=[3.6, 8.6, 3.8], titulo='Reparto de la protoboard', tam=9)
 B([
     '**pH**: la placa de la sonda se alimenta a 3,3 V desde la LILYGO, así su salida nunca pasa de 3,0 V y entra '
-    'directa a la entrada analógica GPIO36.',
-    '**Nivel**: el conversor del KIT0139 se alimenta también a 3,3 V y entrega entre 0,48 y 2,40 V en GPIO39. El '
+    'directa a la entrada analógica GPIO36 (S_VP).',
+    '**Nivel**: el conversor SEN0262 se alimenta también a 3,3 V y entrega entre 0,48 y 2,40 V en GPIO39 (S_VN). El '
     'transmisor en sí va a 12 V.',
     '**Presencia de agua**: el SEN0204 necesita entre 5 y 24 V, y por USB el pin de 5 V de la LILYGO se queda en unos '
     '4,7 V, así que va a 12 V. Su salida vale lo mismo que su alimentación, y por eso pasa por un divisor de 27 kΩ y '
@@ -259,8 +319,12 @@ B([
     '**Masa común**: el negativo de la fuente de 12 V se une al GND de la LILYGO. Sin eso las lecturas no tienen '
     'referencia.',
 ])
-P('Antes de enchufar la LILYGO se hacen dos comprobaciones con el polímetro: que la fuente de PC da entre 12 y 13 V '
-  'en las bornas, y, con todo conectado y la LILYGO fuera, que ningún cable de los que van a sus pines pasa de 3,3 V.')
+P('Los cables de los sensores son de hilos sueltos y no agarran en la protoboard, así que se estaña la punta de cada '
+  'uno. El montaje se hace por pasos, un sensor cada vez y con todo desenchufado, y después de cada paso se mide '
+  'con el polímetro: 12-13 V en la línea de arriba, unos 12 V en la columna 23 y unos 3,2 V en la 27 con agua '
+  'delante del SEN0204. Antes de pinchar la LILYGO se comprueba en continuidad que no hay cortos entre las líneas y, '
+  'con la fuente enchufada, que ningún dupont de los que van a sus pines pasa de 3,3 V. La guía completa paso a '
+  'paso está en el repositorio (`docs/12-guia-montaje.md`, también en PDF).')
 P('Hay dos cosas más que conviene saber de esta placa. No se le puede poner tarjeta microSD, porque el lector usa '
   'los mismos pines que el RS485. Y el GPIO12 se deja sin conectar, porque es un pin que el ESP32 mira al arrancar.')
 H(3, 'Instalación de las sondas en el bidón')
@@ -299,13 +363,32 @@ P('El firmware se compila y se graba con PlatformIO por el cable USB. Hay varias
   'mismo código: la del montaje real, una para probar la placa suelta en la mesa y una que inventa datos realistas '
   'para probar el servidor y la web sin sensores. Las claves LoRaWAN van en un fichero aparte que tampoco se sube '
   'al repositorio.')
-H(3, 'Calibración del pH')
-P('La sonda de pH hay que calibrarla, porque cada sonda da una tensión un poco distinta y además estamos leyendo '
-  'con el convertidor del ESP32, que es menos fino que uno dedicado. Se hace en dos puntos. Se pone el puente de '
-  'calibración y se reinicia el nodo; por el monitor serie se mete la sonda en el tampón de pH 7 y se escribe '
-  '`ph7`, se enjuaga con agua destilada, se mete en el de pH 4 y se escribe `ph4`. Los dos puntos se quedan '
-  'guardados en la memoria del nodo aunque se apague. En ese mismo modo hay comandos para leer todos los sensores '
-  'una vez.')
+H(3, 'Calibración de los sensores')
+P('Para calibrar se pone el puente de calibración (un dupont hembra-hembra entre IO15 y GND), se enciende y se '
+  'abre el monitor serie. El nodo espera 60 segundos a que se estabilicen los sensores y luego acepta comandos. Lo '
+  'que se calibra se guarda en la memoria flash del ESP32, así que no se pierde al apagar ni al volver a grabar el '
+  'firmware. Los comandos se pueden escribir a mano o mandarlos con `calibrar.py` desde el PC: así una persona hace '
+  'la parte física (mover la sonda, vaciar el bidón) y otra, o Claude Code en el PC, va mandando los comandos.')
+T(['Comando', 'Qué hace'], [
+    ['`leer`', 'Una medida completa de todos los sensores'],
+    ['`mv`', 'Tensiones crudas en los pines (pH en mV, nivel en mV y mA, presencia de agua 0/1), para comprobar el cableado'],
+    ['`ph7` / `ph4`', 'Guarda el punto del tampón de pH 7 / pH 4'],
+    ['`nivel0`', 'Guarda el cero del nivel con el bidón vacío'],
+    ['`sal` / `sal0`', 'Lee la salinidad del SEN0681 / la pone a 0 (agua dulce)'],
+    ['`o2_100` / `o2_cero`', 'Calibración del oxígeno al 100 % / a cero'],
+    ['`ver` / `reset`', 'Enseña lo guardado / vuelve a la calibración de fábrica'],
+    ['`salir`', 'Sale del modo calibración (después se quita el puente y se pulsa RST)'],
+], anchos=[4.0, 12.0], titulo='Comandos del modo calibración', tam=9.5)
+B([
+    '**pH (dos puntos)**: la sonda en el tampón de pH 7, se espera a que `mv` no cambie y se escribe `ph7`; se '
+    'enjuaga con agua destilada, se mete en el de pH 4 y se escribe `ph4`. Se comprueba volviendo a cada tampón: '
+    'tiene que dar 7,00 y 4,00 con ±0,1. Se repite cada mes.',
+    '**Nivel**: con el bidón vacío y la sonda de pie en el fondo se escribe `nivel0`, y después se echa agua de 5 en '
+    '5 L apuntando la lectura para ajustar el % de la web.',
+    '**Presencia de agua**: solo se comprueba que da 1 con agua detrás de la pared y 0 sin ella; si no, se cambia la '
+    'sensibilidad con el botón SET de su placa.',
+    '**Oxígeno**: cuando tengamos el módulo RS485, se pone la salinidad a 0 (`sal0`), porque usamos agua de red.',
+])
 FOTO('Calibración del pH: la sonda dentro del vaso con la solución tampón y el monitor serie con la lectura.',
      'Calibración de la sonda de pH con soluciones tampón', alto=5.5)
 
