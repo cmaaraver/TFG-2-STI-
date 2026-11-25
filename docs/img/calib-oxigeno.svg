@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 740" width="1500" height="740" font-family="DejaVu Sans, Arial, sans-serif" font-size="15">
+<style>
+.t{fill:#17201d}.m{fill:#4f5b57;font-size:14px}.h{font-weight:700;font-size:22px;fill:#17201d}
+.b{font-weight:700;fill:#17201d}.s{font-size:13px;fill:#17201d}.w{fill:#fff;font-weight:700}
+.mono{font-family:DejaVu Sans Mono,monospace;font-size:14px;fill:#d8f5d0}
+.monob{font-family:DejaVu Sans Mono,monospace;font-size:14px;fill:#ffffff;font-weight:700}
+.pin{font-family:DejaVu Sans Mono,monospace;font-size:13px;fill:#ffe07a;font-weight:700}
+.oled{font-family:DejaVu Sans Mono,monospace;font-size:13px;fill:#9fe0ff}
+.warn{fill:#b3261e;font-size:14px;font-weight:700}.ok{fill:#1f7a3c;font-size:14px;font-weight:700}
+</style>
+<defs><marker id="fl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4f5b57"/></marker></defs>
+<rect width="1500" height="740" fill="#f6f8f7"/>
+<text x="28" y="38" class="h" text-anchor="start">Oxígeno (SEN0681): salinidad a 0 y punto del 100 % · solo con el módulo RS485</text>
+<text x="28" y="62" class="m" text-anchor="start">Claude pregunta antes de mandar sal0, o2_100 y o2_cero, porque escriben dentro del sensor.</text>
+<rect x="28" y="90" width="440" height="560" rx="10" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="48" y="122" class="b" text-anchor="start" style="font-size:18px">1. Salinidad a 0 (agua de red)</text>
+<rect x="48" y="145" width="400" height="139" rx="8" fill="#13201b" stroke="#13201b" stroke-width="1.5" />
+<rect x="48" y="145" width="400" height="24" rx="8" fill="#2c3a34" stroke="#2c3a34" stroke-width="1.5" />
+<text x="60" y="162" class="s" text-anchor="start" style="fill:#c9d6d0">Monitor</text>
+<text x="60" y="189" class="monob" text-anchor="start">> sal</text>
+<text x="60" y="210" class="mono" text-anchor="start">Salinidad: registros 0x....</text>
+<text x="60" y="231" class="monob" text-anchor="start">> sal0</text>
+<text x="60" y="252" class="mono" text-anchor="start">Salinidad a 0: OK</text>
+<text x="60" y="273" class="mono" text-anchor="start">Salinidad: 0x0000 0x0000 (0)</text>
+<text x="48" y="330" class="s" text-anchor="start" style="font-size:15px">El SEN0681 es la versión de agua de mar:</text>
+<text x="48" y="356" class="s" text-anchor="start" style="font-size:15px">puede venir con salinidad ≠ 0 y daría</text>
+<text x="48" y="382" class="s" text-anchor="start" style="font-size:15px">el oxígeno mal en agua dulce.</text>
+<text x="48" y="408" class="s" text-anchor="start" style="font-size:15px">Se hace una sola vez (se guarda en el sensor).</text>
+<text x="48" y="434" class="s" text-anchor="start" style="font-size:15px">Apuntar el valor de fábrica.</text>
+<rect x="48" y="484" width="92" height="22" rx="11" fill="#e07a1f" stroke="#e07a1f" stroke-width="1.5" />
+<text x="94" y="500" class="w" text-anchor="middle" style="font-size:12px">PERSONA</text>
+<text x="150" y="500" class="s" text-anchor="start">dice «sí» a poner 0</text>
+<rect x="48" y="524" width="80" height="22" rx="11" fill="#6d4bd1" stroke="#6d4bd1" stroke-width="1.5" />
+<text x="88" y="540" class="w" text-anchor="middle" style="font-size:12px">CLAUDE</text>
+<text x="140" y="540" class="mono" text-anchor="start" style="fill:#6d4bd1;font-weight:700">sal → sal0</text>
+<rect x="520" y="90" width="460" height="560" rx="10" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="540" y="122" class="b" text-anchor="start" style="font-size:18px">2. Punto del 100 % (aire saturado)</text>
+<path d="M630,215 L690,215 L690,255 Q740,285 740,345 L740,595 Q740,615 720,615 L600,615 Q580,615 580,595 L580,345 Q580,285 630,255 Z" fill="#f4fafe" stroke="#6f8390" stroke-width="3"/>
+<rect x="582" y="535" width="156" height="78" fill="#8ccbef" opacity=".6"/>
+<rect x="642" y="165" width="36" height="320" rx="6" fill="#3a3f44" stroke="#111" stroke-width="1.5" />
+<rect x="642" y="477" width="36" height="8" fill="#ffcf4a"/>
+<path d="M700,485 H770" stroke="#b3261e" stroke-width="2"/><path d="M700,535 H770" stroke="#b3261e" stroke-width="2"/>
+<path d="M760,487 V533" stroke="#b3261e" stroke-width="2"/>
+<text x="776" y="515" class="warn" text-anchor="start">1 cm</text>
+<text x="776" y="477" class="s" text-anchor="start">membrana</text>
+<text x="776" y="565" class="s" text-anchor="start">un poco de agua</text>
+<path d="M620,217 Q660,199 700,217" stroke="#9aa8a2" stroke-width="6" fill="none"/>
+<text x="610" y="207" class="s" text-anchor="end">film tapando la boca</text>
+<text x="820" y="190" class="s" text-anchor="start" style="font-size:15px">a. Agitar la botella</text>
+<text x="820" y="220" class="s" text-anchor="start" style="font-size:15px">    cerrada 30 s.</text>
+<text x="820" y="250" class="s" text-anchor="start" style="font-size:15px">b. Meter la sonda</text>
+<text x="820" y="280" class="s" text-anchor="start" style="font-size:15px">    sin tocar el agua.</text>
+<text x="820" y="310" class="s" text-anchor="start" style="font-size:15px">c. leer cada minuto</text>
+<text x="820" y="340" class="s" text-anchor="start" style="font-size:15px">    5-10 min, hasta</text>
+<text x="820" y="370" class="s" text-anchor="start" style="font-size:15px">    3 lecturas iguales.</text>
+<text x="820" y="400" class="s" text-anchor="start" style="font-size:15px;font-weight:700">d. o2_100</text>
+<rect x="1032" y="90" width="440" height="560" rx="10" fill="#fff" stroke="#9aa8a2" stroke-width="1.5" />
+<text x="1052" y="122" class="b" text-anchor="start" style="font-size:18px">3. Comprobar en el bidón</text>
+<text x="1052" y="156" class="s" text-anchor="start" style="font-size:15px">O2 en agua dulce saturada de aire:</text>
+<text x="1062" y="208" class="b" text-anchor="start">15 °C</text>
+<rect x="1142" y="190" width="263" height="26" rx="4" fill="#0e8fb5" stroke="#0e8fb5" stroke-width="1.5" />
+<text x="1415" y="208" class="s" text-anchor="start" style="font-weight:700">10,1 mg/L</text>
+<text x="1062" y="258" class="b" text-anchor="start">20 °C</text>
+<rect x="1142" y="240" width="237" height="26" rx="4" fill="#0e8fb5" stroke="#0e8fb5" stroke-width="1.5" />
+<text x="1389" y="258" class="s" text-anchor="start" style="font-weight:700">9,1 mg/L</text>
+<text x="1062" y="308" class="b" text-anchor="start">25 °C</text>
+<rect x="1142" y="290" width="216" height="26" rx="4" fill="#0e8fb5" stroke="#0e8fb5" stroke-width="1.5" />
+<text x="1368" y="308" class="s" text-anchor="start" style="font-weight:700">8,3 mg/L</text>
+<text x="1062" y="358" class="b" text-anchor="start">30 °C</text>
+<rect x="1142" y="340" width="198" height="26" rx="4" fill="#0e8fb5" stroke="#0e8fb5" stroke-width="1.5" />
+<text x="1350" y="358" class="s" text-anchor="start" style="font-weight:700">7,6 mg/L</text>
+<text x="1052" y="420" class="s" text-anchor="start" style="font-size:15px">Bien si el O2 del bidón (agua que lleve</text>
+<text x="1052" y="448" class="s" text-anchor="start" style="font-size:15px">horas al aire) se parece a la tabla, ±0,5.</text>
+<text x="1052" y="476" class="s" text-anchor="start" style="font-size:15px">La T del SEN0681 tiene que dar lo mismo</text>
+<text x="1052" y="504" class="s" text-anchor="start" style="font-size:15px">que el termómetro, ±0,5 °C.</text>
+<text x="1052" y="532" class="s" text-anchor="start" style="font-size:15px">Cero con sulfito sódico: solo si lo hay</text>
+<text x="1052" y="560" class="s" text-anchor="start" style="font-size:15px">(docs/13, apartado 5.3).</text>
+<text x="28" y="690" class="m" text-anchor="start">Si sale rs485_err=1: con la fuente apagada, cambiar entre sí los dupont de las columnas 6 y 7; si sigue, cambiar A y B en el módulo. No se rompe nada.</text>
+</svg>

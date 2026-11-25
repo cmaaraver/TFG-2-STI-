@@ -2,7 +2,8 @@
 
 Esta guía sirve para pasar la LILYGO del firmware de **simulación** al firmware **real** y dejar calibrados los
 sensores que tenemos de verdad. Está escrita para que la siga cualquiera del grupo (o Claude Code con la LILYGO
-conectada al PC por USB). El cableado es el de `docs/12-guia-montaje.md` (montaje simple en la protoboard).
+conectada al PC por USB). El cableado es el de `docs/12-guia-montaje.md` (montaje simple en la protoboard). Para el día del taller hay una
+versión corta con dibujos y hoja de resultados: `docs/14-checklist-calibracion.md` (y su PDF).
 
 Sensores que se calibran aquí:
 

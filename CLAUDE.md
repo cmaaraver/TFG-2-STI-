@@ -97,8 +97,10 @@ docs/
   11-cartel-referencia.md     ← cartel de referencia del centro comparado bloque por bloque con nuestro sistema
   12-guia-montaje.md          ← montaje cable a cable en la protoboard de la caja (colores, columnas, pines) y pasos; PDF al lado
   13-guia-calibracion.md      ← grabar el firmware real (lilygo_t3_simple) y calibrar pH, nivel, SEN0204 y SEN0681 paso a paso
+  14-checklist-calibracion.md ← checklist visual del taller (persona hace lo físico, Claude manda comandos); PDF al lado, dibujos img/calib-*
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
-  memoria/                    ← memoria del TFG en Word (.docx), planos, capturas de la web y fuentes-word/ (scripts que generan el Word)
+  memoria/                    ← memoria del TFG en Word (.docx), planos, capturas de la web y fuentes-word/ (scripts que generan el Word);
+                                cambios-pendientes-memoria.md = lo cambiado desde el último Word, para el documento final
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
   herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
   herramientas/calibrar.py    ← manda comandos al modo calibración por el puerto serie (para scripts o Claude Code)
