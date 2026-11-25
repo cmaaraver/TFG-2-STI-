@@ -240,8 +240,8 @@ un trozo de cinta.
      cambiar entre sí los cables de las columnas 6 y 7, y si sigue igual, A y B. No se rompe nada.
    - `bat=0 mV` es normal: en este montaje no se mide la batería.
 4. Calibrar el pH: sonda en tampón 7 → `ph7`; enjuagar, sonda en tampón 4 → `ph4`. `ver` enseña lo guardado.
-5. Cero del nivel: con el bidón vacío y la sonda en el fondo, apuntar `nivel=` y ponerlo en `NIVEL_CERO_MM` de
-   `config.h` (`docs/06`, apartado 1.4).
+5. Cero del nivel: con el bidón vacío y la sonda en el fondo, escribir `nivel0` (se guarda en la flash, no hace
+   falta volver a grabar). Paso a paso de toda la calibración: `docs/13-guia-calibracion.md`.
 6. `salir`, **quitar el puente de calibración** y pulsar reset. El nodo hace el join y empieza a enviar; los datos
    salen en la web a los pocos segundos de cada envío.
 

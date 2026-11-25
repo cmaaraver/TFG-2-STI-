@@ -1,11 +1,13 @@
 # Firmware del nodo (LILYGO T3 V1.6.1)
 
-Proyecto PlatformIO. Cómo cablearlo: `docs/03-conexionado-nodo.md`. Cómo grabarlo y calibrarlo paso a paso:
-`docs/08-guia-instalacion.md` (apartados 1 a 3 y 6).
+Proyecto PlatformIO. Cómo cablearlo: `docs/12-guia-montaje.md` (montaje real). Cómo grabar el firmware real y
+calibrar los sensores paso a paso: `docs/13-guia-calibracion.md`. Comandos del modo calibración: `leer`, `mv`, `ph7`,
+`ph4`, `nivel0`, `sal`, `sal0`, `o2_100`, `o2_cero`, `ver`, `reset`, `salir` (también por script con
+`herramientas/calibrar.py COM7 leer`).
 
 ```
-pio run -e lilygo_t3_v1_6_1                 # compilar
-pio run -e lilygo_t3_v1_6_1 -t upload       # grabar
+pio run -e lilygo_t3_simple                 # compilar (montaje real)
+pio run -e lilygo_t3_simple -t upload --upload-port COM7   # grabar
 pio device monitor                          # monitor serie a 115200
 ```
 
@@ -49,6 +51,7 @@ La bomba va aparte, con su propia alimentación: el nodo no la controla (GPIO 12
 | `src/pantalla.cpp` | OLED: logo, fase del ciclo y temporizador del envío (tarea de FreeRTOS) |
 | `src/i2c_compartido.cpp` | Mutex para que la OLED y el ADS1115 no usen el bus I2C a la vez |
 | `include/logo.h` | Logo de Los Viveros en XBM, generado con `herramientas/logo_a_xbm.py` |
+| `herramientas/calibrar.py` | Manda comandos al modo calibración por el puerto serie (pyserial) |
 
 Lo que queda por confirmar está marcado con `TODO VERIFICAR` en `config.h` (registros Modbus del SEN0681,
 sacados de la wiki del SEN0680 y pendientes de probar con el sensor real, salinidad de fábrica y factor del caudalímetro).

@@ -96,10 +96,12 @@ docs/
   10-prompts-claude-code.md   ← prompts para Claude Code: Raspberry por SSH y LILYGO por USB
   11-cartel-referencia.md     ← cartel de referencia del centro comparado bloque por bloque con nuestro sistema
   12-guia-montaje.md          ← montaje cable a cable en la protoboard de la caja (colores, columnas, pines) y pasos; PDF al lado
+  13-guia-calibracion.md      ← grabar el firmware real (lilygo_t3_simple) y calibrar pH, nivel, SEN0204 y SEN0681 paso a paso
   img/                        ← esquemas (.png y .svg editables), pantalla OLED y capturas de la web (datos simulados)
   memoria/                    ← memoria del TFG en Word (.docx), planos, capturas de la web y fuentes-word/ (scripts que generan el Word)
 firmware/nodo-agua/           ← proyecto PlatformIO de la LILYGO (OLED con logo de Los Viveros y temporizador del envío)
   herramientas/logo_a_xbm.py  ← convierte el logo PNG en include/logo.h
+  herramientas/calibrar.py    ← manda comandos al modo calibración por el puerto serie (para scripts o Claude Code)
 pruebas/                      ← pruebas sin hardware (README.md); payload/: payload.h → decoder.js → ingestor;
                                 servidor/: wAP y nodo simulados (join OTAA 1.1 + uplink) contra el servidor
 raspberry/                    ← todo el servidor (ver raspberry/README.md para ponerlo en marcha)
@@ -131,7 +133,7 @@ raspberry/                    ← todo el servidor (ver raspberry/README.md para
 - [x] Bomba aparte, con su propia alimentación y sin conexión al nodo (2026-10-26).
 - [x] Depósito = bidón de plástico de 25 L (2026-11-17, `docs/06` apartados 1.1-1.4). Agujeros solo arriba; nivel en % en la web.
 - [ ] Medidas reales del bidón (alto, boca) y diámetros del SEN0681, KIT0139 y bomba; calibrar el nivel de 5 en 5 L
-      (`NIVEL_CERO_MM` en `config.h` y `BIDON` en `raspberry/web/static/app.js`).
+      (comando `nivel0` del modo calibración y `BIDON` en `raspberry/web/static/app.js`; `docs/13-guia-calibracion.md`).
 - [x] Montaje real (2026-11-13): todo se lee con la LILYGO, sin ADS1115 ni aislador (entorno `lilygo_t3_simple`,
       `docs/03` apartado 0, `docs/img/conexionado-simple.png`). LILYGO por USB con respaldo; sensores con fuente de 12 V de PC.
 - [ ] Módulo RS485 a TTL de 3,3 V: por conseguir (sin él no se lee el SEN0681).
