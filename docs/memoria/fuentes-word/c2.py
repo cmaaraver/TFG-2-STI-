@@ -368,7 +368,12 @@ P('Para calibrar se pone el puente de calibración (un dupont hembra-hembra entr
   'abre el monitor serie. El nodo espera 60 segundos a que se estabilicen los sensores y luego acepta comandos. Lo '
   'que se calibra se guarda en la memoria flash del ESP32, así que no se pierde al apagar ni al volver a grabar el '
   'firmware. Los comandos se pueden escribir a mano o mandarlos con `calibrar.py` desde el PC: así una persona hace '
-  'la parte física (mover la sonda, vaciar el bidón) y otra, o Claude Code en el PC, va mandando los comandos.')
+  'la parte física (mover la sonda, vaciar el bidón) y otra, o Claude Code en el PC, va mandando los comandos. '
+  'Para el taller hicimos una checklist con dibujos de cada paso y una hoja de resultados '
+  '(`docs/14-checklist-calibracion.md`, también en PDF); la explicación larga está en `docs/13-guia-calibracion.md`.')
+FIG(REPO + 'docs/img/calib-flujo.png', 'Los siete pasos de la calibración en el taller', ancho=16)
+FIG(REPO + 'docs/img/calib-puente-io15.png', 'Dónde va el puente de calibración (IO15 a GND) en la serigrafía de la placa', ancho=15)
+FIG(REPO + 'docs/img/calib-pantallas.png', 'Lo que enseñan la pantalla OLED y el monitor serie en el modo calibración', ancho=15)
 T(['Comando', 'Qué hace'], [
     ['`leer`', 'Una medida completa de todos los sensores'],
     ['`mv`', 'Tensiones crudas en los pines (pH en mV, nivel en mV y mA, presencia de agua 0/1), para comprobar el cableado'],
@@ -380,15 +385,20 @@ T(['Comando', 'Qué hace'], [
     ['`salir`', 'Sale del modo calibración (después se quita el puente y se pulsa RST)'],
 ], anchos=[4.0, 12.0], titulo='Comandos del modo calibración', tam=9.5)
 B([
-    '**pH (dos puntos)**: la sonda en el tampón de pH 7, se espera a que `mv` no cambie y se escribe `ph7`; se '
-    'enjuaga con agua destilada, se mete en el de pH 4 y se escribe `ph4`. Se comprueba volviendo a cada tampón: '
-    'tiene que dar 7,00 y 4,00 con ±0,1. Se repite cada mes.',
+    '**pH (dos puntos)**: la sonda en el tampón de pH 7, se espera a que `mv` no cambie y se escribe `ph7` (unos '
+    '1500 mV); se enjuaga con agua destilada, se mete en el de pH 4 y se escribe `ph4` (unos 2000 mV). Se comprueba '
+    'volviendo a cada tampón: tiene que dar 7,00 y 4,00 con ±0,1. Si la diferencia entre los dos puntos baja mucho '
+    'de unos 450 mV, la sonda está gastada. Se repite cada mes.',
     '**Nivel**: con el bidón vacío y la sonda de pie en el fondo se escribe `nivel0`, y después se echa agua de 5 en '
     '5 L apuntando la lectura para ajustar el % de la web.',
     '**Presencia de agua**: solo se comprueba que da 1 con agua detrás de la pared y 0 sin ella; si no, se cambia la '
     'sensibilidad con el botón SET de su placa.',
-    '**Oxígeno**: cuando tengamos el módulo RS485, se pone la salinidad a 0 (`sal0`), porque usamos agua de red.',
+    '**Oxígeno**: cuando tengamos el módulo RS485, se pone la salinidad a 0 (`sal0`), porque usamos agua de red, y '
+    'se hace el punto del 100 % (`o2_100`) con la sonda al aire saturado de humedad. Se repite cada tres meses.',
 ])
+FIG(REPO + 'docs/img/calib-ph.png', 'Calibración del pH con los tampones 7 y 4', ancho=15)
+FIG(REPO + 'docs/img/calib-nivel.png', 'Cero del nivel con el bidón vacío y tabla de 5 en 5 L (con el SEN0204)', ancho=15)
+FIG(REPO + 'docs/img/calib-oxigeno.png', 'Salinidad a 0 y punto del 100 % del sensor de oxígeno', ancho=15)
 FOTO('Calibración del pH: la sonda dentro del vaso con la solución tampón y el monitor serie con la lectura.',
      'Calibración de la sonda de pH con soluciones tampón', alto=5.5)
 

@@ -157,12 +157,16 @@ H(3, '5.6 Resultados con los sensores reales')
 P('[COMPLETAR: cuando el sistema lleve una semana midiendo, describir aquí los resultados: si las lecturas son '
   'estables, si se ha perdido algún mensaje y cómo se comportan los valores a lo largo del día]')
 T(['Comprobación', 'Valor esperado', 'Valor obtenido'], [
+    ['pH: tensión en el tampón 7 (`ph7`) y en el 4 (`ph4`)', 'Unos 1500 y 2000 mV (diferencia de 450-550 mV)', '[COMPLETAR: mV]'],
     ['pH en tampón de 7,00 después de calibrar', '7,00 ± 0,1', '[COMPLETAR: lectura]'],
     ['pH en tampón de 4,00 después de calibrar', '4,00 ± 0,1', '[COMPLETAR: lectura]'],
     ['Temperatura frente a un termómetro de referencia', 'Diferencia pequeña', '[COMPLETAR: lecturas]'],
     ['Oxígeno disuelto del depósito', 'Coherente con la temperatura del agua', '[COMPLETAR: lectura en mg/L]'],
     ['Nivel frente a la medida con una cinta métrica', 'Diferencia pequeña', '[COMPLETAR: lecturas]'],
+    ['Cero del nivel guardado con `nivel0`', 'Entre −50 y 50 mm', '[COMPLETAR: mm]'],
     ['Nivel en % al echar el agua de 5 en 5 L', 'Sube unos 20 % cada vez', '[COMPLETAR: lecturas]'],
+    ['Litros a los que el SEN0204 pasa a «hay agua»', 'Unos 7-8 L (12 cm del fondo)', '[COMPLETAR: litros]'],
+    ['Salinidad del SEN0681 de fábrica y después de `sal0`', '0 después de `sal0`', '[COMPLETAR: valores]'],
     ['Aviso de falta de agua al bajar el nivel', 'Aparece en la web', '[COMPLETAR: sí o no]'],
     ['Mensajes recibidos en 24 horas', '96', '[COMPLETAR: número]'],
     ['Mensajes recibidos en una semana', '672', '[COMPLETAR: número]'],
